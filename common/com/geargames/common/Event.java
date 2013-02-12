@@ -24,6 +24,8 @@ public abstract class Event {
     public final static int EVENT_KEY_UP = 110;
     public final static int EVENT_KEY_DOWN = 111;
 
+    public final static int EVENT_SYNTHETIC_CLICK = 112;
+
     public final static int EVENT_TIMER_END = 120;
     public final static int EVENT_SYSEDIT_OK = 121;             //вышли из системного эдита
     public final static int EVENT_SYSEDIT_CANCEL = 122;

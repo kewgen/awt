@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Created with IntelliJ IDEA.
  * User: kewgen
  * Date: 18.09.12
  * Time: 17:49
@@ -23,6 +22,7 @@ public abstract class PManager implements com.geargames.common.Render {
 
     protected boolean DEBUG = false;
     private PCreator creator;
+    private PUnresolvedFrameManger unresolvedFrameManger;
 
     public PManager() {
         isDataLoaded = false;
@@ -38,9 +38,11 @@ public abstract class PManager implements com.geargames.common.Render {
     }
 
     public void loadImages(Graphics graphics, InputStream is) {
-        int count = IMG_COUNT  + 1;
+        int count = IMG_COUNT + 1;
         images = new ArrayList(count);
-        for (int i = 0; i < count; i++) images.add(graphics.createImage());
+        for (int i = 0; i < count; i++) {
+            images.add(graphics.createImage());
+        }
         loadImagesFromStream(graphics, is);
         isImagesLoaded = true;
         end();
@@ -314,7 +316,9 @@ public abstract class PManager implements com.geargames.common.Render {
                     dis.read(arrayByte.getArray(), 0, len);
                     for (int a = 0; a < len; a++) {
                         arrayDual.set(i, a, arrayByte.get(a));
-                        if (DEBUG && a < 100) str = str.concatI(arrayDual.get(i, a)).concatC(",");
+                        if (DEBUG && a < 100){
+                            str = str.concatI(arrayDual.get(i, a)).concatC(",");
+                        }
                     }
                     arrayByte.free();
                 } else if (i < PARAM_BYTE_COUNT + PARAM_SHORT_COUNT) {//SHORT
@@ -322,7 +326,9 @@ public abstract class PManager implements com.geargames.common.Render {
                     dis.read(arrayByte.getArray(), 0, len * 2);
                     for (int a = 0; a < len; a++) {
                         arrayDual.set(i, a, ((arrayByte.get(a * 2) << 8) | (arrayByte.get(a * 2 + 1) & 0xff)));
-                        if (DEBUG && a < 100) str = str.concatI(arrayDual.get(i, a)).concatC(",");
+                        if (DEBUG && a < 100){
+                            str = str.concatI(arrayDual.get(i, a)).concatC(",");
+                        }
                     }
                     arrayByte.free();
                 } else {
@@ -331,11 +337,15 @@ public abstract class PManager implements com.geargames.common.Render {
                     for (int a = 0; a < len; a++) {
                         arrayDual.set(i, a, ((arrayByte.get(a * 4) << 24) | ((arrayByte.get(a * 4 + 1) & 0xff) << 16)
                                 | ((arrayByte.get(a * 4 + 2) & 0xff) << 8) | (arrayByte.get(a * 4 + 3) & 0xff)));
-                        if (DEBUG && a < 100) str = str.concatI(arrayDual.get(i, a)).concatC(",");
+                        if (DEBUG && a < 100) {
+                            str = str.concatI(arrayDual.get(i, a)).concatC(",");
+                        }
                     }
                     arrayByte.free();
                 }
-                if (DEBUG) System.out.println(str);
+                if (DEBUG) {
+                    System.out.println(str);
+                }
             }
             dis.close();
             dis = null;
@@ -354,7 +364,7 @@ public abstract class PManager implements com.geargames.common.Render {
             DataInputStream dis = new DataInputStream(is);
             readImages(dis, graphics, img_count, 0);
             dis.close();
-            dis = null;//for ObjC - autorelsed
+            dis = null;//for ObjC - autoreleased
             System.gc();
         } catch (IOException e) {
             e.printStackTrace();
@@ -399,7 +409,7 @@ public abstract class PManager implements com.geargames.common.Render {
             images.set(img_cur, image);
             System.out.println(String.valueOfC("Image created(").concatI(img_cur).concatC(")"));
         }
-        if (Port.IS_OPENGL) graphics.addTexture((Image) images.get(img_cur));
+        if (Port.OPEN_GL) graphics.addTexture((Image) images.get(img_cur));
     }
 
     private void updateFrames() {
@@ -467,7 +477,11 @@ public abstract class PManager implements com.geargames.common.Render {
     }
 
     public PFrame getFrame(int pid) {
-        return (PFrame)frames.get(pid);
+        if(pid < frames.size()){
+            return (PFrame)frames.get(pid);
+        }else{
+            return unresolvedFrameManger.getFrame(pid);
+        }
     }
 
     protected int o_dx;
@@ -526,6 +540,14 @@ public abstract class PManager implements com.geargames.common.Render {
 
     public void setCreator(PCreator creator) {
         this.creator = creator;
+    }
+
+    public PUnresolvedFrameManger getUnresolvedFrameManger() {
+        return unresolvedFrameManger;
+    }
+
+    public void setUnresolvedFrameManger(PUnresolvedFrameManger unresolvedFrameManger) {
+        this.unresolvedFrameManger = unresolvedFrameManger;
     }
 
     //тип слоя индекса

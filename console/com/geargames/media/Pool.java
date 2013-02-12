@@ -1,7 +1,6 @@
 package com.geargames.media;
 
 import com.geargames.Debug;
-import com.geargames.MIDlet;
 import com.geargames.Recorder;
 import com.geargames.common.String;
 import com.geargames.common.util.ArrayByte;
@@ -21,7 +20,7 @@ public class Pool implements com.geargames.common.media.Pool {
     }
 
     public void load(Object midlet, String path, int id) {
-        ArrayByte arrayByte = Recorder.RMSStoreRead((MIDlet) midlet, path.toString(), false);
+        ArrayByte arrayByte = Recorder.RMSStoreRead(path.toString(), false);
         SoundPlayer player = new SoundPlayer(path.toString(), null, arrayByte, false);
         list.put(id, player);
     }
@@ -44,9 +43,5 @@ public class Pool implements com.geargames.common.media.Pool {
 
     public boolean isReady(int id) {
         return list.get(id) != null;
-    }
-
-    public void releasePool() {
-
     }
 }

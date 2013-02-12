@@ -10,20 +10,19 @@ public abstract class EmitProcess {
     protected Random rand;
 
     private final static short ACC_MULT = 100;
-    protected short EMIT_INTERVAL = 1000 / 8;
+    protected short EMIT_INTERVAL = 1000/8;
 
     private final static short SIN_DIVIDE = 10000;
-    private static short[] sin_ = new short[]{
-            0, 175, 349, 523, 698, 872, 1045, 1219, 1392, 1564,
-            1736, 1908, 2079, 2250, 2419, 2588, 2756, 2924, 3090, 3256,
-            3420, 3584, 3746, 3907, 4067, 4226, 4384, 4540, 4695, 4848,
-            5000, 5150, 5299, 5446, 5592, 5736, 5878, 6018, 6157, 6293,
-            6428, 6561, 6691, 6820, 6947, 7071, 7193, 7314, 7431, 7547,
-            7660, 7771, 7880, 7986, 8090, 8192, 8290, 8387, 8480, 8572,
-            8660, 8746, 8829, 8910, 8988, 9063, 9135, 9205, 9272, 9336,
-            9397, 9455, 9511, 9563, 9613, 9659, 9703, 9744, 9781, 9816,
-            9848, 9877, 9903, 9925, 9945, 9962, 9976, 9986, 9994, 9998,
-            10000};
+    private short[] sin_ = new short[] {   0, 175, 349, 523, 698, 872,1045,1219,1392,1564,
+                               1736,1908,2079,2250,2419,2588,2756,2924,3090,3256,
+                               3420,3584,3746,3907,4067,4226,4384,4540,4695,4848,
+                               5000,5150,5299,5446,5592,5736,5878,6018,6157,6293,
+                               6428,6561,6691,6820,6947,7071,7193,7314,7431,7547,
+                               7660,7771,7880,7986,8090,8192,8290,8387,8480,8572,
+                               8660,8746,8829,8910,8988,9063,9135,9205,9272,9336,
+                               9397,9455,9511,9563,9613,9659,9703,9744,9781,9816,
+                               9848,9877,9903,9925,9945,9962,9976,9986,9994,9998,
+                              10000};
     private int vect_x, vect_y;
 
     protected int dx;
@@ -49,11 +48,11 @@ public abstract class EmitProcess {
 
     protected ArrayList particles;
 
-    public boolean process(Render render, long current_time, long time_process_last, int map_dx, int map_dy, int map_ddx, int map_ddy) {
+    public boolean process(Render render,long current_time, long time_process_last, int map_dx, int map_dy, int map_ddx, int map_ddy) {
 
         int[] xy;
-        int time_diff_create = (int) (time_process_last - create_time);
-        int time_diff = (int) (current_time - time_process_last);
+        int time_diff_create = (int)(time_process_last - create_time);
+        int time_diff = (int)(current_time - time_process_last);
         if (create_time + life_time < current_time) {
             return false;
         }
@@ -98,9 +97,9 @@ public abstract class EmitProcess {
                 int an = (countAngle(vel_x * (100 - ld) / 100 + vel_x_diff_2, vel_y * (100 - ld) / 100 + vel_y_diff_2) + emit_vector + an_curr) % 360;
 //                    Director.log("em t = " + (time_diff_create + emit_step * i) + "; vel = " + (vel_x * (100 - ld) / 100 + vel_x_diff_1 + vel_x_diff_2) + ", " + (vel_y * (100 - ld) / 100 + vel_y_diff_1 + vel_y_diff_2) + "; an = " + an + " (" + emit_vector + ", " + an_curr + ")");
                 xy = calcShift(x, y, vel_x, vel_y, acc_x, acc_y, acc_line, emit_next_time);
-                particleTemp.setX((short) (map_dx + map_ddx * (emit_next_time - time_diff_create) / EMIT_INTERVAL + xy[0]));
+                particleTemp.setX((short)(map_dx + map_ddx * (emit_next_time - time_diff_create) / EMIT_INTERVAL + xy[0]));
                 particleTemp.setXCurr(particleTemp.getX());//[PARTICLE_X_CURR] = (short)(map_dx + map_ddx * (emit_next_time - time_diff_create) / EMIT_INTERVAL + xy[0]);
-                particleTemp.setY((short) (map_dy + map_ddy * (emit_next_time - time_diff_create) / EMIT_INTERVAL + xy[1]));
+                particleTemp.setY((short)(map_dy + map_ddy * (emit_next_time - time_diff_create) / EMIT_INTERVAL + xy[1]));
                 particleTemp.setYCurr(particleTemp.getY());
                 if (radius != 0) {
                     int r = (radius > 0 ? (rand.nextInt() & 0xffff) % radius : -radius);
@@ -112,9 +111,9 @@ public abstract class EmitProcess {
                 }
                 int vlen = emit_vel_base + (emit_vel_inc > 0 ? (rand.nextInt() & 0xffff) % emit_vel_inc : 0);
                 countVector(an, vlen, 1);
-                particleTemp.setVelX((short) vect_x);
+                particleTemp.setVelX((short)vect_x);
                 particleTemp.setVelY((short) vect_y);
-                particleTemp.setLifeTime((short) (emit_life_base + (emit_life_inc > 0 ? (rand.nextInt() & 0xffff) % emit_life_inc : 0)));
+                particleTemp.setLifeTime((short)(emit_life_base + (emit_life_inc > 0 ? (rand.nextInt() & 0xffff) % emit_life_inc : 0)));
 
                 if (pManager.getParticlesCount() > 0 && pManager.get(particleTemp.getPType()).getType() == /*Render.T_EMITTER*/11) {
                     EmitProcess em = emitterAdd(render, pManager.get(particleTemp.getPType()).getId());
@@ -137,16 +136,16 @@ public abstract class EmitProcess {
         x_curr = xy[0];
         y_curr = xy[1];
         for (int i = 0; i < particles.size(); i++) {
-            PartTemp particle = (PartTemp) particles.get(i);
+            PartTemp particle = (PartTemp)particles.get(i);
             if (create_time + particle.getEmitTime() + particle.getLifeTime() <= current_time) {
                 //particles.remove(particle);//очень тяжелая линейная операция
                 particles.remove(i);
                 i--;
                 continue;
             }
-            xy = calcShift(particle.getX(), particle.getY(), particle.getVelX(), particle.getVelY(), emit_acc_x, emit_acc_y, emit_acc_line, (int) (current_time - (create_time + particle.getEmitTime())));
-            particle.setXCurr((short) xy[0]);
-            particle.setYCurr((short) xy[1]);
+            xy = calcShift(particle.getX(), particle.getY(), particle.getVelX(), particle.getVelY(), emit_acc_x, emit_acc_y, emit_acc_line, (int)(current_time - (create_time + particle.getEmitTime())));
+            particle.setXCurr((short)xy[0]);
+            particle.setYCurr((short)xy[1]);
         }
         return true;
 
@@ -164,23 +163,23 @@ public abstract class EmitProcess {
                 int time_1 = 100 * EMIT_INTERVAL / acc_line_;
                 int vel_x_1 = acc_x_ * time_1 / ACC_MULT;
                 int vel_y_1 = acc_y_ * time_1 / ACC_MULT;
-                res[0] += (vel_x_ + vel_x_1) / 2 * time_1 / (EMIT_INTERVAL * EMIT_INTERVAL);
-                res[1] += (vel_y_ + vel_y_1) / 2 * time_1 / (EMIT_INTERVAL * EMIT_INTERVAL);
+                res[0] += (vel_x_ + vel_x_1) / 2 * time_1 / (EMIT_INTERVAL *EMIT_INTERVAL);
+                res[1] += (vel_y_ + vel_y_1) / 2 * time_1 / (EMIT_INTERVAL *EMIT_INTERVAL);
                 vel_x_ = vel_x_1;
                 vel_y_ = vel_y_1;
                 time -= time_1;
             } else {
                 int vel_x_1 = vel_x_ * (100 - line_diff) / 100 + acc_x_ * time / ACC_MULT;
                 int vel_y_1 = vel_y_ * (100 - line_diff) / 100 + acc_y_ * time / ACC_MULT;
-                res[0] += (vel_x_ + vel_x_1) / 2 * time / (EMIT_INTERVAL * EMIT_INTERVAL);
-                res[1] += (vel_y_ + vel_y_1) / 2 * time / (EMIT_INTERVAL * EMIT_INTERVAL);
+                res[0] += (vel_x_ + vel_x_1) / 2 * time / (EMIT_INTERVAL *EMIT_INTERVAL);
+                res[1] += (vel_y_ + vel_y_1) / 2 * time / (EMIT_INTERVAL *EMIT_INTERVAL);
                 return res;
             }
         }
         int vel_x_1 = vel_x_ + acc_x_ * time / ACC_MULT;
         int vel_y_1 = vel_y_ + acc_y_ * time / ACC_MULT;
-        res[0] += (vel_x_ + vel_x_1) / 2 * time / (EMIT_INTERVAL * EMIT_INTERVAL);
-        res[1] += (vel_y_ + vel_y_1) / 2 * time / (EMIT_INTERVAL * EMIT_INTERVAL);
+        res[0] += (vel_x_ + vel_x_1) / 2 * time / (EMIT_INTERVAL *EMIT_INTERVAL);
+        res[1] += (vel_y_ + vel_y_1) / 2 * time / (EMIT_INTERVAL *EMIT_INTERVAL);
         return res;
 
     }
@@ -191,20 +190,20 @@ public abstract class EmitProcess {
         int an = angle % 90, qu = angle / 90;
         switch (qu) {
             case 0:
-                si = EmitProcess.sin_[an];
-                co = EmitProcess.sin_[90 - an];
+                si = sin_[an];
+                co = sin_[90 - an];
                 break;
             case 1:
-                si = EmitProcess.sin_[90 - an];
-                co = -EmitProcess.sin_[an];
+                si = sin_[90 - an];
+                co = -sin_[an];
                 break;
             case 2:
-                si = -EmitProcess.sin_[an];
-                co = -EmitProcess.sin_[90 - an];
+                si = -sin_[an];
+                co = -sin_[90 - an];
                 break;
             case 3:
-                si = -EmitProcess.sin_[90 - an];
-                co = EmitProcess.sin_[an];
+                si = -sin_[90 - an];
+                co = sin_[an];
                 break;
         }
         vect_x = len * si * mult / SIN_DIVIDE;
@@ -220,8 +219,8 @@ public abstract class EmitProcess {
         int sin2 = x * x * 100 / (x * x + y * y) * 1000000;
         int i = 0;
         for (; i < 90; i++) {
-//            Director.log("ca 1 = " + (EmitProcess.sin_[i + 1] * EmitProcess.sin_[i + 1]) + ", " + sin2);
-            if (EmitProcess.sin_[i + 1] * EmitProcess.sin_[i + 1] > sin2) {
+//            Director.log("ca 1 = " + (sin_[i + 1] * sin_[i + 1]) + ", " + sin2);
+            if (sin_[i + 1] * sin_[i + 1] > sin2) {
                 break;
             }
         }

@@ -1,8 +1,8 @@
 package com.geargames.awt;
 
-import com.geargames.awt.utils.ItemSkin;
+import com.geargames.awt.components.PElement;
+import com.geargames.awt.components.PPrototypeElement;
 import com.geargames.awt.utils.MotionListener;
-import com.geargames.common.util.Region;
 import com.geargames.common.Event;
 import com.geargames.common.Graphics;
 import com.geargames.common.Port;
@@ -19,52 +19,40 @@ public abstract class HorizontalScrollView extends HorizontalScrollableArea {
     private int touchX;
     private int touchY;
 
-    private Region drawRegion;
-    private Region touchRegion;
     private int margin;
     private int currentLastClicked;
 
     public HorizontalScrollView() {
         setInitiated(false);
-        drawRegion = new Region();
-        touchRegion = new Region();
     }
 
-    public Region getTouchRegion() {
-        return touchRegion;
-    }
-
-    public Region getDrawRegion() {
-        return drawRegion;
-    }
-
-    public void initiate(Graphics graphics) {
-        setInitiated(true);
-    }
 
     public boolean event(int code, int param, int x, int y) {
         int number;
         boolean result = super.event(code, param, x, y);
         if (getTouchRegion().isWithIn(x, y)) {
-            switch (code) {
-                case Event.EVENT_TOUCH_PRESSED:
-                    touchX = x;
-                    touchY = y;
-                    number = getNumber(x);
-                    if (number >= 0 && number <= getItemsAmount() - 1) {
-                        currentLastClicked = number;
-                    }
-                    break;
-                case Event.EVENT_TOUCH_RELEASED:
-                    if (Math.abs(touchX - x) <= Port.TOUCH_ROUND && Math.abs(touchY - y) <= Port.TOUCH_ROUND) {
+            if (code != Event.EVENT_TICK) {
+                number = getNumber(x);
+                switch (code) {
+                    case Event.EVENT_TOUCH_PRESSED:
+                        touchX = x;
+                        touchY = y;
                         number = getNumber(x);
                         if (number >= 0 && number <= getItemsAmount() - 1) {
-                            getMotionListener().onClick(number);
-                            ScrollViewItem viewItem = (ScrollViewItem) getItems().elementAt(number);
-                            viewItem.click(number);
+                            currentLastClicked = number;
                         }
-                    }
-                    break;
+                        break;
+                    case Event.EVENT_TOUCH_RELEASED:
+                        if (Math.abs(touchX - x) <= Port.TOUCH_ROUND && Math.abs(touchY - y) <= Port.TOUCH_ROUND) {
+                            if (number >= 0 && number <= getItemsAmount() - 1) {
+                                getMotionListener().onClick(number);
+                                ((PElement) getItems().elementAt(number)).event(code, param, x, y);
+                                ((PElement) getItems().elementAt(number)).event(Event.EVENT_SYNTHETIC_CLICK, number, x, y);
+                            }
+                        }
+                        return result;
+                }
+                ((PElement) getItems().elementAt(number)).event(code, param, x, y);
             }
         }
         return result;
@@ -72,10 +60,13 @@ public abstract class HorizontalScrollView extends HorizontalScrollableArea {
 
 
     private int getNumber(int x) {
-        int i;
-        i = (-getPosition() + getItemSkin().getOffsetX() + x) / getItemSize();
-        if (x - getPosition() + getItemSkin().getOffsetX() > i * getItemSize() + getItemSkin().getWidth()) {
-            i = -1;
+        int length = (-getPosition() + x);
+        if (length % getItemSize() > getItemSize() - margin) {
+            return -1;
+        }
+        int i = length / getItemSize();
+        if (length > i * getItemSize() + getPrototype().getDrawRegion().getWidth()) {
+            return -1;
         }
         return i;
     }
@@ -98,11 +89,11 @@ public abstract class HorizontalScrollView extends HorizontalScrollableArea {
     }
 
     public int getItemSize() {
-        return getItemSkin().getWidth() + margin;
+        return getPrototype().getDrawRegion().getWidth() + margin;
     }
 
     public void drawItem(Graphics graphics, int itemIndex, int position, int coordinate) {
-        ((ScrollViewItem) getItems().elementAt(itemIndex)).draw(graphics, position + margin, coordinate);
+        ((PElement) getItems().elementAt(itemIndex)).draw(graphics, position, coordinate);
     }
 
     /**
@@ -110,22 +101,21 @@ public abstract class HorizontalScrollView extends HorizontalScrollableArea {
      *
      * @return
      */
-    public abstract ItemSkin getItemSkin();
+    public abstract PPrototypeElement getPrototype();
 
     /**
      * Вернуть наибольшее количество целых элементов которое может быть видимо в списке.
      *
      * @return
      */
-    public int getShowedItemsAmount() {
-        return drawRegion.getWidth() / getItemSize();
+    public int getShownItemsAmount() {
+        return getDrawRegion().getWidth() / getItemSize();
     }
 
     /**
      * Вернуть вектор элементов списка.
      *
      * @return
-     * @See ScrollViewItem
      */
     public abstract Vector getItems();
 

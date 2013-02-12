@@ -1,6 +1,5 @@
 package com.geargames.packer;
 
-import com.geargames.MIDlet;
 import com.geargames.Manager;
 import com.geargames.common.String;
 
@@ -23,9 +22,9 @@ public class Image implements com.geargames.common.Image {
         return new Image(new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB));
     }
 
-    public static Image createImage(String path, MIDlet midlet) throws IOException {
+    public static Image createImage(String path, Manager manager) throws IOException {
         InputStream is;
-        is = midlet.getResourceAsStream(path);
+        is = manager.getMidlet().getResourceAsStream(path);
         Image image1 = new Image(ImageIO.read(is));
         is.close();
         return image1;

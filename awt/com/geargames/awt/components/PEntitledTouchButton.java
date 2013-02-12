@@ -16,7 +16,7 @@ public abstract class PEntitledTouchButton extends PTouchButton {
     public PEntitledTouchButton(PObject prototype, String title) {
         super(prototype);
         IndexObject index = (IndexObject) prototype.getIndexBySlot(2);
-        caption = new PLabel(index);
+        caption = new PSimpleLabel(index);
         caption.setX(index.getX());
         caption.setY(index.getY());
         caption.setData(title);

@@ -16,13 +16,15 @@ public class LinearVanishingStrategy extends GraphicsStrategy {
     private long tick;
 
     public LinearVanishingStrategy() {
-        transparent = false;
+        transparent = true;
     }
 
     public void event(int code, int param, int x, int y) {
-        switch (code) {
-            case Event.EVENT_TICK:
-                tick++;
+        if (!transparent) {
+            switch (code) {
+                case Event.EVENT_TICK:
+                    tick++;
+            }
         }
     }
 

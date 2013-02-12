@@ -19,7 +19,7 @@ public abstract class Port {
     public static boolean IS_FOURTHIRDS_GRAPHIC = false;// 4/3, графика 2/3 от двойной
     public static boolean IS_HALF_GRAPHIC = false;// 2/3
 
-    public static boolean IS_OPENGL = false;
+    public static boolean OPEN_GL = false;
     private static final boolean RETINA = false;
     public static int TOUCH_ROUND = 3;//допустимая разница в пикселах между точкой нажатия и точкой отжатия для фиксирования клика
 
@@ -116,13 +116,12 @@ public abstract class Port {
         return false;
     }
 
-    /**@Deprecated*/
-    public static void setOpenGL(boolean flag) {//
+
+    public static void setOpenGL(boolean flag) {//Deprecated
         Port.isOpenGL = flag;
     }
 
-    /**@Deprecated*/
-    public static boolean isOpenGl__() {//Deprecated
+    public static boolean isOpenGl() {//Deprecated
         return Port.isOpenGL;
     }
 

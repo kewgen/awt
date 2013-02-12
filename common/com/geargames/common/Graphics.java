@@ -78,12 +78,4 @@ public interface Graphics {
     Image createImage(byte[] array, int i, int data_len) throws IOException;
 
     Image createImage();
-
-
-    /**@deprecated*/
-    public void setFont(Font font, boolean fake);
-
-    /**@deprecated*/
-    public Font getFont(boolean fake);
-
 }

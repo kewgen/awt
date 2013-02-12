@@ -1,6 +1,7 @@
 package com.geargames.awt;
 
 import com.geargames.awt.components.PElement;
+import com.geargames.common.Port;
 import com.geargames.common.util.Region;
 import com.geargames.common.Graphics;
 
@@ -14,6 +15,7 @@ import com.geargames.common.Graphics;
 public class DrawablePElement extends Drawable {
     private int x;
     private int y;
+    private byte anchor;
     private PElement element;
 
     /**
@@ -68,5 +70,40 @@ public class DrawablePElement extends Drawable {
 
     public void setElement(PElement element) {
         this.element = element;
+    }
+
+    public byte getAnchor() {
+        return anchor;
+    }
+
+    public void setAnchor(byte anchor) {
+        this.anchor = anchor;
+    }
+
+    public void init(){
+        switch (anchor){
+            case Anchors.NONE_ANCHOR:
+                break;
+            case Anchors.BOTTOM_LEFT_ANCHOR:
+                setY(Port.getH());
+                setX(0);
+                break;
+            case Anchors.TOP_LEFT_ANCHOR:
+                setY(0);
+                setX(0);
+                break;
+            case Anchors.TOP_RIGHT_ANCHOR:
+                setX(Port.getW() - element.getDrawRegion().getWidth());
+                setY(0);
+                break;
+            case Anchors.CENTER_ANCHOR:
+                setX((Port.getScreenW() / 2) - element.getDrawRegion().getWidth() / 2);
+                setY((Port.getScreenH() / 2) - element.getDrawRegion().getHeight() / 2);
+                break;
+            case Anchors.BOTTOM_RIGHT_ANCHOR:
+                setX(Port.getW() - element.getDrawRegion().getWidth());
+                setY(Port.getH() - element.getDrawRegion().getHeight());
+                break;
+        }
     }
 }

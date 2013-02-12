@@ -315,7 +315,4 @@ public abstract class MIDlet extends JFrame implements HTTPCounter {
 
     protected abstract Manager getManager();
 
-    protected abstract void setManager(Manager manager);
-
-
 }

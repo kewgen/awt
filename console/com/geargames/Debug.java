@@ -3,7 +3,6 @@ package com.geargames;
 import com.geargames.common.String;
 
 import java.util.Calendar;
-import java.util.Hashtable;
 import java.util.TimeZone;
 
 public class Debug {
@@ -121,14 +120,10 @@ public class Debug {
 
     }
 
-    public static void logEx(Exception e) {
-        Logger.logException(e);
+    public static void logEx(Exception ex) {
+        Logger.logException(ex);
 
-//        e.printStackTrace();
-    }
-
-    public static void logEx(Exception e, Hashtable params) {
-        Logger.logException(e);
+//        ex.printStackTrace();
     }
 
     private static String intToStr(int value, int digits) {
@@ -139,7 +134,7 @@ public class Debug {
         return String.valueOfC(sb.toString());
     }
 
-    public static void sendReport(Exception e, Hashtable params) {
+    public static void sendReport(Exception e, int uid) {
         logEx(e);
     }
 }

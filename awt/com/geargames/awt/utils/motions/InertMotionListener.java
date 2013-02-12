@@ -73,7 +73,6 @@ public class InertMotionListener extends MotionListener {
     public void onTick() {
         if (released) {
             if (storedMove != 0) {
-
                 if (position + window <= down || position >= top) {
                     storedMove = 0;
                 } else {
@@ -89,13 +88,17 @@ public class InertMotionListener extends MotionListener {
                     Debug.trace("POSITION = " + position);
                 }
             } else {
-
                 if (position > top) {
+                    if (Drawable.DEBUG) {
+                        Debug.trace("return up");
+                    }
                     position -= position - top > backSpeed ? backSpeed : position - top;
-                } else if (position != top && position < down - window) {
+                } else if (position != top && position + window < down) {
+                    if (Drawable.DEBUG) {
+                        Debug.trace("return down" + " position=" + position + " window=" + window + " down=" + down + " top=" + top);
+                    }
                     position += down - window - position > backSpeed ? backSpeed : down - window - position;
                 }
-
             }
             draggingTicks = 0;
         } else {

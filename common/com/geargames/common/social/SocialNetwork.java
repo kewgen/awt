@@ -12,15 +12,13 @@ import com.geargames.common.String;
  */
 public interface SocialNetwork {
 
-    public void login(Social socialManager);
+    public void login();
 
     public void logout();
 
     public void sendPost(String message, Social social);
 
-    public void sendPost(String message, Image image, boolean fake);
+    public void sendPost(String message, Image image);
 
     public boolean isLogged();
-
-    String getName();
 }

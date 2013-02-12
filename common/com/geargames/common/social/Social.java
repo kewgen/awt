@@ -34,10 +34,7 @@ public interface Social {
     public com.geargames.common.String getVkontakteURL();
     public String getTwitterURL();
 
-    //соцсеть зарегистрирована
-    public void onShared(SocialNetwork socialNetwork);
-    //пост размещен на стену
-    public void onPostSended(boolean isSended, SocialNetwork socialNetwork);
+    public void onPostSended(boolean isSended);
 
     void sendMail(String message_text, String message_subject);
 }

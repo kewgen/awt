@@ -9,15 +9,6 @@ import com.geargames.common.packer.*;
  * Time: 14:46
  */
 public interface Render {
-    //тип шрифта
-    byte FONT_SYSTEM = -1;
-    byte FONT_BIG = 0;
-    byte FONT_SMALL = 1;
-    byte STRING_COLOR_YELLOW = 0;
-    byte STRING_COLOR_RED = 1;
-    byte STRING_COLOR_BLUE = 2;
-    byte WIDTH = 0;
-    byte HIGHT = 1;
     //типы индексного элемента
     byte T_FRAME = 0;
     byte T_SPRITE = 1;
@@ -59,30 +50,4 @@ public interface Render {
     public int getFrameH(int id);
 
     EmitProcess createEmitter(int pos, int i, int i1);
-
-
-    /**@deprecated*/
-    void drawString(Graphics graphics, String string, int x, int y, int anchor, byte font);
-
-    /**@deprecated*/
-    void setFont(byte font);
-
-    /**@deprecated*/
-    byte getFont();
-
-    /**@deprecated*/
-    int getSpriteId(int c);
-
-    /**@deprecated*/
-    int getStringWidth(String string);
-
-    /**@deprecated*/
-    int getCharWidth(int id);
-
-    /**@deprecated*/
-    int getCustomFontHeight();
-
-    /**@deprecated*/
-    int getCustomFontBaseLine();
-
 }

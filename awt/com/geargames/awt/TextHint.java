@@ -17,7 +17,6 @@ import com.geargames.common.util.Region;
  */
 public class TextHint extends PopUp {
     private TextArea textArea;
-    private DrawablePElement drawableTextArea;
     private ItemSkin topLeftSkin;
     private ItemSkin topMiddleSkin;
     private ItemSkin topRightSkin;
@@ -61,7 +60,6 @@ public class TextHint extends PopUp {
 
     private TextHint() {
         textArea = new TextArea();
-        drawableTextArea.setElement(textArea);
         evaluatedRegion = new Region();
         graphicsStrategy = new LinearVanishingStrategy();
 
@@ -77,7 +75,6 @@ public class TextHint extends PopUp {
     }
 
     private void init(com.geargames.common.String text, PFont font, int color, boolean scrollable, int time, int vanishTime, int margin) {
-        textArea = (TextArea) drawableTextArea.getElement();
         textArea.setData(text);
         textArea.setFont(font);
         textArea.setColor(color);
@@ -100,7 +97,7 @@ public class TextHint extends PopUp {
      * @param font
      * @return
      */
-    public static TextHint show(String data, int x, int y, PFont font) {
+    public static void show(String data, int x, int y, PFont font) {
         if (instance == null) {
             instance = new TextHint();
             instance.setClickListener(HintClickListener.getInstance());
@@ -111,8 +108,6 @@ public class TextHint extends PopUp {
         instance.reset();
         instance.setX(x);
         instance.setY(y);
-
-        return instance;
     }
 
     /**
@@ -123,19 +118,8 @@ public class TextHint extends PopUp {
      * @param y
      * @return
      */
-    public static TextHint show(String data, int x, int y) {
-        if (instance == null) {
-            instance = new TextHint();
-            instance.setClickListener(HintClickListener.getInstance());
-        }
-        instance.init(data, null, 0, false, 50, 10, 10);
-        instance.setData(data);
-        instance.setTime(50);
-        instance.reset();
-        instance.setX(x);
-        instance.setY(y);
-
-        return instance;
+    public static void show(String data, int x, int y) {
+        show(data,x,y,null);
     }
 
     public void reset() {
@@ -157,16 +141,16 @@ public class TextHint extends PopUp {
         topLeftSkin.copyTo(bottomRightSkin);
     }
 
-    public void setData(String data) {
+    private void setData(String data) {
         textArea.setData(data);
         initiated = false;
     }
 
-    public void setTime(int time) {
+    private void setTime(int time) {
         graphicsStrategy.setTime(time);
     }
 
-    public void setVanishTime(int vanishTime) {
+    private void setVanishTime(int vanishTime) {
         graphicsStrategy.setTransparencyTime(vanishTime);
     }
 
@@ -206,14 +190,6 @@ public class TextHint extends PopUp {
         return bottomRightSkin;
     }
 
-    public int getMinMargin() {
-        return margin;
-    }
-
-    public void setMinMargin(int margin) {
-        this.margin = margin;
-    }
-
     public void setY(int top) {
         this.top = top;
         initiated = false;
@@ -227,7 +203,6 @@ public class TextHint extends PopUp {
         this.left = left;
         initiated = false;
     }
-
 
     public int getX() {
         return left;
@@ -268,8 +243,6 @@ public class TextHint extends PopUp {
                 top = -fullRegionHeight + Port.getScreenH();
             }
             int vMargin = (fullRegionHeight - regionHeight) >> 1;
-            drawableTextArea.setY(top);
-            drawableTextArea.setX(left);
 
             textArea.getDrawRegion().setMinY(vMargin);
             textArea.getDrawRegion().setMinX(margin);
@@ -291,11 +264,7 @@ public class TextHint extends PopUp {
         return textArea;
     }
 
-    public ClickListener getClickListener() {
-        return listener;
-    }
-
-    public void setClickListener(ClickListener listener) {
+    private void setClickListener(ClickListener listener) {
         this.listener = listener;
     }
 

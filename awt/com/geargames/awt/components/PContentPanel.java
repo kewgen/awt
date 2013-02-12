@@ -2,9 +2,11 @@ package com.geargames.awt.components;
 
 import com.geargames.common.Event;
 import com.geargames.common.packer.Index;
+import com.geargames.common.packer.IndexObject;
 import com.geargames.common.packer.PObject;
 import com.geargames.common.util.ArrayList;
 import com.geargames.common.Graphics;
+import com.geargames.common.util.NullRegion;
 
 /**
  * User: mikhail v. kutuzov
@@ -17,11 +19,27 @@ public abstract class PContentPanel extends PObjectElement {
     private ArrayList activeChildren;
 
     public PContentPanel(PObject prototype) {
-        super(prototype);
+        this(prototype, true);
+    }
 
+    public PContentPanel(PObject prototype, boolean assignDynamic) {
+        super(prototype);
         children = new ArrayList();
         activeChildren = new ArrayList();
         dedicatedConsumer = null;
+
+        if (assignDynamic) {
+            ArrayList indexes = prototype.getIndexes();
+            for (int i = 0; i < indexes.size(); i++) {
+                IndexObject index = (IndexObject) indexes.get(i);
+                if (!index.isSlot()) {
+                    PPrototypeElement simple = new PPrototypeElement();
+                    simple.setPrototype(index.getPrototype());
+                    addPassiveChild(simple, index.getX(), index.getY());
+                    simple.setRegion(NullRegion.instance);
+                }
+            }
+        }
     }
 
     /**
@@ -63,13 +81,15 @@ public abstract class PContentPanel extends PObjectElement {
      * @return
      */
     public boolean event(int code, int param, int xTouch, int yTouch) {
-        if (code >= Event.EVENT_KEY_PRESSED && code <= Event.EVENT_KEY_DOWN) {
-            if (getTouchRegion().isWithIn(xTouch, yTouch)) {
-                if (dedicatedConsumer != null) {
-                    if (!dedicatedConsumer.event(code, param, xTouch - dedicatedConsumer.getX(), yTouch - dedicatedConsumer.getY())) {
-                        dedicatedConsumer = null;
-                    }
-                } else {
+        if (dedicatedConsumer != null) {
+            if (!dedicatedConsumer.event(code, param, xTouch - dedicatedConsumer.getX(), yTouch - dedicatedConsumer.getY())) {
+                dedicatedConsumer = null;
+            } else {
+                return true;
+            }
+        } else {
+            if (code >= Event.EVENT_KEY_PRESSED && code <= Event.EVENT_KEY_DOWN) {
+                if (getTouchRegion().isWithIn(xTouch, yTouch)) {
                     int size = getActiveChildren().size();
                     for (int i = 0; i < size; i++) {
                         PElement child = (PElement) getActiveChildren().get(i);
@@ -83,12 +103,12 @@ public abstract class PContentPanel extends PObjectElement {
                         }
                     }
                 }
-            }
-        } else {
-            int size = getActiveChildren().size();
-            for (int i = 0; i < size; i++) {
-                PElement child = (PElement) getActiveChildren().get(i);
-                child.event(code, param, xTouch, yTouch);
+            } else {
+                int size = getActiveChildren().size();
+                for (int i = 0; i < size; i++) {
+                    PElement child = (PElement) getActiveChildren().get(i);
+                    child.event(code, param, xTouch, yTouch);
+                }
             }
         }
         return false;
@@ -120,7 +140,7 @@ public abstract class PContentPanel extends PObjectElement {
         activeChildren.add(element);
     }
 
-    public void addActiveChild(PElement element, Index index){
+    public void addActiveChild(PElement element, Index index) {
         addActiveChild(element, index.getX(), index.getY());
     }
 
@@ -135,7 +155,7 @@ public abstract class PContentPanel extends PObjectElement {
         children.add(element);
     }
 
-    public void addPassiveChild(PElement element, Index index){
+    public void addPassiveChild(PElement element, Index index) {
         addPassiveChild(element, index.getX(), index.getY());
     }
 

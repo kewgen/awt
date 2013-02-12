@@ -32,7 +32,7 @@ public class Recorder {
      * RMF
      * ******************************************************************************
      */
-    public static synchronized boolean RMSStoreSave(MIDlet midlet, String name, ByteArrayOutputStream baos, boolean isEncoded) {//synchronized - исключаем совместный доступ
+    public static synchronized boolean RMSStoreSave(String name, ByteArrayOutputStream baos, boolean isEncoded) {//synchronized - исключаем совместный доступ
         byte[] data = baos.toByteArray();
 
         if (isEncoded) Recorder.xoreArray(Recorder.key, data, 0, data.length);
@@ -55,7 +55,7 @@ public class Recorder {
         return false;
     }
 
-    public static synchronized boolean RMSStoreSave(MIDlet midlet, String name, ArrayByte arrayByte, boolean isEncoded, int portData) {//synchronized - исключаем совместный доступ
+    public static synchronized boolean RMSStoreSave(String name, ArrayByte arrayByte, boolean isEncoded, int portData) {//synchronized - исключаем совместный доступ
         byte[] data = arrayByte.getArray();
 
         if (isEncoded) Recorder.xoreArray(Recorder.key, data, 0, data.length);
@@ -78,7 +78,7 @@ public class Recorder {
         return false;
     }
 
-    public static ArrayByte RMSStoreRead(MIDlet midlet, String name, boolean isEncoded) {
+    public static ArrayByte RMSStoreRead(String name, boolean isEncoded) {
         File file = new File(name + ".storage");
         byte data[] = null;
         if (!file.exists()) return null;
@@ -99,7 +99,7 @@ public class Recorder {
         return new ArrayByte(data, 0);
     }
 
-    public static boolean RMSStoreExist(MIDlet midlet, String name) {
+    public static boolean RMSStoreExist(String name) {
         File file = new File(name + ".storage");
          return file.exists();
     }
@@ -128,13 +128,18 @@ public class Recorder {
         return true;
     }
 
-    public static boolean RMSStoreDelete(MIDlet midlet, String name) {
-        File file = new File(name + ".storage");
-        if (!file.exists()) return false;
-        if (!file.delete()) return false;
-
-        if (DEBUG_RMS) Debug.trace("Recorder.RMSStoreDelete, path " + file.getAbsolutePath());
-        return true;
+    public static void RMSStoreDelete(String name) {
+/*
+       try {
+           Manager.logEx("RMS. Delete, " + name);
+           RecordStore.deleteRecordStore(name);
+       } catch (RecordStoreNotFoundException e) {
+           if (DEBUG_RMS) Manager.logEx("RMS. Delete. Record not found, name:" + name);
+       } catch (RecordStoreException e) {
+           if (DEBUG_RMS) Manager.logEx(e);
+           Manager.logEx(e);
+       }
+*/
     }
 
     public static int RMSRecordSave(String name, byte[] data, int rec) {

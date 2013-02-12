@@ -89,7 +89,7 @@ public class ScrollHelper {
             stubMotionListener.create(getYBegin(region, itemsAmount, itemSize, format));
             return stubMotionListener;
         } else {
-            return adjustInertMotionListener(elasticInertMotionListener, region, itemsAmount, itemSize);
+            return adjustVerticalInertMotionListener(elasticInertMotionListener, region, itemsAmount, itemSize);
         }
     }
 
@@ -102,7 +102,7 @@ public class ScrollHelper {
             stubMotionListener.create(getXBegin(region, itemsAmount, itemSize, format));
             return stubMotionListener;
         } else {
-            return createCenteredMenuMotionListener(centeredElasticInertMotionListener, region, itemsAmount, itemSize, itemOffset);
+            return adjustHorizontalCenteredMenuMotionListener(centeredElasticInertMotionListener, region, itemsAmount, itemSize, itemOffset);
         }
     }
 
@@ -127,7 +127,7 @@ public class ScrollHelper {
             stubMotionListener.create(getXBegin(region, itemsAmount, itemSize, format) + itemOffset + (itemMargin >> 1));
             return stubMotionListener;
         } else {
-            return adjustInertMotionListener(inertMotionListener, region, itemsAmount, itemSize);
+            return adjustHorizontalInertMotionListener(inertMotionListener, region, itemsAmount, itemSize);
         }
     }
 
@@ -139,9 +139,15 @@ public class ScrollHelper {
      * @param itemSize линейный размер элемента списка
      * @return
      */
-    public static InertMotionListener adjustInertMotionListener(InertMotionListener motionListener, Region region, int itemsAmount, int itemSize) {
+    public static InertMotionListener adjustVerticalInertMotionListener(InertMotionListener motionListener, Region region, int itemsAmount, int itemSize) {
         int size = itemsAmount * itemSize;
         motionListener.create(region.getMinY(), region.getMaxY(), size);
+        return motionListener;
+    }
+
+    public static InertMotionListener adjustHorizontalInertMotionListener(InertMotionListener motionListener, Region region, int itemsAmount, int itemSize) {
+        int size = itemsAmount * itemSize;
+        motionListener.create(region.getMinX(), region.getMaxX(), size);
         return motionListener;
     }
 
@@ -155,7 +161,7 @@ public class ScrollHelper {
      * @param itemOffset сдвиг элемента списка
      * @return
      */
-    public static MotionListener createCenteredMenuMotionListener(CenteredElasticInertMotionListener motionListener, Region region, int itemsAmount, int itemSize, int itemOffset) {
+    public static CenteredElasticInertMotionListener adjustHorizontalCenteredMenuMotionListener(CenteredElasticInertMotionListener motionListener, Region region, int itemsAmount, int itemSize, int itemOffset) {
         int size = itemsAmount * itemSize;
         motionListener.create(region.getMinX(), itemOffset, size, itemSize);
         return motionListener;

@@ -1,7 +1,6 @@
 package com.geargames.pfp;
 
 import com.geargames.common.Manager;
-import com.geargames.packer.Image;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,13 +16,5 @@ public class MyGLRenderer {
 
     public boolean isTexturesLoaded() {
         return true;
-    }
-
-    public void onPause() {
-
-    }
-
-    public void renderSplash(Image image, short elEnd) {
-
     }
 }

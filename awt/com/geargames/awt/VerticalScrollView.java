@@ -1,6 +1,7 @@
 package com.geargames.awt;
 
-import com.geargames.awt.utils.ItemSkin;
+import com.geargames.awt.components.PElement;
+import com.geargames.awt.components.PPrototypeElement;
 import com.geargames.awt.utils.MotionListener;
 import com.geargames.common.Event;
 import com.geargames.common.Graphics;
@@ -24,29 +25,28 @@ public abstract class VerticalScrollView extends VerticalScrollableArea {
         setInitiated(false);
     }
 
-    public void initiate(Graphics graphics) {
-        setInitiated(true);
-    }
-
     public boolean event(int code, int param, int x, int y) {
         int number;
         boolean result = super.event(code, param, x, y);
         if (getTouchRegion().isWithIn(x, y)) {
-            switch (code) {
-                case Event.EVENT_TOUCH_PRESSED:
-                    touchX = x;
-                    touchY = y;
-                    break;
-                case Event.EVENT_TOUCH_RELEASED:
-                    if (Math.abs(touchX - x) <= Port.TOUCH_ROUND && Math.abs(touchY - y) <= Port.TOUCH_ROUND) {
-                        number = getNumber(y);
-                        if (number >= 0 && number <= getItemsAmount() - 1) {
-                            getMotionListener().onClick(number);
-                            ScrollViewItem viewItem = (ScrollViewItem) getItems().elementAt(number);
-                            viewItem.click(number);
-                        }
+            if (code != Event.EVENT_TICK) {
+                number = getNumber(y);
+                if (number >= 0 && number <= getItemsAmount() - 1) {
+                    switch (code) {
+                        case Event.EVENT_TOUCH_PRESSED:
+                            touchX = x;
+                            touchY = y;
+                            break;
+                        case Event.EVENT_TOUCH_RELEASED:
+                            if (Math.abs(touchX - x) <= Port.TOUCH_ROUND && Math.abs(touchY - y) <= Port.TOUCH_ROUND) {
+                                getMotionListener().onClick(number);
+                                ((PElement) getItems().elementAt(number)).event(code, param, x, y);
+                                ((PElement) getItems().elementAt(number)).event(Event.EVENT_SYNTHETIC_CLICK, number, x, y);
+                            }
+                            return result;
                     }
-                    break;
+                    ((PElement) getItems().elementAt(number)).event(code, param, x, y);
+                }
             }
         }
         return result;
@@ -54,10 +54,13 @@ public abstract class VerticalScrollView extends VerticalScrollableArea {
 
 
     private int getNumber(int y) {
-        int i;
-        i = (-getPosition() + getItemSkin().getOffsetY() + y) / getItemSize();
-        if (y - getPosition() + getItemSkin().getOffsetY() > i * getItemSize() + getItemSkin().getHeight()) {
-            i = -1;
+        int length = -getPosition() + y;
+        if(length % getItemSize() > getItemSize() - margin){
+            return -1;
+        }
+        int i = length / getItemSize();
+        if (length > i * getItemSize() + getPrototype().getDrawRegion().getHeight()) {
+            return -1;
         }
         return i;
     }
@@ -80,11 +83,11 @@ public abstract class VerticalScrollView extends VerticalScrollableArea {
     }
 
     public int getItemSize() {
-        return getItemSkin().getHeight() + margin;
+        return getPrototype().getDrawRegion().getHeight() + margin;
     }
 
     public void drawItem(Graphics graphics, int itemIndex, int position, int coordinate) {
-       ((ScrollViewItem) getItems().elementAt(itemIndex)).draw(graphics, coordinate, position + margin);
+        ((PElement) getItems().elementAt(itemIndex)).draw(graphics, coordinate, position);
     }
 
     /**
@@ -92,14 +95,14 @@ public abstract class VerticalScrollView extends VerticalScrollableArea {
      *
      * @return
      */
-    public abstract ItemSkin getItemSkin();
+    public abstract PPrototypeElement getPrototype();
 
     /**
      * Вернуть наибольшее количество целых элементов которое может быть видимо в списке.
      *
      * @return
      */
-    public int getShowedItemsAmount() {
+    public int getShownItemsAmount() {
         return getDrawRegion().getHeight() / getItemSize();
     }
 
@@ -107,7 +110,6 @@ public abstract class VerticalScrollView extends VerticalScrollableArea {
      * Вернуть вектор элементов списка.
      *
      * @return
-     * @See ScrollViewItem
      */
     public abstract Vector getItems();
 

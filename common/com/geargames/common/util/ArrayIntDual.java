@@ -62,14 +62,11 @@ public class ArrayIntDual implements Array {
     }
 
     public ArrayIntDual copy() {
-        ArrayIntDual ab = new ArrayIntDual(length());
-        for (int i = 0; i < length(); i++) {
-            if (length(i) > 0) {
-                ab.createY(i, length(i));
-                System.arraycopy(get(i), 0, ab.get(i), 0, length(i));
-            }
+        int[][] arrayNew = new int[length()][length(0)];
+        for (int y = 0; y < length(); y++) {
+            System.arraycopy(array[y], 0, arrayNew[y], 0, length(0));
         }
-        return ab;
+        return new ArrayIntDual(arrayNew);
     }
 
     private int sizeY;

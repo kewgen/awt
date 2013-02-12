@@ -59,39 +59,34 @@ public abstract class VerticalScrollableArea extends ScrollableArea {
         if (getMotionListener() == null) {
             return false;
         }
-        switch (code) {
-            case Event.EVENT_TICK:
-                getMotionListener().onTick();
-                return false;
-        }
-        if (!isStuck()) {
-            if (getTouchRegion().isWithIn(x, y)) {
-                switch (code) {
-                    case Event.EVENT_KEY_RELEASED:
-                    case Event.EVENT_TOUCH_RELEASED:
-                        getMotionListener().onRelease(y);
-                        break;
-                    case Event.EVENT_KEY_REPEATED:
-                    case Event.EVENT_TOUCH_MOVED:
-                        getMotionListener().onMove(y);
-                        break;
-                    case Event.EVENT_KEY_PRESSED:
-                    case Event.EVENT_TOUCH_PRESSED:
-                        getMotionListener().onTouch(y);
-                        break;
+        if (code == Event.EVENT_TICK) {
+            getMotionListener().onTick();
+            return false;
+        } else {
+            if (!isStuck()) {
+                if (getTouchRegion().isWithIn(x, y)) {
+                    switch (code) {
+                        case Event.EVENT_KEY_RELEASED:
+                        case Event.EVENT_TOUCH_RELEASED:
+                            getMotionListener().onRelease(y);
+                            break;
+                        case Event.EVENT_KEY_REPEATED:
+                        case Event.EVENT_TOUCH_MOVED:
+                            getMotionListener().onMove(y);
+                            break;
+                        case Event.EVENT_KEY_PRESSED:
+                        case Event.EVENT_TOUCH_PRESSED:
+                            getMotionListener().onTouch(y);
+                            break;
+                    }
+                    return true;
+                } else {
+                    getMotionListener().onOutOfBounds();
+                    return false;
                 }
-                return true;
             } else {
-                switch (code) {
-                    case Event.EVENT_KEY_REPEATED:
-                    case Event.EVENT_TOUCH_MOVED:
-                        getMotionListener().onOutOfBounds();
-                        break;
-                }
                 return false;
             }
-        } else {
-            return false;
         }
     }
 

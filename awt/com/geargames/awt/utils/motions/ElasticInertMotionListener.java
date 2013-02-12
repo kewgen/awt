@@ -92,7 +92,7 @@ public class ElasticInertMotionListener extends MotionListener {
             } else {
                 if (position > top) {
                     position -= position - top > backSpeed ? backSpeed : position - top;
-                } else if (position != top && position < down - window) {
+                } else if (position != top && position + window < down) {
                     position += down - window - position > backSpeed ? backSpeed : down - window - position;
                 } else {
                     int margin = (-position + top) % itemSize;

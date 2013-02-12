@@ -10,7 +10,7 @@ import com.geargames.packer.Canvas;
  */
 public abstract class Manager extends com.geargames.common.Manager {
 
-    //abstract public MIDlet getMidlet();
+    abstract public MIDlet getMidlet();
 
     abstract public Canvas getCanvas();
 

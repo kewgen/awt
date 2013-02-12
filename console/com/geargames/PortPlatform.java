@@ -19,10 +19,6 @@ public class PortPlatform extends Port {
         setScale(Port.scale);//обновляем масштабируемость при изменении размеров экрана
     }
 
-    public static long getIMEI_OLD(Object/*MIDlet*/ miDlet) {
-        return 1;
-    }
-
     public static long getIMEI(Object/*MIDlet*/ miDlet) {
         return 1;
     }

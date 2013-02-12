@@ -20,11 +20,6 @@ public class Result {
     public static final int IOEXCEPTION = 14;
     public static final int STREAM_CLOSE_EXCEPTION = 15;
     public static final int SOCKET_TIMEOUT_EXCEPTION = 16;
-    public static final int SOCKET_URLCONNECT_EXCEPTION = 17;
-    public static final int SEND_EXCEPTION = 18;
-    public static final int DATA_LEN_ERROR = 19;
-    public static final int RESPONSE_EXCEPTION = 20;
-    public static final int INCORRECT_ANSWER = 21;
 
     private Result(ArrayByte data, int errorID) {
         this.data = data;
