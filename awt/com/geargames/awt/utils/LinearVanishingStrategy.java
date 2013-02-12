@@ -35,7 +35,7 @@ public class LinearVanishingStrategy extends GraphicsStrategy {
                 return;
             }
             long tTime = time - tick;
-            if (tTime < transparencyTime) {
+            if (tTime <= transparencyTime) {
                 int old = graphics.getTransparency();
                 graphics.setTransparency((int) (100 - ((100 * tTime) / transparencyTime)));
                 drawable.superDraw(graphics);
