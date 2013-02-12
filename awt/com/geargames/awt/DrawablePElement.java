@@ -19,7 +19,7 @@ public class DrawablePElement extends Drawable {
     private PElement element;
 
     /**
-     * Прорисовываем элемент содержимого так, чтоб его левый верхний угол совпадал с координатами (0:0) окна.
+     * Прорисовываем компонент пррисовки так, чтоб его левый верхний угол совпадал с координатами (0:0) окна.
      * @param graphics
      */
     public void draw(Graphics graphics) {
@@ -27,7 +27,7 @@ public class DrawablePElement extends Drawable {
     }
 
     /**
-     * Передаём панели содержимого(чаще всего) или просто элементу содержимого координаты события в его собственной
+     * Передаём компоненту прорисовки координаты события в его собственной
      * системе координат.
      * @param code
      * @param param
@@ -64,6 +64,10 @@ public class DrawablePElement extends Drawable {
         return element.getDrawRegion().getWidth();
     }
 
+    /**
+     * Вернуть компонент для прорисовки.
+     * @return
+     */
     public PElement getElement() {
         return element;
     }
@@ -72,6 +76,10 @@ public class DrawablePElement extends Drawable {
         this.element = element;
     }
 
+    /**
+     * Вернуть экранный якорь компонента прорисовки.
+     * @return
+     */
     public byte getAnchor() {
         return anchor;
     }
@@ -80,6 +88,10 @@ public class DrawablePElement extends Drawable {
         this.anchor = anchor;
     }
 
+    /**
+     * Настройка расположения окна для компонента прорисовки на экране, в случае
+     * простановки ему экранного якоря.
+     */
     public void init(){
         switch (anchor){
             case Anchors.NONE_ANCHOR:
