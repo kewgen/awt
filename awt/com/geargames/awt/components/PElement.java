@@ -5,6 +5,7 @@ import com.geargames.common.Graphics;
 
 /**
  * User: mikhail v. kutuzov
+ * Базовый компонент любой игровой панели.
  */
 public abstract class PElement {
     private int x;
@@ -64,6 +65,7 @@ public abstract class PElement {
         this.y = y;
     }
 
+    //TODO нужно ли элементу игровой панели становится не видимым на этой панели? по-моему - нет.
     /**
      * Видим ли компонент на своём родителе.
      * @return

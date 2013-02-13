@@ -1,6 +1,6 @@
 package com.geargames.awt.utils.motions;
 
-import com.geargames.awt.HorizontalScrollView;
+import com.geargames.awt.components.HorizontalScrollView;
 
 /**
  * User: mkutuzov

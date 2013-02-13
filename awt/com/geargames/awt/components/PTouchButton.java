@@ -25,11 +25,8 @@ public abstract class PTouchButton extends PButton {
     public boolean event(int code, int param, int x, int y) {
         switch (code) {
             case Event.EVENT_TOUCH_PRESSED:
-                if (getTouchRegion().isWithIn(x, y)) {
-                    setState(true);
-                    return true;
-                }
-                break;
+                setState(true);
+                return true;
             case Event.EVENT_TOUCH_RELEASED:
                 if (isState() && getTouchRegion().isWithIn(x, y)) {
                     action();

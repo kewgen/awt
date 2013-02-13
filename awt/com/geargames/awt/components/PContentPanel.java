@@ -88,23 +88,20 @@ public abstract class PContentPanel extends PObjectElement {
                 return true;
             }
         } else {
-            if (code >= Event.EVENT_KEY_PRESSED && code <= Event.EVENT_KEY_DOWN) {
-                if (getTouchRegion().isWithIn(xTouch, yTouch)) {
-                    int size = getActiveChildren().size();
-                    for (int i = 0; i < size; i++) {
-                        PElement child = (PElement) getActiveChildren().get(i);
-                        if (child.isVisible()) {
-                            int x = xTouch - child.getX();
-                            int y = yTouch - child.getY();
-                            if (child.event(code, param, x, y)) {
-                                dedicatedConsumer = child;
-                                return true;
-                            }
+            int size = getActiveChildren().size();
+            if (code != Event.EVENT_TICK) {
+                for (int i = 0; i < size; i++) {
+                    PElement child = (PElement) getActiveChildren().get(i);
+                    if (child.isVisible()) {
+                        int x = xTouch - child.getX();
+                        int y = yTouch - child.getY();
+                        if (child.getTouchRegion().isWithIn(x, y) && child.event(code, param, x, y)) {
+                            dedicatedConsumer = child;
+                            return true;
                         }
                     }
                 }
             } else {
-                int size = getActiveChildren().size();
                 for (int i = 0; i < size; i++) {
                     PElement child = (PElement) getActiveChildren().get(i);
                     child.event(code, param, xTouch, yTouch);
