@@ -19,7 +19,7 @@ public class DrawablePElement extends Drawable {
     private PElement element;
 
     /**
-     * Прорисовываем компонент пррисовки так, чтоб его левый верхний угол совпадал с координатами (0:0) окна.
+     * Прорисовываем компонент прорисовки так, чтоб его левый верхний угол совпадал с координатами (0:0) окна.
      * @param graphics
      */
     public void draw(Graphics graphics) {
@@ -27,8 +27,7 @@ public class DrawablePElement extends Drawable {
     }
 
     /**
-     * Передаём компоненту прорисовки координаты события в его собственной
-     * системе координат.
+     * Передаём компоненту прорисовки координаты события в его собственной системе координат.
      * @param code
      * @param param
      * @param x
