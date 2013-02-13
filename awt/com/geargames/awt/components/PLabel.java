@@ -12,7 +12,7 @@ import com.geargames.common.String;
  * Легкая метка, для рисования на панели содержимого.
  */
 public abstract class PLabel extends PElement {
-    private String data;
+    private String data; // TODO Переименовать в value, text или caption
     private PFont font;
     private byte anchor;
 

@@ -11,17 +11,25 @@ import com.geargames.common.packer.PObject;
  */
 public class PGradualSpinButton extends PTouchButton {
     private byte counter;
-    private byte fps;
+//    private final int fps = Application.mult_fps * 8; // TODO Использовать константу из Application
+    private int fps;
     private int tickCounter;
     private PGradualSpinBox box;
     private byte direction = 0;
 
-    public PGradualSpinButton(PObject prototype, int fps, boolean direction) {
+    public PGradualSpinButton(PObject prototype, boolean direction) {
         super(prototype);
-        this.fps = (byte) fps;
         tickCounter = 0;
         counter = 0;
         this.direction = (byte) (direction ? 1 : -1);
+    }
+
+    public int getFps() {
+        return fps;
+    }
+
+    public void setFps(int fps) {
+        this.fps = fps;
     }
 
     protected void second() {

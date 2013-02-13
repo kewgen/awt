@@ -19,6 +19,7 @@ import com.geargames.common.util.Region;
  */
 public class TextHint extends PopUp {
     private TextArea textArea;
+
     private ItemSkin topLeftSkin;
     private ItemSkin topMiddleSkin;
     private ItemSkin topRightSkin;
@@ -37,6 +38,17 @@ public class TextHint extends PopUp {
     private Region evaluatedRegion;
     private LinearVanishingStrategy graphicsStrategy;
     private ClickListener listener;
+
+    private static TextHint instance;
+
+    public static TextHint getInstance()
+    {
+        if (instance == null) {
+            instance = new TextHint();
+            instance.setClickListener(HintClickListener.getInstance());
+        }
+        return instance;
+    }
 
     public void draw(Graphics graphics) {
         graphicsStrategy.draw(graphics, this);
@@ -58,10 +70,9 @@ public class TextHint extends PopUp {
         return false;
     }
 
-    private static TextHint instance;
-
     private TextHint() {
         textArea = new TextArea();
+
         evaluatedRegion = new Region();
         graphicsStrategy = new LinearVanishingStrategy();
 
@@ -74,20 +85,21 @@ public class TextHint extends PopUp {
         bottomLeftSkin = new ItemSkin();
         bottomMiddleSkin = new ItemSkin();
         bottomRightSkin = new ItemSkin();
+        initiated = false;
     }
 
+    // TODO : Избавиться от метода
     private void init(com.geargames.common.String text, PFont font, int color, boolean scrollable, int time, int vanishTime, int margin) {
         textArea.setData(text);
         textArea.setFont(font);
         textArea.setColor(color);
         textArea.setFormat(Graphics.HCENTER | Graphics.TOP);
-        initiated = false;
         textArea.setEllipsis(!scrollable);
         graphicsStrategy.setTime(time);
         graphicsStrategy.setTransparencyTime(vanishTime);
         edgeRegion = new Region();
-
         this.margin = margin;
+        initiated = false;
     }
 
     /**
@@ -100,13 +112,8 @@ public class TextHint extends PopUp {
      * @return
      */
     public static void show(String data, int x, int y, PFont font) {
-        if (instance == null) {
-            instance = new TextHint();
-            instance.setClickListener(HintClickListener.getInstance());
-        }
+        getInstance();
         instance.init(data, font, 0, false, 50, 10, 10);
-        instance.setData(data);
-        instance.setTime(50);
         instance.reset();
         instance.setX(x);
         instance.setY(y);
@@ -121,7 +128,7 @@ public class TextHint extends PopUp {
      * @return
      */
     public static void show(String data, int x, int y) {
-        show(data,x,y,null);
+        show(data, x, y, null);
     }
 
     public void reset() {
@@ -192,17 +199,12 @@ public class TextHint extends PopUp {
         return bottomRightSkin;
     }
 
-    public void setY(int top) {
-        this.top = top;
-        initiated = false;
-    }
-
     public int getY() {
         return top;
     }
 
-    public void setX(int left) {
-        this.left = left;
+    public void setY(int top) {
+        this.top = top;
         initiated = false;
     }
 
@@ -210,10 +212,14 @@ public class TextHint extends PopUp {
         return left;
     }
 
+    public void setX(int left) {
+        this.left = left;
+        initiated = false;
+    }
+
     public void hide() {
         setTime(0);
     }
-
 
     protected Region getRegionToDraw(Graphics graphics) {
         if (!initiated) {
@@ -244,12 +250,13 @@ public class TextHint extends PopUp {
             if (top + fullRegionHeight > Port.getScreenH()) {
                 top = -fullRegionHeight + Port.getScreenH();
             }
-            int vMargin = (fullRegionHeight - regionHeight) >> 1;
+            int vertMargin = (fullRegionHeight - regionHeight) >> 1;
 
-            textArea.getDrawRegion().setMinY(vMargin);
-            textArea.getDrawRegion().setMinX(margin);
-            textArea.getDrawRegion().setWidth(regionWidth);
-            textArea.getDrawRegion().setHeight(regionHeight);
+            Region drawRegion = textArea.getDrawRegion();
+            drawRegion.setMinX(margin);
+            drawRegion.setMinY(vertMargin);
+            drawRegion.setWidth(regionWidth);
+            drawRegion.setHeight(regionHeight);
             textArea.setInitiated(false);
 
             edgeRegion.setMinX(left);

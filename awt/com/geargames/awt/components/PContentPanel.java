@@ -19,31 +19,39 @@ public abstract class PContentPanel extends PObjectElement {
     private ArrayList activeChildren;
 
     public PContentPanel(PObject prototype) {
-        this(prototype, true);
-    }
-
-    public PContentPanel(PObject prototype, boolean assignDynamic) {
         super(prototype);
         children = new ArrayList();
         activeChildren = new ArrayList();
         dedicatedConsumer = null;
 
-        if (assignDynamic) {
-            ArrayList indexes = prototype.getIndexes();
-            for (int i = 0; i < indexes.size(); i++) {
-                IndexObject index = (IndexObject) indexes.get(i);
-                if (!index.isSlot()) {
-                    PPrototypeElement simple = new PPrototypeElement();
-                    simple.setPrototype(index.getPrototype());
-                    addPassiveChild(simple, index.getX(), index.getY());
-                    simple.setRegion(NullRegion.instance);
-                }
+        ArrayList indexes = prototype.getIndexes();
+        for (int i = 0; i < indexes.size(); i++) {
+            IndexObject index = (IndexObject) indexes.get(i);
+            if (index.isSlot()) {
+                createSlotElementByIndex(index);
+            } else {
+                createDefaultElementByIndex(index);
             }
         }
     }
 
     /**
-     * Вернуть сдесь объекты которые изображаются на панели.
+     * Создать "слотовый" объект по индексу объекта.
+     */
+    protected abstract void createSlotElementByIndex(IndexObject index);
+
+    /**
+     * Создать все остальные не "слотовые" объекты по индексу объекта.
+     */
+    protected void createDefaultElementByIndex(IndexObject index) {
+        PPrototypeElement simple = new PPrototypeElement();
+        simple.setPrototype(index.getPrototype());
+        addPassiveChild(simple, index.getX(), index.getY());
+        simple.setRegion(NullRegion.instance);
+    }
+
+    /**
+     * Вернуть здесь объекты, которые изображаются на панели.
      *
      * @return
      */

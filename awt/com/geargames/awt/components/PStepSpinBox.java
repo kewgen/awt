@@ -14,37 +14,32 @@ public class PStepSpinBox extends PValueComponent  {
     private short value;
     private boolean initiated;
     private PLabel label;
-    private PStepSpinButton up;
-    private PStepSpinButton down;
+    private PStepSpinButton buttonUp;
+    private PStepSpinButton buttonDown;
 
     public PStepSpinBox(PObject prototype) {
         super(prototype);
-
-        ArrayList indexes = prototype.getIndexes();
-        for (int i = 0; i < indexes.size(); i++) {
-            IndexObject index = (IndexObject) indexes.get(i);
-            if (index.isSlot()) {
-                switch (index.getSlot()) {
-                    case 0:
-                        down = new PStepSpinButton((PObject)index.getPrototype());
-                        down.setBox(this);
-                        addActiveChild(down, index);
-                        break;
-                    case 1:
-                        up = new PStepSpinButton((PObject)index.getPrototype());
-                        up.setBox(this);
-                        addActiveChild(up, index);
-                        break;
-                    case 2:
-                        label = new PSimpleLabel(index);
-                        addActiveChild(label, index);
-                        break;
-                }
-            }
-        }
         initiated = false;
     }
 
+    protected void createSlotElementByIndex(IndexObject index) {
+        switch (index.getSlot()) {
+            case 0:
+                buttonDown = new PStepSpinButton((PObject)index.getPrototype());
+                buttonDown.setBox(this);
+                addActiveChild(buttonDown, index);
+                break;
+            case 1:
+                buttonUp = new PStepSpinButton((PObject)index.getPrototype());
+                buttonUp.setBox(this);
+                addActiveChild(buttonUp, index);
+                break;
+            case 2:
+                label = new PSimpleLabel(index);
+                addActiveChild(label, index);
+                break;
+        }
+    }
 
     public void draw(Graphics graphics, int x, int y) {
         if(!initiated){
@@ -68,8 +63,8 @@ public class PStepSpinBox extends PValueComponent  {
     }
 
     public void setStep(byte step){
-        up.setStep(step);
-        down.setStep((byte)-step);
+        buttonUp.setStep(step);
+        buttonDown.setStep((byte)-step);
     }
 
     public void setFont(PFont font){
