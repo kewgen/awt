@@ -57,12 +57,7 @@ public abstract class PPanelManager {
                 ((Drawable) callableElements.get(i)).event(code, param, x, y);
             }
         } else {
-            if (code == Event.EVENT_TICK) {
-                if (Drawable.DEBUG) {
-                    Debug.trace("TICK-TACK");
-                }
-            }
-            modal.event(code, param, x, y);
+            modal.modalEvent(code, param, x, y);
         }
     }
 

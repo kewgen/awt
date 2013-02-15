@@ -64,6 +64,21 @@ public class DrawablePElement extends Drawable {
         return dedicated;
     }
 
+    /**
+     * Передаём все события в модальном режиме.
+     * @param code
+     * @param param
+     * @param x
+     * @param y
+     * @return
+     */
+    public boolean modalEvent(int code, int param, int x, int y){
+        Region region = element.getTouchRegion();
+        int localX = x - getX() + region.getMinX();
+        int localY = y - getY() + region.getMinY();
+        return element.event(code, param, localX, localY);
+    }
+
     public int getX() {
         return x;
     }

@@ -35,10 +35,14 @@ public class Recorder {
     public static synchronized boolean RMSStoreSave(String name, ByteArrayOutputStream baos, boolean isEncoded) {//synchronized - исключаем совместный доступ
         byte[] data = baos.toByteArray();
 
-        if (isEncoded) Recorder.xoreArray(Recorder.key, data, 0, data.length);
+        if (isEncoded){
+            Recorder.xoreArray(Recorder.key, data, 0, data.length);
+        }
 
         File file = new File(name + ".storage");
-        if (file.exists()) file.delete();
+        if (file.exists()){
+            file.delete();
+        }
         try {
             file.createNewFile();
             FileOutputStream fos = new FileOutputStream(file);
@@ -112,7 +116,9 @@ public class Recorder {
             FileInputStream fis = new FileInputStream(file);
             dis = new DataInputStream(fis);
 
-            if (DEBUG_RMS) Debug.trace("Recorder.RMSStoreStreamRead, path " + file.getAbsolutePath());
+            if (DEBUG_RMS){
+                Debug.trace("Recorder.RMSStoreStreamRead, path " + file.getAbsolutePath());
+            }
         } catch (IOException e) {
             Debug.logEx(e);
         }
@@ -124,7 +130,9 @@ public class Recorder {
         if (!file.exists()) return false;
         if (!file.delete()) return false;
 
-        if (DEBUG_RMS) Debug.trace("Recorder.RMSStoreClean, path " + file.getAbsolutePath());
+        if (DEBUG_RMS){
+            Debug.trace("Recorder.RMSStoreClean, path " + file.getAbsolutePath());
+        }
         return true;
     }
 
