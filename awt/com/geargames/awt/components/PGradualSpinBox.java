@@ -22,7 +22,7 @@ public class PGradualSpinBox extends PValueComponent {
         initiated = false;
     }
 
-    protected void createSlotElementByIndex(IndexObject index, PObject prototype) {
+    protected void createSlotElementByIndex(IndexObject index, PObject parentPrototype) {
         switch (index.getSlot()) {
             case 0:
                 buttonDown = new PGradualSpinButton((PObject)index.getPrototype(), false);

@@ -38,7 +38,7 @@ public abstract class PContentPanel extends PObjectElement {
     /**
      * Создать "слотовый" объект по индексу объекта.
      */
-    protected abstract void createSlotElementByIndex(IndexObject index, PObject prototype);
+    protected abstract void createSlotElementByIndex(IndexObject index, PObject parentPrototype);
 
     /**
      * Создать все остальные не "слотовые" объекты по индексу объекта.
