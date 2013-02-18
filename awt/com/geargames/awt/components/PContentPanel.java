@@ -84,44 +84,50 @@ public abstract class PContentPanel extends PObjectElement {
      *
      * @param code
      * @param param
-     * @param xTouch
-     * @param yTouch
+     * @param x
+     * @param y
      * @return
      */
-    public boolean event(int code, int param, int xTouch, int yTouch) {
-        if (dedicatedConsumer != null) {
-            if (!dedicatedConsumer.event(code, param, xTouch - dedicatedConsumer.getX(), yTouch - dedicatedConsumer.getY())) {
-                dedicatedConsumer = null;
-            } else {
-                return true;
+    public boolean event(int code, int param, int x, int y) {
+        if (code == Event.EVENT_TICK) {
+            int size = getActiveChildren().size();
+            for (int i = 0; i < size; i++) {
+                PElement child = (PElement) getActiveChildren().get(i);
+                child.event(code, param, 0, 0);
             }
         } else {
-            if (code >= Event.EVENT_KEY_PRESSED && code <= Event.EVENT_KEY_DOWN) {
-                if (getTouchRegion().isWithIn(xTouch, yTouch)) {
-                    int size = getActiveChildren().size();
-                    for (int i = 0; i < size; i++) {
-                        PElement child = (PElement) getActiveChildren().get(i);
-                        if (child.isVisible()) {
-                            int x = xTouch - child.getX();
-                            int y = yTouch - child.getY();
-                            if (child.event(code, param, x, y)) {
-                                dedicatedConsumer = child;
-                                return true;
-                            }
-                        }
-                    }
+            if (dedicatedConsumer != null) {
+                if (!dedicatedConsumer.event(code, param, x - dedicatedConsumer.getX(), y - dedicatedConsumer.getY())) {
+//                    dedicatedConsumer = null;
+//                } else {
+//                    return true;
                 }
+                if (code == Event.EVENT_TOUCH_RELEASED) {
+                    dedicatedConsumer = null;
+                    return false;
+                } else
+                    return true;
             } else {
                 int size = getActiveChildren().size();
-                for (int i = 0; i < size; i++) {
+                for (int i = size-1; i >= 0; i--) {
                     PElement child = (PElement) getActiveChildren().get(i);
-                    child.event(code, param, xTouch, yTouch);
+                    if (child.isVisible()) {
+                        int clientX = x - child.getX();
+                        int clientY = y - child.getY();
+                        if (child.getTouchRegion().isWithIn(clientX, clientY)) {
+                            child.event(code, param, clientX, clientY);
+                            if (code == Event.EVENT_TOUCH_PRESSED) {
+                                dedicatedConsumer = child;
+                                return true;
+                            } else
+                                return false;
+                        }
+                    }
                 }
             }
         }
         return false;
     }
-
 
     /**
      * Добавляем сдесь элементы на панель, в конкретную точку, выраженную смещениями элемента от левого верхнего угла

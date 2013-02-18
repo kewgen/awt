@@ -47,21 +47,24 @@ public abstract class PPanelManager {
     public void event(int code, int param, int x, int y) {
         eventX = x;
         eventY = y;
-        if (modal == null) {
+        if (code == Event.EVENT_TICK || modal == null) {
             if (!preDeafElements.isEmpty()) {
                 callableElements.removeAll(preDeafElements);
                 preDeafElements.clear();
             }
             int size = callableElements.size();
             for (int i = 0; i < size; i++) {
-                ((Drawable) callableElements.get(i)).event(code, param, x, y);
+                Drawable element = (Drawable) callableElements.get(i);
+                if (element.event(code, param, x, y))
+                    break;
             }
-        } else {
-            if (code == Event.EVENT_TICK) {
-                if (Drawable.DEBUG) {
-                    Debug.trace("TICK-TACK");
-                }
-            }
+        }
+        if (modal != null) {
+//            if (code == Event.EVENT_TICK) {
+//                if (Drawable.DEBUG) {
+//                    Debug.trace("TICK-TACK");
+//                }
+//            }
             modal.event(code, param, x, y);
         }
     }

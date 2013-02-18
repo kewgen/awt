@@ -2,6 +2,7 @@ package com.geargames.awt.components;
 
 import com.geargames.common.Graphics;
 import com.geargames.common.packer.IndexObject;
+import com.geargames.common.packer.PFont;
 import com.geargames.common.packer.PObject;
 import com.geargames.common.String;
 
@@ -11,20 +12,35 @@ import com.geargames.common.String;
  * Time: 14:29
  */
 public abstract class PEntitledTouchButton extends PTouchButton {
-    private PLabel caption;
+    private PLabel labelCaption;
 
-    public PEntitledTouchButton(PObject prototype, String title) {
+    public PEntitledTouchButton(PObject prototype, String caption) {
         super(prototype);
         IndexObject index = (IndexObject) prototype.getIndexBySlot(2);
-        caption = new PSimpleLabel(index);
-        caption.setX(index.getX());
-        caption.setY(index.getY());
-        caption.setData(title);
+        labelCaption = new PSimpleLabel(index);
+        labelCaption.setX(index.getX());
+        labelCaption.setY(index.getY());
+        labelCaption.setData(caption);
     }
 
     public void draw(Graphics graphics, int x, int y) {
         super.draw(graphics, x, y);
-        caption.draw(graphics, x + caption.getX(), y+caption.getY());
+        labelCaption.draw(graphics, x + labelCaption.getX(), y + labelCaption.getY());
     }
 
+    public String getCaption() {
+        return labelCaption.getData();
+    }
+
+    public void setCaption(String caption) {
+        labelCaption.setData(caption);
+    }
+
+    public PFont getFont() {
+        return labelCaption.getFont();
+    }
+
+    public void setFont(PFont font) {
+        labelCaption.setFont(font);
+    }
 }

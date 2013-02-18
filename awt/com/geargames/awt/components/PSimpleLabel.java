@@ -5,7 +5,7 @@ import com.geargames.common.util.NullRegion;
 import com.geargames.common.util.Region;
 
 /**
- * Простой label: не реагирует ни на что =) и сразмерами полная неопределённость.
+ * Простой label: не реагирует ни на что =) и с размерами полная неопределённость.
  */
 public class PSimpleLabel extends PLabel {
     public PSimpleLabel(IndexObject index) {

@@ -39,7 +39,6 @@ public class PPrototypeElement extends PElement {
         this.region = region;
     }
 
-
     public void draw(Graphics graphics, int x, int y) {
         prototype.draw(graphics, x, y);
     }

@@ -5,15 +5,17 @@ import com.geargames.common.Graphics;
 
 /**
  * User: mikhail v. kutuzov
+ * Базовый класс любого компонента пользовательского интерфейса.
  */
 public abstract class PElement {
     private int x;
     private int y;
+
     /**
-     * Нарисовать элемент на экране в точке x:y.
+     * Нарисовать элемент на экране в точке (x, y).
      * @param graphics
-     * @param x
-     * @param y
+     * @param x координата по оси Х в локальной системе координат объекта.
+     * @param y координата по оси Y в локальной системе координат объекта.
      */
     public abstract void draw(Graphics graphics, int x, int y);
 
@@ -21,8 +23,8 @@ public abstract class PElement {
      * Передать событие code нарисованному объекту.
      * @param code
      * @param param
-     * @param x координата по оси Х в системе координат текущего объекта.
-     * @param y
+     * @param x координата по оси Х в локальной системе координат объекта.
+     * @param y координата по оси Y в локальной системе координат объекта.
      * @return true если дальнейшие события будут поглащаться этим объектом, иначе - false
      */
     public abstract boolean event(int code, int param, int x, int y);
@@ -64,6 +66,7 @@ public abstract class PElement {
         this.y = y;
     }
 
+    //TODO нужно ли элементу игровой панели становиться не видимым на этой панели? по-моему - нет.
     /**
      * Видим ли компонент на своём родителе.
      * @return

@@ -36,10 +36,9 @@ public class PSimplePrototype extends PElement {
         return region;
     }
 
-    public void setRegion(Region drawRegion) {
-        this.region = drawRegion;
+    public void setRegion(Region region) {
+        this.region = region;
     }
-
 
     public void draw(Graphics graphics, int x, int y) {
         prototype.draw(graphics, x, y);

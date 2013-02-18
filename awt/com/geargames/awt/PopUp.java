@@ -1,5 +1,6 @@
 package com.geargames.awt;
 
+import com.geargames.awt.components.ScrollableArea;
 import com.geargames.awt.utils.ItemSkin;
 import com.geargames.common.util.Region;
 import com.geargames.common.Graphics;

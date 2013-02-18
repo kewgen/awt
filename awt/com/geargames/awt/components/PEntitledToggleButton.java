@@ -7,14 +7,13 @@ import com.geargames.common.packer.PObject;
 import com.geargames.common.String;
 
 /**
- * User: mikhail v. kutuzov
- * Date: 14.12.12
- * Time: 23:50
+ * User: abarakov
+ * Date: 14.02.13
  */
-public abstract class PEntitledRadioButton extends PRadioButton {
+public abstract class PEntitledToggleButton extends PToggleButton {
     private PLabel labelCaption;
 
-    public PEntitledRadioButton(PObject prototype, String caption) {
+    public PEntitledToggleButton(PObject prototype, String caption) {
         super(prototype);
         IndexObject index = (IndexObject) prototype.getIndexBySlot(2);
         labelCaption = new PSimpleLabel(index);
@@ -43,5 +42,4 @@ public abstract class PEntitledRadioButton extends PRadioButton {
     public void setFont(PFont font) {
         labelCaption.setFont(font);
     }
-
 }

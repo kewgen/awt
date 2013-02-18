@@ -1,6 +1,7 @@
 package com.geargames.awt;
 
 import com.geargames.awt.components.PElement;
+import com.geargames.common.Event;
 import com.geargames.common.Port;
 import com.geargames.common.util.Region;
 import com.geargames.common.Graphics;
@@ -16,10 +17,16 @@ public class DrawablePElement extends Drawable {
     private int x;
     private int y;
     private byte anchor;
+    private boolean dedicated;
     private PElement element;
 
+    public DrawablePElement() {
+        dedicated = false;
+    }
+
     /**
-     * Прорисовываем компонент прорисовки так, чтоб его левый верхний угол совпадал с координатами (0:0) окна.
+     * Прорисовываем компонент прорисовки так, чтоб его левый верхний угол совпадал с координатами (0,0) окна.
+     *
      * @param graphics
      */
     public void draw(Graphics graphics) {
@@ -27,7 +34,12 @@ public class DrawablePElement extends Drawable {
     }
 
     /**
-     * Передаём компоненту прорисовки координаты события в его собственной системе координат.
+     * tick событие:
+     * Транслируется компоненту в любом случае.
+     * touch событие:
+     * Транслируется компоненту прорисовки, если событие попадает на touch область компонента.
+     * Координаты передаются в локальной системе координат этого компонента.
+     *
      * @param code
      * @param param
      * @param x
@@ -36,7 +48,21 @@ public class DrawablePElement extends Drawable {
      */
     public boolean event(int code, int param, int x, int y) {
         Region region = element.getTouchRegion();
-        return element.event(code, param, x - getX() + region.getMinX(), y - getY() + region.getMinY());
+        int localX = x - getX() + region.getMinX();
+        int localY = y - getY() + region.getMinY();
+        if (code == Event.EVENT_TICK) {
+            element.event(code, param, 0, 0);
+            return false;
+        } else {
+            if (dedicated) {
+                dedicated = element.event(code, param, localX, localY);
+            } else {
+                if (region.isWithIn(localX, localY)) {
+                    dedicated = element.event(code, param, localX, localY);
+                }
+            }
+            return dedicated;
+        }
     }
 
     public int getX() {
@@ -65,6 +91,7 @@ public class DrawablePElement extends Drawable {
 
     /**
      * Вернуть компонент для прорисовки.
+     *
      * @return
      */
     public PElement getElement() {
@@ -77,6 +104,7 @@ public class DrawablePElement extends Drawable {
 
     /**
      * Вернуть экранный якорь компонента прорисовки.
+     *
      * @return
      */
     public byte getAnchor() {
@@ -91,8 +119,8 @@ public class DrawablePElement extends Drawable {
      * Настройка расположения окна для компонента прорисовки на экране, в случае
      * простановки ему экранного якоря.
      */
-    public void init(){
-        switch (anchor){
+    public void init() {
+        switch (anchor) {
             case Anchors.NONE_ANCHOR:
                 break;
             case Anchors.BOTTOM_LEFT_ANCHOR:

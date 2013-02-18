@@ -1,5 +1,7 @@
 package com.geargames.awt;
 
+import com.geargames.awt.components.ScrollableArea;
+import com.geargames.awt.components.TextArea;
 import com.geargames.awt.utils.*;
 import com.geargames.common.Event;
 import com.geargames.common.Port;

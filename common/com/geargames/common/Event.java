@@ -19,7 +19,9 @@ public abstract class Event {
     public final static int EVENT_TOUCH_PRESSED = 105;
     public final static int EVENT_TOUCH_RELEASED = 106;
     public final static int EVENT_TOUCH_MOVED = 107;
-    public final static int EVENT_TOUCH_DOUBBLE_CLICK = 108;
+    public final static int EVENT_TOUCH_DOUBLE_CLICK = 108;
+    @Deprecated // Исправлена опечатка
+    public final static int EVENT_TOUCH_DOUBBLE_CLICK = EVENT_TOUCH_DOUBLE_CLICK;
     public final static int EVENT_TOUCH_LONG_CLICK = 109;
     public final static int EVENT_KEY_UP = 110;
     public final static int EVENT_KEY_DOWN = 111;
