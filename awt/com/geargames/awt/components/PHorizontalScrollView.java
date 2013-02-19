@@ -46,7 +46,6 @@ public class PHorizontalScrollView extends HorizontalScrollView {
 
         IndexObject index0 = (IndexObject) prototype.getIndexBySlot(0);
         IndexObject index1 = (IndexObject) prototype.getIndexBySlot(1);
-        setMargin(index1.getX() - index0.getX());
 
         prototypeElement = new PPrototypeElement();
         prototypeElement.setPrototype(index0.getPrototype());
@@ -60,6 +59,8 @@ public class PHorizontalScrollView extends HorizontalScrollView {
         frame = (PFrame)index.getPrototype();
         tmp.setWidth(frame.getWidth());
         tmp.setHeight(frame.getHeight());
+
+        setMargin(index1.getX() - (index0.getX()+tmp.getWidth()));
     }
 
     public Vector getItems() {

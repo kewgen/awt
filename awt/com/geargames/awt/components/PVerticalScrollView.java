@@ -46,7 +46,6 @@ public class PVerticalScrollView extends VerticalScrollView {
 
         IndexObject index0 = (IndexObject) prototype.getIndexBySlot(0);
         IndexObject index1 = (IndexObject) prototype.getIndexBySlot(1);
-        setMargin(index1.getY() - index0.getY());
 
         prototypeElement = new PPrototypeElement();
         prototypeElement.setPrototype(index0.getPrototype());
@@ -60,6 +59,7 @@ public class PVerticalScrollView extends VerticalScrollView {
         frame = (PFrame)index.getPrototype();
         tmp.setWidth(frame.getWidth());
         tmp.setHeight(frame.getHeight());
+        setMargin(index1.getY() - (index0.getY()+tmp.getHeight()));
     }
 
     public Vector getItems() {
