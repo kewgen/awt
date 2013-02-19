@@ -73,7 +73,7 @@ public class ScrollHelper {
 
     /**
      * Настроить один из MotionListener-ов , переданных в качестве параметров, для работы с вертикальным меню.
-     * @param elasticInertMotionListener
+     * @param inertMotionListener
      * @param stubMotionListener
      * @param region область отображения меню
      * @param itemsAmount количество элементов меню
@@ -81,7 +81,7 @@ public class ScrollHelper {
      * @param format форматирование (в случае меню влезающего полностью в область отображения)
      * @return
      */
-    public static MotionListener createVerticalMotionListener(InertMotionListener elasticInertMotionListener,
+    public static MotionListener createVerticalMotionListener(InertMotionListener inertMotionListener,
                                                               StubMotionListener stubMotionListener,
                                                               Region region, int itemsAmount, int itemSize, int format) {
         int size = itemsAmount * itemSize;
@@ -89,7 +89,7 @@ public class ScrollHelper {
             stubMotionListener.create(getYBegin(region, itemsAmount, itemSize, format));
             return stubMotionListener;
         } else {
-            return adjustVerticalInertMotionListener(elasticInertMotionListener, region, itemsAmount, itemSize);
+            return adjustVerticalInertMotionListener(inertMotionListener, region, itemsAmount, itemSize);
         }
     }
 

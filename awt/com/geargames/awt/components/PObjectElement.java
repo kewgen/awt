@@ -10,24 +10,37 @@ import com.geargames.common.packer.PObject;
  * Базовый элемент GUI для всех элементов собирающихся по объектам из пакера.
  */
 public abstract class PObjectElement extends PElement {
-    private Region region;
+    private Region drawRegion;
+    private Region touchRegion;
 
     public Region getDrawRegion() {
-        return region;
+        return drawRegion;
     }
 
     public Region getTouchRegion() {
-        return region;
+        return touchRegion;
     }
 
     public PObjectElement(PObject prototype) {
         Index index = prototype.getIndexBySlot(110);
-        region = new Region();
-        region.setMinX(index.getX());
-        region.setMinY(index.getY());
-        PFrame frame = (PFrame)index.getPrototype();
-        region.setWidth(frame.getWidth());
-        region.setHeight(frame.getHeight());
+        drawRegion = new Region();
+        drawRegion.setMinX(index.getX());
+        drawRegion.setMinY(index.getY());
+        PFrame frame = (PFrame) index.getPrototype();
+        drawRegion.setWidth(frame.getWidth());
+        drawRegion.setHeight(frame.getHeight());
+
+        index = prototype.getIndexBySlot(112);
+        if (index != null) {
+            touchRegion = new Region();
+            touchRegion.setMinX(index.getX());
+            touchRegion.setMinY(index.getY());
+            frame = (PFrame) index.getPrototype();
+            touchRegion.setWidth(frame.getWidth());
+            touchRegion.setHeight(frame.getHeight());
+        } else {
+            touchRegion = drawRegion;
+        }
     }
 
 
