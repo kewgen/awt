@@ -16,16 +16,21 @@ public abstract class VerticalScrollableArea extends ScrollableArea {
         if (!isInitiated()) {
             initiate(graphics);
         }
-        Region touchRegion = getTouchRegion();
         Region drawRegion = getDrawRegion();
         if (Drawable.DEBUG) {
+            Region touchRegion = getTouchRegion();
             graphics.drawRect(x + touchRegion.getMinX(), y + touchRegion.getMinY(), touchRegion.getWidth(), touchRegion.getHeight());
             graphics.drawRect(x + drawRegion.getMinX(), y + drawRegion.getMinY(), drawRegion.getWidth(), drawRegion.getHeight());
         }
-        int clipMin = y;
-        int clipMax = clipMin + drawRegion.getHeight();
+//        int clipMin = y;
+//        int clipMax = clipMin + drawRegion.getHeight();
+//        graphics.setClip(x + drawRegion.getMinX(), y + drawRegion.getMinY(), drawRegion.getWidth(), drawRegion.getHeight());
+//        int localPosition = clipMin + getPosition();
+
         graphics.setClip(x + drawRegion.getMinX(), y + drawRegion.getMinY(), drawRegion.getWidth(), drawRegion.getHeight());
-        int localPosition = clipMin + getPosition();
+        int localPosition = y + getPosition();
+        int clipMin = y + drawRegion.getMinY(); // todo-discussion: изменено, верно ли?
+        int clipMax = clipMin + drawRegion.getHeight();
         if (isStrictlyClipped()) {
             for (int i = 0; i < getItemsAmount(); i++) {
                 if (localPosition >= clipMin && localPosition + getItemSize() <= clipMax) {
@@ -35,7 +40,7 @@ public abstract class VerticalScrollableArea extends ScrollableArea {
             }
         } else {
             for (int i = 0; i < getItemsAmount(); i++) {
-                if (localPosition + getItemSize() >= clipMin && localPosition - getItemSize() <= clipMax) {
+                if (localPosition + getItemSize() > clipMin && localPosition - getItemSize() <= clipMax) {
                     drawItem(graphics, i, localPosition, x);
                 }
                 localPosition += getItemSize();

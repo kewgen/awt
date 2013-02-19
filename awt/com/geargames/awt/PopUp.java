@@ -56,7 +56,7 @@ public abstract class PopUp extends Drawable {
         }
         if (DEBUG) {
             Region inner = getScrollableArea().getDrawRegion();
-            graphics.drawRect(inner.getMinX(), inner.getMinY(), inner.getWidth(), inner.getHeight());
+            graphics.drawRect(inner.getMinX() + getX(), inner.getMinY() + getY(), inner.getWidth(), inner.getHeight());
         }
         getScrollableArea().draw(graphics, getX(), getY());
     }

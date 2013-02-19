@@ -181,12 +181,12 @@ public class ScrollHelper {
     }
 
     /**
-     * Настраиваем StubMotionListener(не крутящийся) на параметры экрана.
+     * Настраиваем StubMotionListener (не крутящийся) на параметры экрана.
      * @param motionListener
      * @param region
      * @param itemsAmount
      * @param itemSize
-     * @param format
+     * @param format одно из значений Graphics.LEFT и т.п.
      * @return
      */
     public static MotionListener adjustStubMotionListener(StubMotionListener motionListener, Region region, int itemsAmount, int itemSize, int format) {
