@@ -1,8 +1,6 @@
 package com.geargames.awt.components;
 
-import com.geargames.awt.components.PElement;
 import com.geargames.awt.utils.MotionListener;
-import com.geargames.common.util.Region;
 import com.geargames.common.Graphics;
 
 /**
@@ -28,13 +26,6 @@ public abstract class ScrollableArea extends PElement {
      * @return
      */
     public abstract int getItemSize();
-
-    /**
-     * Вернуть регион прикосновения, который обрабатываются окном списка.
-     *
-     * @return
-     */
-    public abstract Region getDrawRegion();
 
     /**
      * Вернет true, если включён строгий режим отсечения крайних элементов списка

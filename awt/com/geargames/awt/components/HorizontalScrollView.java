@@ -24,7 +24,6 @@ public abstract class HorizontalScrollView extends HorizontalScrollableArea {
         setInitiated(false);
     }
 
-
     public boolean event(int code, int param, int x, int y) {
         int number;
         boolean result = super.event(code, param, x, y);

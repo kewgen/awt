@@ -26,11 +26,11 @@ public class CenteredElasticInertMotionListener extends MotionListener {
 
     private int itemSize;
     private int center;
-    private int itemOffset;
+    private int itemDiff;
     private int itemsAmount;
 
     private int position;
-    private int backSpeed;
+    private int backStep;
     private boolean released;
     public boolean instinctPosition;
 
@@ -47,11 +47,11 @@ public class CenteredElasticInertMotionListener extends MotionListener {
 
         this.window = window;
         this.position = center;
-        this.backSpeed = itemSize / 10;
+        this.backStep = itemSize / 10;
         this.itemSize = itemSize;
         this.relativeClickedPosition = -1;
         this.center = center;
-        this.itemOffset = itemOffset;
+        this.itemDiff = itemSize + itemOffset;
         this.released = true;
         instinctPosition = false;
         itemsAmount = window / itemSize;
@@ -102,27 +102,28 @@ public class CenteredElasticInertMotionListener extends MotionListener {
             } else {
                 if (relativeClickedPosition == -1) {
                     if (position > center) {
-                        position -= position - center > backSpeed ? backSpeed : position - center;
-                    } else if (position + window - (itemSize - itemOffset) < center) {
-                        position += center - window - position + (itemSize - itemOffset) > backSpeed ? backSpeed : center - window - position + (itemSize - itemOffset);
+                        position -= position - center > backStep ? backStep : position - center;
+                    } else if (position + window - itemDiff < center) {
+                        int tmp = center - window - position + itemDiff;
+                        position += tmp > backStep ? backStep : tmp;
                     } else {
                         int margin = (-position + center) % itemSize;
                         if (margin != 0) {
                             margin = getCentralPositionNumber() * itemSize + position - center;
                             if (margin > 0) {
-                                position -= margin > backSpeed ? backSpeed : margin;
+                                position -= margin > backStep ? backStep : margin;
                             } else {
                                 margin = -margin;
-                                position += margin > backSpeed ? backSpeed : margin;
+                                position += margin > backStep ? backStep : margin;
                             }
                         }
                     }
                 } else {
                     int clickedPosition = position + relativeClickedPosition;
                     if (clickedPosition > center) {
-                        position -= -center + clickedPosition > backSpeed ? backSpeed : -center + clickedPosition;
+                        position -= -center + clickedPosition > backStep ? backStep : -center + clickedPosition;
                     } else if (clickedPosition < center) {
-                        position += -clickedPosition + center > backSpeed ? backSpeed : -clickedPosition + center;
+                        position += -clickedPosition + center > backStep ? backStep : -clickedPosition + center;
                     }
                 }
 
@@ -191,7 +192,7 @@ public class CenteredElasticInertMotionListener extends MotionListener {
                 Debug.trace("" + number);
                 Debug.trace("" + relativeClickedPosition + " " + position);
                 Debug.trace("" + position + " + " + window + " = ");
-                Debug.trace("" + (position + window - (itemSize - itemOffset)));
+                Debug.trace("" + (position + window - itemDiff));
                 Debug.trace("" + center);
             }
         } else {
