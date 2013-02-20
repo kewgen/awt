@@ -1,7 +1,5 @@
 package com.geargames.awt;
 
-import com.geargames.Debug;
-import com.geargames.common.Event;
 import com.geargames.common.Graphics;
 import com.geargames.common.util.ArrayList;
 
@@ -55,8 +53,9 @@ public abstract class PPanelManager {
             int size = callableElements.size();
             for (int i = size - 1; i >= 0; i++) {
                 Drawable element = (Drawable) callableElements.get(i);
-                if (element.event(code, param, x, y))
+                if (element.event(code, param, x, y)) {
                     break;
+                }
             }
         } else {
             modal.modalEvent(code, param, x, y);
@@ -65,6 +64,7 @@ public abstract class PPanelManager {
 
     /**
      * Вернуть экранную координату X.
+     *
      * @return
      */
     public int getEventX() {
@@ -73,6 +73,7 @@ public abstract class PPanelManager {
 
     /**
      * Вернуть экранную координату Y.
+     *
      * @return
      */
     public int getEventY() {
