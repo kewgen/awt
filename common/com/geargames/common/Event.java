@@ -1,14 +1,11 @@
 package com.geargames.common;
 
 /**
- * Created with IntelliJ IDEA.
- * User: kewgen
+ * User: kewgen, mikhail kutuzov
  * Date: 01.06.12
  * Time: 13:07
  */
-public abstract class Event {
-
-
+public class Event {
     public final static int EVENT_NULL = 0;
     public static final byte EVENT_TICK = 1;
 
@@ -20,8 +17,6 @@ public abstract class Event {
     public final static int EVENT_TOUCH_RELEASED = 106;
     public final static int EVENT_TOUCH_MOVED = 107;
     public final static int EVENT_TOUCH_DOUBLE_CLICK = 108;
-    @Deprecated // Исправлена опечатка
-    public final static int EVENT_TOUCH_DOUBBLE_CLICK = EVENT_TOUCH_DOUBLE_CLICK;
     public final static int EVENT_TOUCH_LONG_CLICK = 109;
     public final static int EVENT_KEY_UP = 110;
     public final static int EVENT_KEY_DOWN = 111;
