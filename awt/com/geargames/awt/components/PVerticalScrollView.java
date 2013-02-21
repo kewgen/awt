@@ -11,7 +11,7 @@ import java.util.Vector;
 
 /**
  * User: mikhail v. kutuzov
- * Реализация VerticalScrollView для списка элементов(меню) на основе prototype из пакера.
+ * Реализация VerticalScrollView для списка элементов (меню) на основе prototype из пакера.
  */
 public class PVerticalScrollView extends VerticalScrollView {
     private Vector items;
@@ -59,7 +59,11 @@ public class PVerticalScrollView extends VerticalScrollView {
         frame = (PFrame)index.getPrototype();
         tmp.setWidth(frame.getWidth());
         tmp.setHeight(frame.getHeight());
-        setMargin(index1.getY() - (index0.getY()+tmp.getHeight()));
+        if (index1 != null) {
+            setMargin(index1.getY() - (index0.getY() + tmp.getHeight()));
+        } else {
+            setMargin(0);
+        }
     }
 
     public Vector getItems() {

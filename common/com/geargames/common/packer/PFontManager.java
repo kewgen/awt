@@ -5,16 +5,16 @@ import com.geargames.common.util.ArrayList;
 
 /**
  * User: mikhail v. kutuzov
- * Класс осуществляет зачитку фонтов по указателям-индексам фонтов в массиве спрайтов проекта.
- * Реализация заворачивает  в один составной фонт фонты от разных символов некоторой кодовой страницы.
+ * Класс осуществляет загрузку шрифтов по указателям-индексам шрифтов в массиве спрайтов проекта.
+ * Реализация заворачивает в один составной шрифт шрифты с разными диапазонами символов некоторой кодовой страницы.
  */
 public class PFontManager {
     private ArrayList fonts;
 
     /**
-     * Зачитать фонты из массива спрайтов.
-     * Текущая реализация завязана на то, что базовая линия фонта проходит по середине прямоугольника выделенного
-     * под символ фонта.
+     * Загрузить шрифты из массива спрайтов.
+     * Текущая реализация завязана на то, что базовая линия шрифта проходит по середине прямоугольника выделенного
+     * под символ шрифта.
      *
      * @param manager     packer manager как есть
      * @param fontIndexes {(0){(0)SYMBOLS, (1)NUMBERS, (2)RU, (3)ESP, (4)EN} 1{SYMBOLS, NUMBERS, RU, ESP, EN}  ..... }  - вот такой может быть формат
@@ -33,7 +33,7 @@ public class PFontManager {
                 index = sprite.getIndex(sprite.getIndexes().size() - 1);
                 int height = index.getX();
                 int baseLine = height / 2;
-                PFontDiapazon font = new PFontDiapazon(baseCharacter, amount, height, baseLine);
+                PFontCharRange font = new PFontCharRange(baseCharacter, amount, height, baseLine);
                 int baseId = sprite.getPID();
                 for (int k = 0; k < amount; k++) {
                     PSprite charSprite = manager.getPSprite(baseId + k);
@@ -46,33 +46,33 @@ public class PFontManager {
     }
 
     /**
-     * Вернуть по индексу фонта составной фонт (хотя этого, что он составной никто и не поймёт)
+     * Вернуть по индексу шрифта составной шрифт (хотя этого, что он составной, никто и не поймёт)
      *
-     * @param fontIndex индекс фонта (например 0 - вернёт первый составной фонт)
-     * @return сдесь лучше не рисковать получить фонт с несуществующим индексом.
+     * @param fontIndex индекс шрифта (например, 0 - вернёт первый составной шрифт)
+     * @return здесь лучше не рисковать получить шрифт с несуществующим индексом.
      */
     public PFont getFont(int fontIndex) {
         return (PFont) fonts.get(fontIndex);
     }
 
     /**
-     * Создать фонт размера size на основе фонта font.
+     * Создать шрифт размера size на основе шрифта baseFont.
      *
-     * @param font базовый фонт (на основе диапазона символов)
-     * @param size размер нового фонта
+     * @param baseFont базовый шрифт (на основе диапазона символов)
+     * @param size размер нового шрифта
      * @return
      */
-    public PFont createReSizedFont(PFontDiapazon font, int size) {
-        ArrayList characters = font.getCharacters();
+    public PFont createReSizedFont(PFontCharRange baseFont, int size) {
+        ArrayList characters = baseFont.getCharacters();
         int length = characters.size();
-        char firstIndex = font.getFirstIndex();
-        PFontDiapazon reSizedFont = new PFontDiapazon(firstIndex, length, size, size >> 1);
+        char firstIndex = baseFont.getFirstIndex();
+        PFontCharRange reSizedFont = new PFontCharRange(firstIndex, length, size, size >> 1);
 
         for (int i = 0; i < length; i++) {
             PSprite oldSprite = (PSprite) characters.get(i);
             ArrayList indexes = oldSprite.getIndexes();
             int indexesLength = indexes.size();
-            int oldSize = font.getSize();
+            int oldSize = baseFont.getSize();
 
             PSprite sprite = new PSprite(indexesLength);
 
@@ -112,24 +112,27 @@ public class PFontManager {
         return reSizedFont;
     }
 
-
     /**
-     * Создать фонт размера size на основе составного фонта font(сам составной фонт должен быть составлен на основе
-     * PFontDiapazon-ов).
+     * Создать шрифт размера size на основе составного шрифта baseFont (сам составной шрифт должен быть составлен на
+     * основе PFontCharRange-ов).
      *
-     * @param font базовый фонт
-     * @param size размер нового фонта
+     * @param baseFont базовый шрифт
+     * @param size размер нового шрифта
      * @return
      */
-    public PFont createReSizedFont(PFontComposite font, int size) {
-        int amount = font.getFontsAmount();
-        ArrayList fonts = new ArrayList(font.getFontsAmount());
+    public PFont createReSizedFont(PFontComposite baseFont, int size) {
+        int amount = baseFont.getFontsAmount();
+        ArrayList fonts = new ArrayList(baseFont.getFontsAmount());
         for (int i = 0; i < amount; i++) {
-            fonts.add(createReSizedFont((PFontDiapazon) font.getFont(i), size));
+            fonts.add(createReSizedFont((PFontCharRange) baseFont.getFont(i), size));
         }
         return new PFontComposite(fonts);
     }
 
+    /**
+     * Добавить шрифт.
+     * @param font
+     */
     public void addFont(PFont font) {
         fonts.add(font);
     }

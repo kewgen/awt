@@ -4,13 +4,12 @@ import com.geargames.common.*;
 import com.geargames.common.packer.IndexObject;
 import com.geargames.common.packer.PFont;
 import com.geargames.common.packer.PObject;
-import com.geargames.common.util.ArrayList;
 
 /**
- * User: mikhail v. kutuzov
- * Компонент содержит в себе кнопу "вверх" и "вниз" для добавления приращения к содержимому label.
+ * Users: mikhail v. kutuzov, abarakov
+ * Компонент содержит в себе кнопку "вверх" и "вниз" для добавления приращения к содержимому label.
  */
-public class PStepSpinBox extends PValueComponent  {
+public class PStepSpinBox extends PValueComponent {
     private short value;
     private boolean initiated;
     private PLabel label;
@@ -20,6 +19,7 @@ public class PStepSpinBox extends PValueComponent  {
     public PStepSpinBox(PObject prototype) {
         super(prototype);
         initiated = false;
+        setStep((byte)1);
     }
 
     protected void createSlotElementByIndex(IndexObject index, PObject parentPrototype) {
@@ -36,20 +36,20 @@ public class PStepSpinBox extends PValueComponent  {
                 break;
             case 2:
                 label = new PSimpleLabel(index);
-                addActiveChild(label, index);
+                addPassiveChild(label, index);
                 break;
         }
     }
 
     public void draw(Graphics graphics, int x, int y) {
-        if(!initiated){
+        if (!initiated) {
             initiate();
         }
         super.draw(graphics, x, y);
     }
 
-    private void initiate(){
-        label.setData(com.geargames.common.String.valueOfI(value));
+    private void initiate() {
+        label.setText(com.geargames.common.String.valueOfI(value));
         initiated = true;
     }
 
@@ -62,12 +62,12 @@ public class PStepSpinBox extends PValueComponent  {
         initiated = false;
     }
 
-    public void setStep(byte step){
+    public void setStep(byte step) {
         buttonUp.setStep(step);
         buttonDown.setStep((byte)-step);
     }
 
-    public void setFont(PFont font){
+    public void setFont(PFont font) {
         label.setFont(font);
     }
 }

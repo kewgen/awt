@@ -12,36 +12,36 @@ import com.geargames.common.String;
  * Time: 23:50
  */
 public abstract class PEntitledRadioButton extends PRadioButton {
-    private PLabel labelCaption;
+    private PLabel labelTitle;
 
-    public PEntitledRadioButton(PObject prototype, String caption) {
+    public PEntitledRadioButton(PObject prototype, String text) {
         super(prototype);
         IndexObject index = (IndexObject) prototype.getIndexBySlot(2);
-        labelCaption = new PSimpleLabel(index);
-        labelCaption.setX(index.getX());
-        labelCaption.setY(index.getY());
-        labelCaption.setData(caption);
+        labelTitle = new PSimpleLabel(index);
+        labelTitle.setX(index.getX());
+        labelTitle.setY(index.getY());
+        labelTitle.setText(text);
     }
 
     public void draw(Graphics graphics, int x, int y) {
         super.draw(graphics, x, y);
-        labelCaption.draw(graphics, x + labelCaption.getX(), y + labelCaption.getY());
+        labelTitle.draw(graphics, x + labelTitle.getX(), y + labelTitle.getY());
     }
 
-    public String getCaption() {
-        return labelCaption.getData();
+    public String getText() {
+        return labelTitle.getText();
     }
 
-    public void setCaption(String caption) {
-        labelCaption.setData(caption);
+    public void setText(String text) {
+        labelTitle.setText(text);
     }
 
     public PFont getFont() {
-        return labelCaption.getFont();
+        return labelTitle.getFont();
     }
 
     public void setFont(PFont font) {
-        labelCaption.setFont(font);
+        labelTitle.setFont(font);
     }
 
 }

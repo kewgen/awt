@@ -1,18 +1,16 @@
 package com.geargames.awt.components;
 
 import com.geargames.common.packer.IndexObject;
-import com.geargames.common.util.Region;
 import com.geargames.common.Graphics;
 import com.geargames.common.packer.PFont;
 import com.geargames.common.String;
-
 
 /**
  * User: mikhail v. kutuzov
  * Легкая метка, для рисования на панели содержимого.
  */
 public abstract class PLabel extends PElement {
-    private String data; // TODO Переименовать в value, text или caption
+    private String text;
     private PFont font;
     private byte anchor;
 
@@ -24,10 +22,10 @@ public abstract class PLabel extends PElement {
     }
 
     public void draw(Graphics graphics, int x, int y) {
-        PFont tmp = graphics.getFont();
+        PFont oldFont = graphics.getFont();
         graphics.setFont(font);
-        graphics.drawString(data, x, y, anchor);
-        graphics.setFont(tmp);
+        graphics.drawString(text, x, y, anchor);
+        graphics.setFont(oldFont);
     }
 
     public byte getAnchor() {
@@ -46,12 +44,12 @@ public abstract class PLabel extends PElement {
         this.font = font;
     }
 
-    public String getData() {
-        return data;
+    public String getText() {
+        return text;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public void setText(String text) {
+        this.text = text;
     }
 
     public boolean isVisible() {

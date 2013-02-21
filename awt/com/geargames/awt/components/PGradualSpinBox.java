@@ -2,19 +2,25 @@ package com.geargames.awt.components;
 
 import com.geargames.common.*;
 import com.geargames.common.packer.IndexObject;
+import com.geargames.common.packer.PFont;
 import com.geargames.common.packer.PObject;
 
 /**
- * User: mikhail v. kutuzov
+ * Users: mikhail v. kutuzov, abarakov
  * Date: 27.12.12
  * Time: 13:06
  */
 public class PGradualSpinBox extends PValueComponent {
+    private short value;
+    private boolean initiated;
     private PLabel label;
     private PGradualSpinButton buttonUp;
     private PGradualSpinButton buttonDown;
-    private short value;
-    private boolean initiated;
+
+    public PGradualSpinBox(PObject prototype) {
+        super(prototype);
+        initiated = false;
+    }
 
     public PGradualSpinBox(PObject prototype, short value) {
         super(prototype);
@@ -54,7 +60,7 @@ public class PGradualSpinBox extends PValueComponent {
     }
 
     private void initiate() {
-        label.setData(com.geargames.common.String.valueOfI(value));
+        label.setText(com.geargames.common.String.valueOfI(value));
         initiated = true;
     }
 
@@ -65,5 +71,9 @@ public class PGradualSpinBox extends PValueComponent {
     public void setValue(short value) {
         this.value = value;
         initiated = false;
+    }
+
+    public void setFont(PFont font) {
+        label.setFont(font);
     }
 }

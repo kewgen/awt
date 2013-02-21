@@ -72,7 +72,7 @@ public class ScrollHelper {
     }
 
     /**
-     * Настроить один из MotionListener-ов , переданных в качестве параметров, для работы с вертикальным меню.
+     * Настроить один из MotionListener-ов, переданных в качестве параметров, для работы с вертикальным меню.
      * @param inertMotionListener
      * @param stubMotionListener
      * @param region область отображения меню

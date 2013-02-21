@@ -59,8 +59,11 @@ public class PHorizontalScrollView extends HorizontalScrollView {
         frame = (PFrame)index.getPrototype();
         tmp.setWidth(frame.getWidth());
         tmp.setHeight(frame.getHeight());
-
-        setMargin(index1.getX() - (index0.getX()+tmp.getWidth()));
+        if (index1 != null) {
+            setMargin(index1.getX() - (index0.getX() + tmp.getWidth()));
+        } else {
+            setMargin(0);
+        }
     }
 
     public Vector getItems() {

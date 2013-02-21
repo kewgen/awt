@@ -76,8 +76,12 @@ public class String {
         return string.indexOf(java.lang.String.valueOf(character));
     }
 
-    public int indexOf(String character, int from) {
-        return string.indexOf(character.toString(), from);
+    public int indexOf(char character, int from) {
+        return string.indexOf(java.lang.String.valueOf(character), from);
+    }
+
+    public int indexOf(String str, int from) {
+        return string.indexOf(str.toString(), from);
     }
 
     public boolean equals(String str) {

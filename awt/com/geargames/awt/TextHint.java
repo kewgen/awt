@@ -13,7 +13,7 @@ import com.geargames.common.packer.PFrame;
 import com.geargames.common.util.Region;
 
 /**
- * User: mikhail.kutuzov
+ * Users: mikhail.kutuzov, abarakov
  * Date: 14.11.11
  * Time: 18:37
  */
@@ -90,7 +90,7 @@ public class TextHint extends PopUp {
 
     // TODO : Избавиться от метода
     private void init(com.geargames.common.String text, PFont font, int color, boolean scrollable, int time, int vanishTime, int margin) {
-        textArea.setData(text);
+        textArea.setText(text);
         textArea.setFont(font);
         textArea.setColor(color);
         textArea.setFormat(Graphics.HCENTER | Graphics.TOP);
@@ -150,8 +150,8 @@ public class TextHint extends PopUp {
         topLeftSkin.copyTo(bottomRightSkin);
     }
 
-    private void setData(String data) {
-        textArea.setData(data);
+    private void setText(String text) {
+        textArea.setText(text);
         initiated = false;
     }
 
@@ -223,12 +223,16 @@ public class TextHint extends PopUp {
 
     protected Region getRegionToDraw(Graphics graphics) {
         if (!initiated) {
+            // Нужно для TextHelper
+            PFont oldFont = graphics.getFont();
+            graphics.setFont(textArea.getFont());
+
             int halfScreenW = Port.getScreenW() >> 1;
             int halfScreenH = Port.getScreenH() >> 1;
             int doubleMargin = margin << 1;
-            int regionWidth = graphics.getWidth(textArea.getData());
+            int regionWidth = graphics.getWidth(textArea.getText());
             if (regionWidth > halfScreenW) {
-                int word = TextHelper.getMaxWordLength(textArea.getData(), graphics);
+                int word = TextHelper.getMaxWordLength(textArea.getText(), graphics);
                 regionWidth = halfScreenW > word ? halfScreenW : word;
             }
             int middleWidth = regionWidth + doubleMargin - getMiddleLeftSkin().getWidth() - getMiddleRightSkin().getWidth();
@@ -243,7 +247,8 @@ public class TextHint extends PopUp {
             int hMargin = (fullRegionWidth - regionWidth) >> 1;
             evaluatedRegion.setMinX(left + hMargin);
             evaluatedRegion.setWidth(regionWidth);
-            int rowCount = TextHelper.indexData(textArea.getData(), evaluatedRegion, graphics, Graphics.HCENTER).length / 2;
+            int[] indexes = TextHelper.textIndexing(textArea.getText(), evaluatedRegion, graphics, Graphics.HCENTER);
+            int rowCount = indexes.length / 2;
             int regionHeight = rowCount * rowHeight < halfScreenH - doubleMargin ? rowCount * rowHeight : halfScreenH - doubleMargin;
             int skinAmount = ((doubleMargin + regionHeight) / getTopLeftSkin().getHeight()) + (regionHeight % getTopLeftSkin().getHeight() != 0 ? 1 : 0);
             int fullRegionHeight = skinAmount * getTopLeftSkin().getHeight();
@@ -258,6 +263,8 @@ public class TextHint extends PopUp {
             drawRegion.setWidth(regionWidth);
             drawRegion.setHeight(regionHeight);
             textArea.setInitiated(false);
+
+            graphics.setFont(oldFont);
 
             edgeRegion.setMinX(left);
             edgeRegion.setMinY(top);

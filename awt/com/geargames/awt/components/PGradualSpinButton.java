@@ -5,7 +5,7 @@ import com.geargames.common.Event;
 import com.geargames.common.packer.PObject;
 
 /**
- * User: mikhail v. kutuzov
+ * Users: mikhail v. kutuzov, abarakov
  * Date: 27.12.12
  * Time: 13:13
  */
@@ -13,14 +13,14 @@ public class PGradualSpinButton extends PTouchButton {
     private byte counter;
     private int fps;
     private int tickCounter;
-    private PGradualSpinBox box;
+    private PGradualSpinBox parentBox;
     private byte direction = 0;
 
-    public PGradualSpinButton(PObject prototype, boolean direction) {
+    public PGradualSpinButton(PObject prototype, boolean isIncreaseDirection) {
         super(prototype);
         tickCounter = 0;
         counter = 0;
-        this.direction = (byte) (direction ? 1 : -1);
+        this.direction = (byte) (isIncreaseDirection ? 1 : -1);
     }
 
     /**
@@ -36,14 +36,14 @@ public class PGradualSpinButton extends PTouchButton {
     }
 
     protected void second() {
-        box.setValue((short) (box.getValue() + counter*direction));
+        parentBox.setValue((short) (parentBox.getValue() + counter * direction));
     }
 
     public boolean event(int code, int param, int x, int y) {
         if (code == Event.EVENT_TICK) {
             if (isState()) {
                 if (tickCounter++ % fps == 0) {
-                    int seconds = tickCounter/fps;
+                    int seconds = tickCounter / fps;
                     Debug.trace("tick counter " + tickCounter + " fps " + fps);
                     Debug.trace("seconds " + seconds);
                     if (seconds < 10) {
@@ -62,12 +62,12 @@ public class PGradualSpinButton extends PTouchButton {
     }
 
     public void action() {
+//        parentBox.setValue((short) (parentBox.getValue() + (counter == 0 ? 1 : counter) * direction));
         tickCounter = 0;
         counter = 0;
-        box.setValue((short) (box.getValue() + counter));
     }
 
     public void setBox(PGradualSpinBox box) {
-        this.box = box;
+        this.parentBox = box;
     }
 }

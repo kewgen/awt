@@ -2,14 +2,15 @@ package com.geargames.common.packer;
 
 import com.geargames.common.String;
 /**
- * User: mikhail v. kutuzov
- * Фонт реализованный на спрайтах.
+ * User: mikhail v. kutuzov, abarakov
+ * Шрифт реализованный на спрайтах.
  */
 public abstract class PFont {
+
     /**
-     * Вернуть спрайт данного символа character.
+     * Вернуть спрайт указанного символа character.
      * @param character
-     * @return в случае если данный спрайт не найден возвращаем null.
+     * @return Возвращает ссылку на спрайт символа или null, если символ в шрифте не определен.
      */
     public abstract PSprite getSprite(char character);
 
@@ -20,26 +21,32 @@ public abstract class PFont {
     public abstract int getBaseLine();
 
     /**
-     * Вернуть размер фонта.
+     * Вернуть размер шрифта.
      * @return
      */
     public abstract int getSize();
 
     /**
-     * Вернуть ширину символа character для фонта.
+     * Вернуть ширину символа character для шрифта.
      * @param character
      * @return
      */
     public abstract int getWidth(char character);
 
     /**
-     * Вернуть длинну строки символов characters, представленной данным фонтом.
+     * Вернуть ширину строки символов characters, представленной данным шрифтом.
      * @param characters
      * @return
      */
-    public abstract int getWidth(String characters);
+    public int getWidth(String characters) {
+        int width = 0;
+        for (int i = 0; i < characters.length(); i++) {
+            width += getWidth(characters.charAt(i));
+        }
+        return width;
+    }
 
-    public byte getAscent(){
-        return (byte)(getSize() - getBaseLine());
+    public int getAscent(){
+        return getSize() - getBaseLine();
     }
 }

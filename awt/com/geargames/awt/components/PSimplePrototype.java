@@ -8,6 +8,7 @@ import com.geargames.common.Graphics;
  * User: mikhail v. kutuzov
  * Простой динамический пакерный объект, нужен только для соблюдения полиморфизма в общих алгоримах отрисовки.
  */
+@Deprecated // Используйте PPrototypeElement вместо PSimplePrototype
 public class PSimplePrototype extends PElement {
     private Region region;
     private Prototype prototype;

@@ -8,7 +8,7 @@ import com.geargames.common.packer.PObject;
  */
 public class PStepSpinButton extends PTouchButton {
     private byte step;
-    private PStepSpinBox box;
+    private PStepSpinBox parentBox;
 
     public PStepSpinButton(PObject prototype) {
         super(prototype);
@@ -19,10 +19,10 @@ public class PStepSpinButton extends PTouchButton {
     }
 
     public void setBox(PStepSpinBox box) {
-        this.box = box;
+        this.parentBox = box;
     }
 
     public void action() {
-        box.setValue((short)(box.getValue() + step));
+        parentBox.setValue((short)(parentBox.getValue() + step));
     }
 }

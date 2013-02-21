@@ -11,9 +11,7 @@ import com.geargames.common.util.Region;
 import java.util.Vector;
 
 public class TextArea extends VerticalScrollableArea {
-    public static char NEW_STRING = 10;
-
-    private String data;
+    private String text;
     private PFont font;
     private int format;
     private int rawHeight;
@@ -42,10 +40,14 @@ public class TextArea extends VerticalScrollableArea {
     }
 
     public void initiate(Graphics graphics) {
-        if (data == null || graphics == null) {
+        if (text == null || graphics == null) {
             return;
         }
-        indexes = TextHelper.indexData(data, region, graphics, format);
+        // Нужно для TextHelper
+        PFont oldFont = graphics.getFont();
+        graphics.setFont(font);
+
+        indexes = TextHelper.textIndexing(text, region, graphics, format);
         strings = new Vector(indexes.length / 2 + 1);
         if (!isEllipsis()) {
             motionListener = ScrollHelper.createVerticalMotionListener(verticalMotionListener, stubMotionListener, region, indexes.length / 2, rawHeight, format);
@@ -56,31 +58,27 @@ public class TextArea extends VerticalScrollableArea {
         String string;
         for (int i = 0; i < getItemsAmount(); i++) {
             if (!isEllipsis() || i + 1 != region.getHeight() / getRawHeight()) {
-                if (i != getItemsAmount() - 1) {
-                    string = data.substring(indexes[i * 2], indexes[(i + 1) * 2]).concat(NEW_STRING);
-                } else {
-                    string = data.substring(indexes[i * 2], indexes[(i + 1) * 2]);
-                }
+                string = text.substring(indexes[i * 2], indexes[(i + 1) * 2]);
             } else {
                 if (i != getItemsAmount() - 1) {
-                    string = data.substring(indexes[i * 2], indexes[(i + 1) * 2] - 3).concat("...");
+                    string = text.substring(indexes[i * 2], indexes[(i + 1) * 2] - 3).concat("...");
                 } else {
-                    string = data.substring(indexes[i * 2], indexes[(i + 1) * 2]).concat(NEW_STRING);
+                    string = text.substring(indexes[i * 2], indexes[(i + 1) * 2]);
                 }
             }
             strings.addElement(string);
         }
-
+        graphics.setFont(oldFont);
         setInitiated(true);
     }
 
     public void drawItem(Graphics graphics, int itemIndex, int position, int coordinate) {
         graphics.setColor(color);
         String string = (String) strings.elementAt(itemIndex);
-        PFont old = graphics.getFont();
+        PFont oldFont = graphics.getFont();
         graphics.setFont(font);
         graphics.drawString(string, coordinate + indexes[itemIndex * 2 + 1], position + graphics.getAscent(), 0);
-        graphics.setFont(old);
+        graphics.setFont(oldFont);
     }
 
     public int getItemsAmount() {
@@ -102,21 +100,26 @@ public class TextArea extends VerticalScrollableArea {
         return motionListener;
     }
 
-    public com.geargames.common.String getData() {
-        return data;
+    public String getText() {
+        return text;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public void setText(String text) {
+        this.text = text;
         setInitiated(false);
     }
 
+    /**
+     * Вернуть формат горизонтального выравнивания.
+     * Одно из значений Graphics.LEFT, Graphics.RIGHT или Graphics.HCENTER
+     */
     public int getFormat() {
         return format;
     }
 
     public void setFormat(int format) {
         this.format = format;
+        setInitiated(false);
     }
 
     public int getItemSize() {
@@ -140,8 +143,9 @@ public class TextArea extends VerticalScrollableArea {
         this.color = color;
     }
 
-    /** Это значит, что текст внутри не будет прокручиваться (100%) и дополнится троеточием,
-     *  в том случае, если он переполняет окошко в котором мы его отрисовываем
+    /**
+     * Если True, то для компонента запрещена прокрутка текста и в случае если текст целиком не помещается в пределах
+     * региона отрисовки, то он будет "обрезан" и в конец "обрезанного" текста будет добавлено троеточие.
      */
     public boolean isEllipsis() {
         return ellipsis;
@@ -149,6 +153,7 @@ public class TextArea extends VerticalScrollableArea {
 
     public void setEllipsis(boolean ellipsis) {
         this.ellipsis = ellipsis;
+        setInitiated(false);
     }
 
     public PFont getFont() {
