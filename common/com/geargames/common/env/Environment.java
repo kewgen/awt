@@ -4,45 +4,18 @@ package com.geargames.common.env; // env -> environment, app
  * User: abarakov
  * Date: 09.02.13 19:28
  */
+public abstract class Environment {
+    public abstract long currentTimeMillis();
 
-// Posible names: System, Runtime
-public class Environment {
+    public abstract long nanoTime();
 
-    public static long currentTimeMillis()
-    {
-        return System.currentTimeMillis();
-    }
+    public abstract void exit(int status);
 
-    public static long nanoTime()
-    {
-        return System.nanoTime();
-    }
+    public abstract int availableProcessors();
 
-    public static void exit(int status) {
-        System.exit(status);
-    }
+    public abstract long freeMemory();
 
-    public static void gc() {
-        System.gc();
-    }
+    public abstract long totalMemory();
 
-    public int availableProcessors()
-    {
-        return Runtime.getRuntime().availableProcessors();
-    }
-
-    public long freeMemory()
-    {
-        return Runtime.getRuntime().freeMemory();
-    }
-
-    public long totalMemory()
-    {
-        return Runtime.getRuntime().totalMemory();
-    }
-
-    public long maxMemory()
-    {
-        return Runtime.getRuntime().maxMemory();
-    }
+    public abstract long maxMemory();
 }
