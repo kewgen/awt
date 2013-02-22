@@ -1,12 +1,13 @@
 package com.geargames.common.packer;
 
 import com.geargames.common.String;
+import com.geargames.common.util.ArrayChar;
+
 /**
  * User: mikhail v. kutuzov, abarakov
  * Шрифт реализованный на спрайтах.
  */
 public abstract class PFont {
-
     /**
      * Вернуть спрайт указанного символа character.
      * @param character
@@ -38,15 +39,12 @@ public abstract class PFont {
      * @param characters
      * @return
      */
-    public int getWidth(String characters) {
-        int width = 0;
-        for (int i = 0; i < characters.length(); i++) {
-            width += getWidth(characters.charAt(i));
-        }
-        return width;
-    }
+    public abstract int getWidth(String characters);
 
-    public int getAscent(){
-        return getSize() - getBaseLine();
+
+    public abstract int getWidth(ArrayChar character, int position, int length);
+
+    public byte getAscent(){
+        return (byte)(getSize() - getBaseLine());
     }
 }

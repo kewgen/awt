@@ -1,5 +1,6 @@
 package com.geargames.common.packer;
 
+import com.geargames.common.util.ArrayChar;
 import com.geargames.common.util.ArrayList;
 
 /**
@@ -95,6 +96,24 @@ public class PFontCharRange extends PFont {
             characters.set(index, sprite);
         }
     }
+
+    public int getWidth(ArrayChar characters, int position, int length) {
+        int width = 0;
+        length += position;
+        for(int i = position; i < length; i++){
+            width += getWidth(characters.get(i));
+        }
+        return width;
+    }
+
+    public int getWidth(com.geargames.common.String characters) {
+        int width = 0;
+        for(int i = 0; i < characters.length(); i++){
+            width += getWidth(characters.charAt(i));
+        }
+        return width;
+    }
+
 
     /**
      * Вернуть массив символов данного диапазона символов шрифта.

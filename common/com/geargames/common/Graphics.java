@@ -3,6 +3,7 @@ package com.geargames.common;
 import com.geargames.common.packer.PAffine;
 import com.geargames.common.packer.PFont;
 import com.geargames.common.packer.PFrame;
+import com.geargames.common.util.ArrayChar;
 
 import java.io.IOException;
 
@@ -58,6 +59,8 @@ public interface Graphics {
     int getWidth(char character);
 
     int getWidth(String characters);
+
+    int getWidth(ArrayChar characters, int position, int length);
 
     Render getRender();
 
