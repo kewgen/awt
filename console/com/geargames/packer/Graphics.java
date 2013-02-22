@@ -9,6 +9,7 @@ import com.geargames.Manager;
 import com.geargames.common.packer.PFont;
 import com.geargames.common.packer.PFrame;
 import com.geargames.common.packer.PSprite;
+import com.geargames.common.util.ArrayChar;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -236,6 +237,15 @@ public class Graphics implements com.geargames.common.Graphics {
         } else {
             return graphics.getFontMetrics().charWidth(character);
         }
+    }
+
+    public int getWidth(ArrayChar characters, int position, int length) {
+        if (font != null) {
+            return font.getWidth(characters, position, length);
+        } else {
+            return graphics.getFontMetrics().charsWidth(characters.getArray(), position, length);
+        }
+
     }
 
     public int getWidth(String characters) {
