@@ -9,6 +9,8 @@ import com.geargames.common.packer.PFont;
 import com.geargames.common.util.Region;
 
 public class TextArea extends VerticalScrollableArea {
+    public static char NEW_STRING = 10;
+    
     private String text;
     private PFont font;
     private int format;
@@ -98,8 +100,8 @@ public class TextArea extends VerticalScrollableArea {
         graphics.setFont(font);
         graphics.drawSubstring(
                 text,
-                indexes[itemIndex * 2 + 0], indexes[itemIndex * 2 + 2],
-                x + indexes[itemIndex * 2 + 1], y + graphics.getAscent(), 0);
+                indexes[itemIndex * 3 + 0], indexes[itemIndex * 3 + 3],
+                x + indexes[itemIndex * 3 + 1], y + graphics.getAscent(), 0);
         if (itemIndex == itemEllipsisIndex) {
             graphics.drawString(STR_ELIPSIS, x + ellipsisOffsetX, y + graphics.getAscent(), 0);
         }
@@ -107,7 +109,7 @@ public class TextArea extends VerticalScrollableArea {
     }
 
     public int getItemsAmount() {
-        return indexes != null ? indexes.length / 2 : 0;
+        return indexes != null ? indexes.length / 3 : 0;
     }
 
     public boolean isVertical() {
