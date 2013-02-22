@@ -6,7 +6,7 @@ import com.geargames.common.Event;
 import com.geargames.common.Graphics;
 
 /**
- * User: mikhail v. kutuzov
+ * User: mikhail v. kutuzov, abarakov
  * Date: 27.11.12
  * Time: 16:32
  */
@@ -50,10 +50,10 @@ public abstract class HorizontalScrollableArea extends ScrollableArea {
      *
      * @param graphics
      * @param itemIndex
-     * @param position
+     * @param x
+     * @param y
      */
-    public abstract void drawItem(Graphics graphics, int itemIndex, int position, int coordinate);
-
+    public abstract void drawItem(Graphics graphics, int itemIndex, int x, int y);
 
     /**
      * Выполнение всех манипуляций на один игровой тик
@@ -94,16 +94,27 @@ public abstract class HorizontalScrollableArea extends ScrollableArea {
     }
 
     /**
-     * Вернуть процентную долю списка прокрурученную от начальной позиции до текущей.
+     * Вернуть высоту видимой области
+     *
+     * @return
+     */
+    public int getDrawableAreaSize() {
+        return getDrawRegion().getWidth();
+    }
+
+    /**
+     * Вернуть процентную долю списка прокрученную от начальной позиции до текущей.
      *
      * @return
      */
     public int getScrollPercent() {
         int window = getItemsAmount() * getItemSize();
+//      window -= getDrawRegion().getHeight(); //todo: Вероятно это тоже нужно?
         if (getTouchRegion().getWidth() >= window) {
             return 0;
         } else {
             return (100 * ((getTouchRegion().getMinX() - getPosition()))) / window;
         }
     }
+
 }

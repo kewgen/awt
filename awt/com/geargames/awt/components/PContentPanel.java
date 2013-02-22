@@ -9,7 +9,7 @@ import com.geargames.common.Graphics;
 import com.geargames.common.util.NullRegion;
 
 /**
- * User: mikhail v. kutuzov
+ * User: mikhail v. kutuzov, abarakov
  * Абстрактный класс игровая панель, предназначен для доставки событий приложения на уровень компонентов и поддерживает
  * "проглатывание" всех событий панели "компонентом-потребителем" + поддерживает отрисовку компонентов на игровом экране.
  */
@@ -51,7 +51,7 @@ public abstract class PContentPanel extends PObjectElement {
     }
 
     /**
-     * Вернуть здесь объекты, которые изображаются на панели.
+     * Вернуть список дочерних элементов, которые могут изображаться на панели.
      *
      * @return
      */
@@ -60,13 +60,21 @@ public abstract class PContentPanel extends PObjectElement {
     }
 
     /**
-     * Вернуть объекты которые могут обробатывать события.
+     * Вернуть список дочерних элементов, которые могут потреблять события.
      *
      * @return
      */
     protected ArrayList getActiveChildren() {
         return activeChildren;
     }
+
+    /**
+     * Нарисовать панель со всеми ее дочерними элементами
+     *
+     * @param graphics
+     * @param x координата по оси Х в локальной системе координат элемента.
+     * @param y координата по оси Y в локальной системе координат элемента.
+     */
 
     public void draw(Graphics graphics, int x, int y) {
         for (int i = 0; i < getChildren().size(); i++) {
@@ -78,9 +86,9 @@ public abstract class PContentPanel extends PObjectElement {
     }
 
     /**
-     * В панель содержимого пришло событие, если оно лежит  в пределах панели, то мы пытаемся разослать его дочерним
-     * элементам и обработав ответ, решить: захватил ли какой либо из них контроль над событиями.
-     * Данная реализация предполагает, что координаты важны только для тычковых событий.
+     * В панель содержимого пришло событие, если оно лежит в пределах панели, то мы пытаемся разослать это событие всем
+     * дочерним элементам и обработав ответ, решить, захватил ли какой-либо из них контроль над событиями или нет.
+     * Данная реализация предполагает, что координаты важны только для тачовых событий.
      *
      * @param code
      * @param param
@@ -109,7 +117,7 @@ public abstract class PContentPanel extends PObjectElement {
                     return true;
             } else {
                 int size = getActiveChildren().size();
-                for (int i = size-1; i >= 0; i--) {
+                for (int i = size - 1; i >= 0; i--) {
                     PElement child = (PElement) getActiveChildren().get(i);
                     if (child.isVisible()) {
                         int clientX = x - child.getX();
@@ -119,8 +127,9 @@ public abstract class PContentPanel extends PObjectElement {
                             if (code == Event.EVENT_TOUCH_PRESSED) {
                                 dedicatedConsumer = child;
                                 return true;
-                            } else
+                            } else {
                                 return false;
+                            }
                         }
                     }
                 }
@@ -130,13 +139,13 @@ public abstract class PContentPanel extends PObjectElement {
     }
 
     /**
-     * Добавляем сдесь элементы на панель, в конкретную точку, выраженную смещениями элемента от левого верхнего угла
-     * панели (x:y)
+     * Добавляем здесь элементы на панель, в конкретную точку, выраженную смещениями элемента от левого верхнего угла
+     * панели (x, y)
      *
-     * @param element
-     * @param x
-     * @param y
-     * @param active  true если мы кладём элемент который будет потреблять события
+     * @param element добавляемый элемент
+     * @param x       координата расположения элемента по оси X в локальной системе координат панели
+     * @param y       координата расположения элемента по оси Y в локальной системе координат панели
+     * @param active  true, если добавляемый элемент может потреблять события
      */
     public void addChild(PElement element, int x, int y, boolean active) {
         element.setX(x);
@@ -178,7 +187,7 @@ public abstract class PContentPanel extends PObjectElement {
     }
 
     /**
-     * Вернуть дочерний элемент который зарегистрировался как единственный потребитель событий на панели.
+     * Вернуть дочерний элемент, который зарегистрировался, как единственный потребитель событий на панели.
      *
      * @return
      */

@@ -6,7 +6,7 @@ import com.geargames.common.Event;
 import com.geargames.common.Graphics;
 
 /**
- * User: mikhail v. kutuzov
+ * User: mikhail v. kutuzov, abarakov
  * Date: 27.11.12
  * Time: 16:17
  */
@@ -34,14 +34,14 @@ public abstract class VerticalScrollableArea extends ScrollableArea {
         if (isStrictlyClipped()) {
             for (int i = 0; i < getItemsAmount(); i++) {
                 if (localPosition >= clipMin && localPosition + getItemSize() <= clipMax) {
-                    drawItem(graphics, i, localPosition, x);
+                    drawItem(graphics, i, x, localPosition);
                 }
                 localPosition += getItemSize();
             }
         } else {
             for (int i = 0; i < getItemsAmount(); i++) {
                 if (localPosition + getItemSize() > clipMin && localPosition - getItemSize() <= clipMax) {
-                    drawItem(graphics, i, localPosition, x);
+                    drawItem(graphics, i, x, localPosition);
                 }
                 localPosition += getItemSize();
             }
@@ -54,9 +54,10 @@ public abstract class VerticalScrollableArea extends ScrollableArea {
      *
      * @param graphics
      * @param itemIndex
-     * @param position
+     * @param x
+     * @param y
      */
-    public abstract void drawItem(Graphics graphics, int itemIndex, int position, int coordinate);
+    public abstract void drawItem(Graphics graphics, int itemIndex, int x, int y);
 
     /**
      * Выполнение всех манипуляций на один игровой тик
@@ -96,15 +97,23 @@ public abstract class VerticalScrollableArea extends ScrollableArea {
         }
     }
 
+    /**
+     * Вернуть высоту видимой области
+     *
+     * @return
+     */
+    public int getDrawableAreaSize() {
+        return getDrawRegion().getHeight();
+    }
 
     /**
-     * Вернуть процентную долю списка прокрурученную от начальной позиции до текущей.
+     * Вернуть процентную долю списка прокрученную от начальной позиции до текущей.
      *
      * @return
      */
     public int getScrollPercent() {
         int window = getItemsAmount() * getItemSize();
-
+//      window -= getDrawRegion().getHeight(); //todo: Вероятно это тоже нужно?
         if (getTouchRegion().getHeight() >= window) {
             return 0;
         } else {

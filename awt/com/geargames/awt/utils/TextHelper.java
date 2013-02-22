@@ -13,9 +13,6 @@ import com.geargames.common.util.Region;
  */
 public class TextHelper {
 
-    private static char SPACE = ' ';
-    private static char LINE_SEPARATOR = '\n';
-
     /**
      * Метод предназначен для разбиения текста на подстроки (индексирования). Разбиение всегда происходит по
      * границам слов (символам пробела) или символам перевода строки.
@@ -78,7 +75,7 @@ public class TextHelper {
                     offsetIndexSubLine++;
                     previousIndex = -1;
                 }
-            } else if (textRemains.charAt(index) == LINE_SEPARATOR) {
+            } else if (textRemains.charAt(index) == String.LINE_SEPARATOR) {
                 textRemains = textRemains.substring(index + 1);
                 indexes[offsetIndexSubLine++] = ScrollHelper.getXTextBegin(format, region, width);
                 indexes[offsetIndexSubLine] = indexes[offsetIndexSubLine - 2] + index + 1;
@@ -94,7 +91,7 @@ public class TextHelper {
             indexes[offsetIndexSubLine++] = ScrollHelper.getXTextBegin(format, region, width);
             indexes[offsetIndexSubLine] = text.length();
         } else {
-            indexes[offsetIndexSubLine++] = ScrollHelper.getXTextBegin(format, region, previousWidth - graphics.getWidth(SPACE));
+            indexes[offsetIndexSubLine++] = ScrollHelper.getXTextBegin(format, region, previousWidth - graphics.getWidth(String.SPACE));
             indexes[offsetIndexSubLine] = indexes[offsetIndexSubLine - 2] + previousIndex + 1;
             offsetIndexSubLine++;
             textRemains = textRemains.substring(previousIndex + 1);
@@ -139,8 +136,8 @@ public class TextHelper {
      * Поиск начинается с индекса from.
      */
     public static int getNextWordBreakIndex(String string, int from) {
-        int spaceIndex = string.indexOf(SPACE, from);
-        int carriageIndex = string.indexOf(LINE_SEPARATOR, from);
+        int spaceIndex = string.indexOf(String.SPACE, from);
+        int carriageIndex = string.indexOf(String.LINE_SEPARATOR, from);
         return spaceIndex > carriageIndex ? (carriageIndex != -1 ? carriageIndex : spaceIndex) : (spaceIndex != -1 ? spaceIndex : carriageIndex);
     }
 
@@ -151,7 +148,7 @@ public class TextHelper {
         int length = string.length();
         int counter = 0;
         for (int i = 0; i < length; i++) {
-            if (string.charAt(i) == LINE_SEPARATOR) {
+            if (string.charAt(i) == String.LINE_SEPARATOR) {
                 counter++;
             }
         }

@@ -11,7 +11,7 @@ import java.util.Vector;
 
 /**
  * User: mikhail v. kutuzov
- * Реализация HorizontalScrollView для списка элементов(меню) на основе prototype из пакера.
+ * Реализация HorizontalScrollView для списка элементов (меню) на основе prototype из пакера.
  */
 public class PHorizontalScrollView extends HorizontalScrollView {
     private Vector items;
@@ -98,4 +98,5 @@ public class PHorizontalScrollView extends HorizontalScrollView {
     public void initiate(Graphics graphics) {
         setInitiated(true);
     }
+
 }

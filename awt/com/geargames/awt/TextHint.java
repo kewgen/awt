@@ -227,9 +227,9 @@ public class TextHint extends PopUp {
             PFont oldFont = graphics.getFont();
             graphics.setFont(textArea.getFont());
 
-            int halfScreenW = Port.getScreenW() >> 1;
-            int halfScreenH = Port.getScreenH() >> 1;
-            int doubleMargin = margin << 1;
+            int halfScreenW = Port.getScreenW() / 2;
+            int halfScreenH = Port.getScreenH() / 2;
+            int doubleMargin = margin * 2;
             int regionWidth = graphics.getWidth(textArea.getText());
             if (regionWidth > halfScreenW) {
                 int word = TextHelper.getMaxWordLength(textArea.getText(), graphics);
@@ -244,7 +244,7 @@ public class TextHint extends PopUp {
             }
             int rowHeight = TextHelper.getRowHeight(graphics);
             textArea.setRawHeight(rowHeight);
-            int hMargin = (fullRegionWidth - regionWidth) >> 1;
+            int hMargin = (fullRegionWidth - regionWidth) / 2;
             evaluatedRegion.setMinX(left + hMargin);
             evaluatedRegion.setWidth(regionWidth);
             int[] indexes = TextHelper.textIndexing(textArea.getText(), evaluatedRegion, graphics, Graphics.HCENTER);
@@ -255,7 +255,7 @@ public class TextHint extends PopUp {
             if (top + fullRegionHeight > Port.getScreenH()) {
                 top = -fullRegionHeight + Port.getScreenH();
             }
-            int vertMargin = (fullRegionHeight - regionHeight) >> 1;
+            int vertMargin = (fullRegionHeight - regionHeight) / 2;
 
             Region drawRegion = textArea.getDrawRegion();
             drawRegion.setMinX(margin);
