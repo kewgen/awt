@@ -1,4 +1,4 @@
-package com.geargames.awt.components;
+﻿package com.geargames.awt.components;
 
 import com.geargames.awt.utils.*;
 import com.geargames.awt.utils.motions.InertMotionListener;
@@ -11,6 +11,8 @@ import com.geargames.common.util.Region;
 import java.util.Vector;
 
 public class TextArea extends VerticalScrollableArea {
+    public static char NEW_STRING = 10;
+    
     private String text;
     private PFont font;
     private int format;
@@ -43,7 +45,6 @@ public class TextArea extends VerticalScrollableArea {
         if (text == null || graphics == null) {
             return;
         }
-        // Нужно для TextHelper
         PFont oldFont = graphics.getFont();
         graphics.setFont(font);
 
@@ -55,15 +56,20 @@ public class TextArea extends VerticalScrollableArea {
             motionListener = ScrollHelper.adjustStubMotionListener(stubMotionListener, region, indexes.length / 2, rawHeight, format);
         }
         setStrictlyClipped(isEllipsis());
-        String string;
+
         for (int i = 0; i < getItemsAmount(); i++) {
+            String string;
             if (!isEllipsis() || i + 1 != region.getHeight() / getRawHeight()) {
-                string = text.substring(indexes[i * 2], indexes[(i + 1) * 2]);
+                if (i != getItemsAmount() - 1) {
+                    string = text.substring(indexes[i * 3], indexes[i * 3] + indexes[i * 3 + 1]).concat(NEW_STRING);
+                } else {
+                    string = text.substring(indexes[i * 3], indexes[i * 3] + indexes[i * 3 + 1]);
+                }
             } else {
                 if (i != getItemsAmount() - 1) {
-                    string = text.substring(indexes[i * 2], indexes[(i + 1) * 2] - 3).concat("...");
+                    string = text.substring(indexes[i * 3], indexes[i * 3] + indexes[i * 3 + 1]).concat("...");
                 } else {
-                    string = text.substring(indexes[i * 2], indexes[(i + 1) * 2]);
+                    string = text.substring(indexes[i * 3], indexes[i * 3] + indexes[i * 3 + 1]).concat(NEW_STRING);
                 }
             }
             strings.addElement(string);
@@ -77,12 +83,12 @@ public class TextArea extends VerticalScrollableArea {
         String string = (String) strings.elementAt(itemIndex);
         PFont oldFont = graphics.getFont();
         graphics.setFont(font);
-        graphics.drawString(string, coordinate + indexes[itemIndex * 2 + 1], position + graphics.getAscent(), 0);
+        graphics.drawString(string, coordinate + indexes[itemIndex * 3 + 2], position + graphics.getAscent(), 0);
         graphics.setFont(oldFont);
     }
 
     public int getItemsAmount() {
-        return indexes != null ? indexes.length >> 1 : 0;
+        return indexes != null ? indexes.length / 3 : 0;
     }
 
     /**

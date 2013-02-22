@@ -1,10 +1,19 @@
-package com.geargames.awt.utils;
+﻿package com.geargames.awt.utils;
 
 import com.geargames.Debug;
 import com.geargames.awt.Drawable;
 import com.geargames.common.String;
 import com.geargames.common.Graphics;
+import com.geargames.common.util.ArrayChar;
+import com.geargames.common.util.ArrayHelper;
+import com.geargames.common.util.ArrayInt;
 import com.geargames.common.util.Region;
+
+/**
+ * user: Mikhail V. Kutuzov
+ * date: 19.11.11
+ * time: 19:26
+ */
 
 /**
  * user: Mikhail V. Kutuzov
@@ -14,119 +23,152 @@ import com.geargames.common.util.Region;
 public class TextHelper {
 
     private static char SPACE = ' ';
-    private static char LINE_SEPARATOR = '\n';
+    private static char CARRIAGE_DOWN = '\n';
 
     /**
-     * Метод предназначен для разбиения текста на подстроки (индексирования). Разбиение всегда происходит по
-     * границам слов (символам пробела) или символам перевода строки.
-     * Состав массива:
-     * набор пар значений [индекс первого символа подстроки][координата подстроки на graphics] и еще одно значение
-     * [индекс последнего символа] в самом конце массива, где:
-     * [индекс первого символа подстроки] - индекс символа, с которого начинается очередная подстрока;
-     * [координата подстроки на graphics] - смещение подстроки по горизонтали слева, вычисляется по заданному
-     * горизонтальному выравниванию;
-     * [индекс последнего символа] - это индекс пробела, если строка не последняя,
-     * если последняя, то [индекс последнего символа] - это индекс последнего символа разбиваемой строки.
-     * [индекс последнего символа] не может быть символом перевода строки, если так, то этот индекс указывает
-     * на предыдущий символ, если предыдущий символ тоже символ перевода строки или [индекс последнего символа]
-     * это первый символ строки...
+     * Метод предназначен для индексирования строки. Разбиения строки на отрезки всегда происходит по
+     * границам слов(символам пробела) или перевода строки.
      *
-     * @param text      строка, предназначенная для разбиения на подстроки
-     * @param region    прямоугольная область экрана, в пределах которой должен разместиться заданный текст
-     * @param graphics  графический контекст на котором будет отрисовываться text в region
-     * @param format    настройки горизонтального выравнивания текста (вертикальное выравнивание не учитывается)
-     * @return массив состоящий из пар элементов [индекс первого символа][координата строки на graphics по Х].
-     * Данный массив всегда имеет нечетную длинну
+     * @param data     строка , предназначенная для разбиения
+     * @param region   область экрана где должна разместится разбитая строка data
+     * @param graphics графический контекст на котором будем рисовать строчку data в region
+     * @param format   настройки форматирования для региона(здесь нас интересует только форматирование по Х )
+     * @return массив состоящий из элементов [индекс первого символа подстроки][количество символов подстроки][координта подстроки на graphics по Х]
      */
-    public static int[] textIndexing(String text, final Region region, Graphics graphics, int format) {
-        int count = graphics.getWidth(text) / region.getWidth();
-        count *= 2;
-        count += getLineSeparatorAmount(text) + 1;
-        int[] indexes = new int[3 + (count * 2)];
-        int offsetIndexSubLine = 0;
-        int previousIndex = 0;
-        String textRemains = String.valueOf(text);
-        int index = 0;
-        indexes[offsetIndexSubLine++] = previousIndex;
-        int width = 0;
-        int previousWidth = 0;
-        while (textRemains.length() > 0 && (index = getNextWordBreakIndex(textRemains, previousIndex + 1)) != -1) {
-            String sub = textRemains.substring(0, index);
-            width = graphics.getWidth(sub);
-            if (width > region.getWidth()) {
-                if (Drawable.DEBUG) {
-                    Debug.trace(text.toString());
-                }
-                if (previousIndex == -1) {
-                    if (Drawable.DEBUG) {
-                        Debug.trace("" + region.getWidth());
-                        Debug.trace("" + offsetIndexSubLine);
-                        for (int i = 1; i < offsetIndexSubLine - 1; i += 2) {
-                            Debug.trace(text.substring(indexes[i - 1], indexes[i + 1]).toString());
-                        }
-                        Debug.trace("the longest word " + sub);
-                        Debug.trace("the longest word length = " + width);
-                    }
-                    textRemains = textRemains.substring(index + 1);
-                    indexes[offsetIndexSubLine++] = ScrollHelper.getXTextBegin(format, region, width);
-                    indexes[offsetIndexSubLine] = indexes[offsetIndexSubLine - 2] + index + 1;
-                    offsetIndexSubLine++;
-                } else {
-                    textRemains = textRemains.substring(previousIndex + 1);
-                    indexes[offsetIndexSubLine++] = ScrollHelper.getXTextBegin(format, region, previousWidth);
-                    indexes[offsetIndexSubLine] = indexes[offsetIndexSubLine - 2] + previousIndex + 1;
-                    offsetIndexSubLine++;
-                    previousIndex = -1;
-                }
-            } else if (textRemains.charAt(index) == LINE_SEPARATOR) {
-                textRemains = textRemains.substring(index + 1);
-                indexes[offsetIndexSubLine++] = ScrollHelper.getXTextBegin(format, region, width);
-                indexes[offsetIndexSubLine] = indexes[offsetIndexSubLine - 2] + index + 1;
-                offsetIndexSubLine++;
-                previousIndex = -1;
-            } else {
-                previousIndex = index;
-                previousWidth = width;
-            }
-        }
-        width = graphics.getWidth(textRemains);
-        if (width <= region.getWidth()) {
-            indexes[offsetIndexSubLine++] = ScrollHelper.getXTextBegin(format, region, width);
-            indexes[offsetIndexSubLine] = text.length();
-        } else {
-            indexes[offsetIndexSubLine++] = ScrollHelper.getXTextBegin(format, region, previousWidth - graphics.getWidth(SPACE));
-            indexes[offsetIndexSubLine] = indexes[offsetIndexSubLine - 2] + previousIndex + 1;
-            offsetIndexSubLine++;
-            textRemains = textRemains.substring(previousIndex + 1);
-            width = graphics.getWidth(textRemains);
-            indexes[offsetIndexSubLine++] = ScrollHelper.getXTextBegin(format, region, width);
-            indexes[offsetIndexSubLine] = text.length();
-        }
+    public static int[] textIndexing(String data, final Region region, Graphics graphics, int format) {
+        int count = (graphics.getWidth(data) / region.getWidth());
+        count *= 3;
+        count += getTagsAmount(data) + 1;
+        ArrayInt indexes = new ArrayInt(3 + (count * 3));
 
-        int[] result = new int[offsetIndexSubLine + 1];
-        for (int i = 0; i < result.length; i++) {
-            result[i] = indexes[i];
+        ArrayChar characters = new ArrayChar(data.length());
+        for (int i = 0; i < characters.length(); i++) {
+            characters.set(i, data.charAt(i));
         }
+        ArrayInt separators = getSeparatorsArray(data);
+
+        int counter = 0;
+        int activeIndex = 0;
+        int previousIndex = 0;
+        boolean complete = false;
+        for (int i = 0; i < separators.length(); i++) {
+            complete = false;
+            int index = separators.get(i);
+            if (characters.get(index) == CARRIAGE_DOWN) {
+                indexes.set(counter, activeIndex);
+                if (graphics.getWidth(characters, activeIndex, index - activeIndex) < region.getWidth()) {
+                    indexes.set(counter + 1, index - activeIndex);
+                    indexes.set(counter + 2, ScrollHelper.getXTextBegin(format, region , graphics.getWidth(characters, activeIndex, index - activeIndex)));
+                    activeIndex = index + 1;
+                    complete = true;
+                } else {
+                    if (previousIndex != activeIndex) {
+                        indexes.set(counter + 1, previousIndex - activeIndex);
+                        indexes.set(counter + 2, ScrollHelper.getXTextBegin(format, region , graphics.getWidth(characters, activeIndex, previousIndex - activeIndex)));
+                        activeIndex = previousIndex + 1;
+                    } else {
+                        //todo длинная строка
+                        indexes.set(counter + 1, index - activeIndex);
+                        indexes.set(counter + 2, ScrollHelper.getXTextBegin(format, region , region.getWidth()));
+                        activeIndex = index + 1;
+                        complete = true;
+                    }
+                }
+                counter += 3;
+            } else {
+                if (graphics.getWidth(characters, activeIndex, index - activeIndex) > region.getWidth()) {
+                    if (previousIndex != activeIndex) {
+                        indexes.set(counter, activeIndex);
+                        indexes.set(counter + 1, previousIndex - activeIndex);
+                        indexes.set(counter + 2, ScrollHelper.getXTextBegin(format, region, graphics.getWidth(characters, activeIndex, previousIndex - activeIndex)));
+                        counter += 3;
+                        activeIndex = index + 1;
+                    } else {
+                        //todo длинная строка
+                        indexes.set(counter, activeIndex);
+                        indexes.set(counter + 1, index - activeIndex);
+                        indexes.set(counter + 2, ScrollHelper.getXTextBegin(format, region , region.getWidth()));
+                        activeIndex = index + 1;
+                        complete = true;
+                    }
+                    counter += 3;
+                }
+            }
+            previousIndex = index + 1;
+        }
+        if (!complete) {
+            indexes.set(counter, activeIndex);
+            indexes.set(counter + 1, previousIndex - activeIndex);
+            indexes.set(counter + 2, ScrollHelper.getXTextBegin(format, region, graphics.getWidth(characters, activeIndex, previousIndex - activeIndex)));
+        }
+        separators.free();
+        int[] result = new int[counter];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = indexes.get(i);
+        }
+        indexes.free();
         return result;
+    }
+
+    private static ArrayInt getSeparatorsArray(String data) {
+        int length = data.length();
+        int amount = 0;
+        if (length > 0) {
+            for (int i = 0; i < length; i++) {
+                char tmp = data.charAt(i);
+                if (tmp == SPACE || tmp == CARRIAGE_DOWN) {
+                    amount++;
+                }
+            }
+            if (!isSeparator(data.charAt(0))) {
+                amount++;
+            }
+            if (!isSeparator(data.charAt(length - 1))) {
+                amount++;
+            }
+            ArrayInt separators = new ArrayInt(amount);
+            int count = 0;
+            for (int i = 0; i < length; i++) {
+                if (i == 0 && !isSeparator(data.charAt(i))) {
+                    separators.set(count++, i);
+                } else if (i == length - 1 && !isSeparator(data.charAt(i))) {
+                    separators.set(count++, i);
+                } else if (isSeparator(data.charAt(i))) {
+                    separators.set(count++, i);
+                }
+            }
+            return separators;
+        } else {
+            return new ArrayInt(0);
+        }
+    }
+
+    private static boolean isSeparator(char character) {
+        return character == SPACE || character == CARRIAGE_DOWN;
     }
 
     public static int getMaxWordLength(String tmp, Graphics graphics) {
         int previousEnd = -1;
         int end = 0;
         int length = 0;
-        while ((end = getNextWordBreakIndex(tmp, previousEnd + 1)) != -1) {
-            String temp = tmp.substring(previousEnd + 1, end + 1);
-            int len = graphics.getWidth(temp);
+        int len;
+        ArrayChar string = new ArrayChar(tmp.length());
+        for (int i = 0; i < string.length(); i++) {
+            string.set(i, tmp.charAt(i));
+        }
+        while ((end = getNextTagIndex(string, previousEnd + 1)) != -1) {
+            len = graphics.getWidth(string, previousEnd + 1, end + 1 - (previousEnd >= 0 ? previousEnd : 0));
             if (len > length) {
                 length = len;
             }
             previousEnd = end;
         }
-        int len = graphics.getWidth(tmp.substring(previousEnd + 1));
+        len = graphics.getWidth(tmp.substring(previousEnd + 1));
         len = (len > length ? len : length);
         if (Drawable.DEBUG) {
             Debug.trace("the longest word length " + len);
         }
+        string.free();
         return len;
     }
 
@@ -134,24 +176,17 @@ public class TextHelper {
         return graphics.getFontSize();
     }
 
-    /**
-     * Находит индекс символа-разделителя слов (пробельный символ или символ-разделитель строк).
-     * Поиск начинается с индекса from.
-     */
-    public static int getNextWordBreakIndex(String string, int from) {
-        int spaceIndex = string.indexOf(SPACE, from);
-        int carriageIndex = string.indexOf(LINE_SEPARATOR, from);
+    public static int getNextTagIndex(ArrayChar string, int from) {
+        int spaceIndex = ArrayHelper.findNext(string, from, SPACE);
+        int carriageIndex = ArrayHelper.findNext(string, from, CARRIAGE_DOWN);
         return spaceIndex > carriageIndex ? (carriageIndex != -1 ? carriageIndex : spaceIndex) : (spaceIndex != -1 ? spaceIndex : carriageIndex);
     }
 
-    /**
-     * Подсчитывает количество символов-разделителей строк.
-     */
-    public static int getLineSeparatorAmount(String string) {
+    public static int getTagsAmount(com.geargames.common.String string) {
         int length = string.length();
         int counter = 0;
         for (int i = 0; i < length; i++) {
-            if (string.charAt(i) == LINE_SEPARATOR) {
+            if (string.charAt(i) == CARRIAGE_DOWN) {
                 counter++;
             }
         }
