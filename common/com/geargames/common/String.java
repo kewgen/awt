@@ -2,10 +2,13 @@ package com.geargames.common;
 
 public class String {
 
+    public final static char SPACE = ' ';
+    public final static char LINE_SEPARATOR = '\n';
+
     private StringBuilder string;
 
-    private String(java.lang.String string) {
-        this.string = new StringBuilder(string);
+    private String(java.lang.String str) {
+        this.string = new StringBuilder(str);
     }
 
     private String(StringBuilder stringBuilder) {
@@ -46,16 +49,16 @@ public class String {
         return new String(string.append(value));
     }
 
-    public char charAt(int value) {
-        return string.charAt(value);
+    public char charAt(int index) {
+        return string.charAt(index);
     }
 
-    public String substring(int a, int b) {
-        return new String(string.substring(a, b));
+    public String substring(int start, int end) {
+        return new String(string.substring(start, end));
     }
 
-    public String substring(int a) {
-        return new String(string.substring(a));
+    public String substring(int start) {
+        return new String(string.substring(start));
     }
 
     public int length() {

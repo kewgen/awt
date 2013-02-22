@@ -34,14 +34,25 @@ public abstract class PFont {
     public abstract int getWidth(char character);
 
     /**
-     * Вернуть ширину строки символов characters, представленной данным шрифтом.
-     * @param characters
+     * Вернуть ширину строки символов string, представленной данным шрифтом.
+     * @param string
      * @return
      */
-    public int getWidth(String characters) {
+    public int getWidth(String string) {
+        return getWidth(string, 0, string.length());
+    }
+
+    /**
+     * Вернуть ширину подстроки символов string, представленной данным шрифтом.
+     * @param string
+     * @param start
+     * @param end
+     * @return
+     */
+    public int getWidth(String string, int start, int end) {
         int width = 0;
-        for (int i = 0; i < characters.length(); i++) {
-            width += getWidth(characters.charAt(i));
+        for (int i = start; i < end; i++) {
+            width += getWidth(string.charAt(i));
         }
         return width;
     }

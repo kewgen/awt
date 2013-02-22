@@ -13,7 +13,7 @@ public class PFontComposite extends PFont {
     private int baseLine;
     private int lastIndex = 0;
 
-    public static char DEFAULT_CHAR = '?';
+    public final static char DEFAULT_CHAR = '?';
     private PSprite defaultSprite = null;
 
     PFontComposite(ArrayList fonts) {
