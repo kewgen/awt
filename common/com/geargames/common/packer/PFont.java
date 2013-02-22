@@ -1,6 +1,8 @@
 package com.geargames.common.packer;
 
 import com.geargames.common.String;
+import com.geargames.common.util.ArrayChar;
+
 /**
  * User: mikhail v. kutuzov, abarakov
  * Шрифт реализованный на спрайтах.
@@ -38,26 +40,12 @@ public abstract class PFont {
      * @param string
      * @return
      */
-    public int getWidth(String string) {
-        return getWidth(string, 0, string.length());
-    }
+    public abstract int getWidth(String string);
 
-    /**
-     * Вернуть ширину подстроки символов string, представленной данным шрифтом.
-     * @param string
-     * @param start
-     * @param end
-     * @return
-     */
-    public int getWidth(String string, int start, int end) {
-        int width = 0;
-        for (int i = start; i < end; i++) {
-            width += getWidth(string.charAt(i));
-        }
-        return width;
-    }
 
-    public int getAscent(){
-        return getSize() - getBaseLine();
+    public abstract int getWidth(ArrayChar character, int position, int length);
+
+    public byte getAscent(){
+        return (byte)(getSize() - getBaseLine());
     }
 }
