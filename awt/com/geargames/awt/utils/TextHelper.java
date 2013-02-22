@@ -14,12 +14,6 @@ import com.geargames.common.util.Region;
  * date: 19.11.11
  * time: 19:26
  */
-
-/**
- * user: Mikhail V. Kutuzov
- * date: 19.11.11
- * time: 19:26
- */
 public class TextHelper {
 
     private static char SPACE = ' ';

@@ -60,11 +60,11 @@ public interface Graphics {
 
     int getWidth(char character);
 
+    int getWidth(ArrayChar characters, int position, int length);
+
     int getWidth(String string);
 
     int getWidth(String string, int start, int end);
-
-    int getWidth(ArrayChar characters, int position, int length);
 
     Render getRender();
 

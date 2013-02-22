@@ -9,8 +9,7 @@ import com.geargames.common.packer.PFont;
 import com.geargames.common.util.Region;
 
 public class TextArea extends VerticalScrollableArea {
-    public static char NEW_STRING = 10;
-    
+
     private String text;
     private PFont font;
     private int format;
@@ -53,8 +52,8 @@ public class TextArea extends VerticalScrollableArea {
             // Многоточие будет добавлено
             itemEllipsisIndex = getShownItemsAmount() - 1;
             int ellipsisWidth = graphics.getWidth(STR_ELIPSIS);
-            int endCharIndex = indexes[itemEllipsisIndex * 2 + 2];
-            int charIndex = indexes[itemEllipsisIndex * 2 + 0];
+            int charIndex = indexes[itemEllipsisIndex * 3 + 0];
+            int endCharIndex = indexes[itemEllipsisIndex * 3 + 1] + charIndex;
             int substringWidth = ellipsisWidth;
             int drawRegionWidth = getDrawRegion().getWidth();
             while (charIndex < endCharIndex) {
@@ -67,8 +66,8 @@ public class TextArea extends VerticalScrollableArea {
                 charIndex++;
             }
             int offsetX = ScrollHelper.getXTextBegin(format, getDrawRegion(), substringWidth);
-            indexes[itemEllipsisIndex * 2 + 1] = offsetX;
-            indexes[itemEllipsisIndex * 2 + 2] = charIndex;
+            indexes[itemEllipsisIndex * 2 + 2] = offsetX;
+            indexes[itemEllipsisIndex * 2 + 1] = charIndex - indexes[itemEllipsisIndex * 3 + 0];
             ellipsisOffsetX = offsetX + substringWidth - ellipsisWidth;
         } else {
             // В добавлении многоточия нет необходимости
@@ -85,10 +84,10 @@ public class TextArea extends VerticalScrollableArea {
                 verticalMotionListener = new InertMotionListener();
             }
             motionListener = ScrollHelper.createVerticalMotionListener(
-                    verticalMotionListener, stubMotionListener, region, indexes.length / 2, rawHeight, format);
+                    verticalMotionListener, stubMotionListener, region, getItemsAmount(), rawHeight, format);
         } else {
             motionListener = ScrollHelper.adjustStubMotionListener(
-                    stubMotionListener, region, indexes.length / 2, rawHeight, format);
+                    stubMotionListener, region, getItemsAmount(), rawHeight, format);
         }
 
         setInitiated(true);
@@ -98,10 +97,11 @@ public class TextArea extends VerticalScrollableArea {
         graphics.setColor(color);
         PFont oldFont = graphics.getFont();
         graphics.setFont(font);
+        int startIndex = indexes[itemIndex * 3 + 0];
         graphics.drawSubstring(
                 text,
-                indexes[itemIndex * 3 + 0], indexes[itemIndex * 3 + 3],
-                x + indexes[itemIndex * 3 + 1], y + graphics.getAscent(), 0);
+                startIndex, indexes[itemIndex * 3 + 1] + startIndex,
+                x + indexes[itemIndex * 3 + 2], y + graphics.getAscent(), 0);
         if (itemIndex == itemEllipsisIndex) {
             graphics.drawString(STR_ELIPSIS, x + ellipsisOffsetX, y + graphics.getAscent(), 0);
         }

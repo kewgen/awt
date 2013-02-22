@@ -9,6 +9,7 @@ import com.geargames.Manager;
 import com.geargames.common.packer.PFont;
 import com.geargames.common.packer.PFrame;
 import com.geargames.common.packer.PSprite;
+import com.geargames.common.util.ArrayChar;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -238,6 +239,14 @@ public class Graphics implements com.geargames.common.Graphics {
         }
     }
 
+    public int getWidth(ArrayChar characters, int position, int length) {
+        if (font != null) {
+            return font.getWidth(characters, position, length);
+        } else {
+            return graphics.getFontMetrics().charsWidth(characters.getArray(), position, length);
+        }
+    }
+
     public int getWidth(String string) {
         if (font != null) {
             return font.getWidth(string);
@@ -381,7 +390,7 @@ public class Graphics implements com.geargames.common.Graphics {
     public void drawSystemString(String string, int x, int y, int anchor) {
         switch (anchor) {
             case Graphics.HCENTER:
-                x -= getWidth(string) >> 1;
+                x -= getWidth(string) / 2;
                 break;
             case Graphics.RIGHT:
                 x -= getWidth(string);
@@ -415,7 +424,7 @@ public class Graphics implements com.geargames.common.Graphics {
     public void drawCustomSubstring(String string, int start, int end, int x, int y, int anchor) {
         switch (anchor) {
             case com.geargames.common.Graphics.HCENTER:
-                x -= getWidth(string, start, end) >> 1;
+                x -= getWidth(string, start, end) / 2;
                 break;
             case com.geargames.common.Graphics.RIGHT:
                 x -= getWidth(string, start, end);
