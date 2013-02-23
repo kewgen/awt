@@ -2,6 +2,7 @@ package com.geargames.common.packer;
 
 import com.geargames.common.util.ArrayChar;
 import com.geargames.common.util.ArrayList;
+import com.geargames.common.String;
 
 /**
  * User: mikhail v. kutuzov, abarakov
@@ -75,15 +76,6 @@ public class PFontCharRange extends PFont {
     }
 
     /**
-     * Вернуть ширину символа character для шрифта.
-     * @param character
-     * @return
-     */
-    public int getWidth(char character) {
-        return (((PSprite)characters.get(character - firstCharacter)).getIndex(0).getX());
-    }
-
-    /**
      * Добавить символ к данному диапазону символов шрифта с кодом character и соответствующим спрайтом sprite
      * @param character
      * @param sprite
@@ -97,6 +89,15 @@ public class PFontCharRange extends PFont {
         }
     }
 
+    /**
+     * Вернуть ширину символа character для шрифта.
+     * @param character
+     * @return
+     */
+    public int getWidth(char character) {
+        return (((PSprite)characters.get(character - firstCharacter)).getIndex(0).getX());
+    }
+
     public int getWidth(ArrayChar characters, int position, int length) {
         int width = 0;
         length += position;
@@ -106,14 +107,21 @@ public class PFontCharRange extends PFont {
         return width;
     }
 
-    public int getWidth(com.geargames.common.String characters) {
+    public int getWidth(String string) {
         int width = 0;
-        for(int i = 0; i < characters.length(); i++){
-            width += getWidth(characters.charAt(i));
+        for(int i = 0; i < string.length(); i++){
+            width += getWidth(string.charAt(i));
         }
         return width;
     }
 
+    public int getWidth(String string, int start, int end) {
+        int width = 0;
+        for (int i = start; i < end; i++){
+            width += getWidth(string.charAt(i));
+        }
+        return width;
+    }
 
     /**
      * Вернуть массив символов данного диапазона символов шрифта.

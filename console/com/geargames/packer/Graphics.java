@@ -245,14 +245,21 @@ public class Graphics implements com.geargames.common.Graphics {
         } else {
             return graphics.getFontMetrics().charsWidth(characters.getArray(), position, length);
         }
-
     }
 
-    public int getWidth(String characters) {
+    public int getWidth(String string) {
         if (font != null) {
-            return font.getWidth(characters);
+            return font.getWidth(string);
         } else {
-            return graphics.getFontMetrics().stringWidth(characters.toString());
+            return graphics.getFontMetrics().stringWidth(string.toString());
+        }
+    }
+
+    public int getWidth(String string, int start, int end) {
+        if (font != null) {
+            return font.getWidth(string, start, end);
+        } else {
+            return graphics.getFontMetrics().stringWidth(string.toString().substring(start, end));
         }
     }
 
@@ -316,19 +323,19 @@ public class Graphics implements com.geargames.common.Graphics {
     private static java.awt.Image[] image_cash;
     private java.awt.Graphics graphics;
 
-    private int transparency;//прозрачность при рендере на графикс
-    private int scale;//масштабирование при рендере на графикс
+    private int transparency; //прозрачность при рендере на графикс
+    private int scale;        //масштабирование при рендере на графикс
     private AffineTransform affineTransformOriginal;
     private PFont font;
+
+    private com.geargames.common.Render render;
 
     public void setRender(com.geargames.common.Render render) {
         this.render = render;
     }
 
-    private com.geargames.common.Render render;
-
     /**
-     * Нарисовать строку  string по координате x:y с якорем anchor.
+     * Нарисовать строку string в координатах (x, y) с якорем anchor.
      *
      * @param string
      * @param x
@@ -347,6 +354,32 @@ public class Graphics implements com.geargames.common.Graphics {
     }
 
     /**
+     * Нарисовать часть строки string в координатах (x, y) с якорем anchor.
+     *
+     * @param string исходная строка
+     * @param start  индекс первого символа отрисовываемой подстроки
+     * @param end    индекс последнего символа + 1 отрисовываемой подстроки
+     * @param x
+     * @param y
+     * @param anchor
+     */
+    public void drawSubstring(String string, int start, int end, int x, int y, int anchor) {
+        if (string == null) {
+            return;
+        }
+        // TrimRight():
+        while (end > start && string.charAt(end-1) <= String.SPACE) {
+            end--;
+        }
+        if (font != null) {
+            drawCustomSubstring(string, start, end, x, y, anchor);
+        } else {
+            String substring = string.substring(start, end);
+            drawSystemString(substring, x, y, anchor);
+        }
+    }
+
+    /**
      * Нарисовать системным фонтом.
      *
      * @param string
@@ -356,16 +389,15 @@ public class Graphics implements com.geargames.common.Graphics {
      */
     public void drawSystemString(String string, int x, int y, int anchor) {
         switch (anchor) {
+            case Graphics.HCENTER:
+                x -= getWidth(string) / 2;
+                break;
             case Graphics.RIGHT:
                 x -= getWidth(string);
-                break;
-            case Graphics.HCENTER:
-                x -= getWidth(string) >> 1;
                 break;
         }
         graphics.drawString(string.toString(), x, y);
     }
-
 
     /**
      * Нарисовать кастомным фонтом.
@@ -376,16 +408,29 @@ public class Graphics implements com.geargames.common.Graphics {
      * @param anchor
      */
     public void drawCustomString(String string, int x, int y, int anchor) {
+        drawCustomSubstring(string, 0, string.length(), x, y, anchor);
+    }
+
+    /**
+     * Нарисовать кастомным фонтом.
+     *
+     * @param string исходная строка
+     * @param start  индекс первого символа отрисовываемой подстроки
+     * @param end    индекс последнего символа + 1 отрисовываемой подстроки
+     * @param x
+     * @param y
+     * @param anchor
+     */
+    public void drawCustomSubstring(String string, int start, int end, int x, int y, int anchor) {
         switch (anchor) {
             case com.geargames.common.Graphics.HCENTER:
-                x -= getWidth(string) >> 1;
+                x -= getWidth(string, start, end) / 2;
                 break;
             case com.geargames.common.Graphics.RIGHT:
-                x -= getWidth(string);
+                x -= getWidth(string, start, end);
                 break;
         }
-        int length = string.length();
-        for (int i = 0; i < length; i++) {
+        for (int i = start; i < end; i++) {
             char character = string.charAt(i);
             PSprite sprite = font.getSprite(character);
             sprite.draw(this, x, y);
@@ -398,5 +443,7 @@ public class Graphics implements com.geargames.common.Graphics {
     }
 
 
-    public void setGLRenderer(Object glRenderer) {}
+    public void setGLRenderer(Object glRenderer) {
+
+    }
 }

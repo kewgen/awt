@@ -8,11 +8,8 @@ import com.geargames.common.Graphics;
 import com.geargames.common.packer.PFont;
 import com.geargames.common.util.Region;
 
-import java.util.Vector;
-
 public class TextArea extends VerticalScrollableArea {
-    public static char NEW_STRING = 10;
-    
+
     private String text;
     private PFont font;
     private int format;
@@ -25,12 +22,12 @@ public class TextArea extends VerticalScrollableArea {
     private Region region;
 
     private int[] indexes;
-    private Vector strings;
+    private final static String STR_ELIPSIS = String.valueOfC("...");
+    private int itemEllipsisIndex = -1;
+    private int ellipsisOffsetX = 0;
 
     public TextArea() {
         region = new Region();
-        verticalMotionListener = new InertMotionListener();
-        stubMotionListener = new StubMotionListener();
     }
 
     public Region getDrawRegion() {
@@ -48,54 +45,71 @@ public class TextArea extends VerticalScrollableArea {
         PFont oldFont = graphics.getFont();
         graphics.setFont(font);
 
-        indexes = TextHelper.textIndexing(text, region, graphics, format);
-        strings = new Vector(indexes.length / 2 + 1);
-        if (!isEllipsis()) {
-            motionListener = ScrollHelper.createVerticalMotionListener(verticalMotionListener, stubMotionListener, region, indexes.length / 2, rawHeight, format);
-        } else {
-            motionListener = ScrollHelper.adjustStubMotionListener(stubMotionListener, region, indexes.length / 2, rawHeight, format);
-        }
-        setStrictlyClipped(isEllipsis());
+        indexes = TextHelper.textIndexing(text, getDrawRegion(), graphics, format);
 
-        for (int i = 0; i < getItemsAmount(); i++) {
-            String string;
-            if (!isEllipsis() || i + 1 != region.getHeight() / getRawHeight()) {
-                if (i != getItemsAmount() - 1) {
-                    string = text.substring(indexes[i * 3], indexes[i * 3] + indexes[i * 3 + 1]).concat(NEW_STRING);
-                } else {
-                    string = text.substring(indexes[i * 3], indexes[i * 3] + indexes[i * 3 + 1]);
+        // Выясняем необходимость добавления многоточия в конец отображаемого текста
+        if (isEllipsis() && getShownItemsAmount() < getItemsAmount()) {
+            // Многоточие будет добавлено
+            itemEllipsisIndex = getShownItemsAmount() - 1;
+            int ellipsisWidth = graphics.getWidth(STR_ELIPSIS);
+            int charIndex = indexes[itemEllipsisIndex * 3 + 0];
+            int endCharIndex = indexes[itemEllipsisIndex * 3 + 1] + charIndex;
+            int substringWidth = ellipsisWidth;
+            int drawRegionWidth = getDrawRegion().getWidth();
+            while (charIndex < endCharIndex) {
+                int charWidth = graphics.getWidth(text.charAt(charIndex));
+                substringWidth += charWidth;
+                if (substringWidth > drawRegionWidth) {
+                    substringWidth -= charWidth;
+                    break;
                 }
-            } else {
-                if (i != getItemsAmount() - 1) {
-                    string = text.substring(indexes[i * 3], indexes[i * 3] + indexes[i * 3 + 1]).concat("...");
-                } else {
-                    string = text.substring(indexes[i * 3], indexes[i * 3] + indexes[i * 3 + 1]).concat(NEW_STRING);
-                }
+                charIndex++;
             }
-            strings.addElement(string);
+            int offsetX = ScrollHelper.getXTextBegin(format, getDrawRegion(), substringWidth);
+            indexes[itemEllipsisIndex * 2 + 2] = offsetX;
+            indexes[itemEllipsisIndex * 2 + 1] = charIndex - indexes[itemEllipsisIndex * 3 + 0];
+            ellipsisOffsetX = offsetX + substringWidth - ellipsisWidth;
+        } else {
+            // В добавлении многоточия нет необходимости
+            itemEllipsisIndex = -1;
+            ellipsisOffsetX = 0;
         }
         graphics.setFont(oldFont);
+
+        if (stubMotionListener == null) {
+            stubMotionListener = new StubMotionListener();
+        }
+        if (!isStuck()) {
+            if (verticalMotionListener == null) {
+                verticalMotionListener = new InertMotionListener();
+            }
+            motionListener = ScrollHelper.createVerticalMotionListener(
+                    verticalMotionListener, stubMotionListener, region, getItemsAmount(), rawHeight, format);
+        } else {
+            motionListener = ScrollHelper.adjustStubMotionListener(
+                    stubMotionListener, region, getItemsAmount(), rawHeight, format);
+        }
+
         setInitiated(true);
     }
 
-    public void drawItem(Graphics graphics, int itemIndex, int position, int coordinate) {
+    public void drawItem(Graphics graphics, int itemIndex, int x, int y) {
         graphics.setColor(color);
-        String string = (String) strings.elementAt(itemIndex);
         PFont oldFont = graphics.getFont();
         graphics.setFont(font);
-        graphics.drawString(string, coordinate + indexes[itemIndex * 3 + 2], position + graphics.getAscent(), 0);
+        int startIndex = indexes[itemIndex * 3 + 0];
+        graphics.drawSubstring(
+                text,
+                startIndex, indexes[itemIndex * 3 + 1] + startIndex,
+                x + indexes[itemIndex * 3 + 2], y + graphics.getAscent(), 0);
+        if (itemIndex == itemEllipsisIndex) {
+            graphics.drawString(STR_ELIPSIS, x + ellipsisOffsetX, y + graphics.getAscent(), 0);
+        }
         graphics.setFont(oldFont);
     }
 
     public int getItemsAmount() {
         return indexes != null ? indexes.length / 3 : 0;
-    }
-
-    /**
-     * Выполнение всех манипуляций на один игровой тик
-     */
-    public boolean event(int code, int param, int x, int y) {
-        return super.event(code, param, x, y);
     }
 
     public boolean isVertical() {
@@ -117,12 +131,16 @@ public class TextArea extends VerticalScrollableArea {
 
     /**
      * Вернуть формат горизонтального выравнивания.
-     * Одно из значений Graphics.LEFT, Graphics.RIGHT или Graphics.HCENTER
+     * @return одно из значений Graphics.LEFT, Graphics.RIGHT или Graphics.HCENTER
      */
     public int getFormat() {
         return format;
     }
 
+    /**
+     * Установить формат горизонтального выравнивания
+     * @param format - одно из значений Graphics.LEFT, Graphics.RIGHT или Graphics.HCENTER
+     */
     public void setFormat(int format) {
         this.format = format;
         setInitiated(false);
@@ -160,6 +178,14 @@ public class TextArea extends VerticalScrollableArea {
     public void setEllipsis(boolean ellipsis) {
         this.ellipsis = ellipsis;
         setInitiated(false);
+    }
+
+    public boolean isStrictlyClipped() {
+        return isEllipsis() || super.isStrictlyClipped();
+    }
+
+    public boolean isStuck() {
+        return isEllipsis() || super.isStuck();
     }
 
     public PFont getFont() {

@@ -8,7 +8,7 @@ import com.geargames.common.Port;
 import java.util.Vector;
 
 /**
- * User: mikhail v. kutuzov
+ * User: mikhail v. kutuzov, abarakov
  * Date: 27.11.12
  * Time: 16:39
  */
@@ -16,7 +16,6 @@ public abstract class VerticalScrollView extends VerticalScrollableArea {
     private MotionListener motionListener;
     private int touchX;
     private int touchY;
-
     private int margin;
 
     public VerticalScrollView() {
@@ -28,8 +27,8 @@ public abstract class VerticalScrollView extends VerticalScrollableArea {
         boolean result = super.event(code, param, x, y);
         if (getTouchRegion().isWithIn(x, y)) {
             if (code != Event.EVENT_TICK) {
-                number = getNumber(y);
-                if (number >= 0 && number <= getItemsAmount() - 1) {
+                number = getItemAtLinearPosition(y);
+                if (number >= 0 && number < getItemsAmount()) {
                     switch (code) {
                         case Event.EVENT_TOUCH_PRESSED:
                             touchX = x;
@@ -50,10 +49,15 @@ public abstract class VerticalScrollView extends VerticalScrollableArea {
         return result;
     }
 
-
-    private int getNumber(int y) {
-        int length = -getPosition() + y;
-        if(length % getItemSize() > getItemSize() - margin){
+    /**
+     * Вернуть индекс элемента списка по заданной линейной координате
+     *
+     * @param pos
+     * @return
+     */
+    public int getItemAtLinearPosition(int pos) {
+        int length = -getPosition() + pos;
+        if (length % getItemSize() > getItemSize() - margin){
             return -1;
         }
         int i = length / getItemSize();
@@ -64,28 +68,25 @@ public abstract class VerticalScrollView extends VerticalScrollableArea {
     }
 
     /**
-     * Установить способ прокрутки списка.
+     * Вернуть количество элементов списка.
      *
-     * @param motionListener
+     * @return
      */
-    public void setMotionListener(MotionListener motionListener) {
-        this.motionListener = motionListener;
-    }
-
-    public MotionListener getMotionListener() {
-        return motionListener;
-    }
-
     public int getItemsAmount() {
         return getItems().size();
     }
 
+    /**
+     * Вернуть линейный размер элемента (высоту).
+     *
+     * @return
+     */
     public int getItemSize() {
         return getPrototype().getDrawRegion().getHeight() + margin;
     }
 
-    public void drawItem(Graphics graphics, int itemIndex, int position, int coordinate) {
-        ((PElement) getItems().elementAt(itemIndex)).draw(graphics, coordinate, position);
+    public void drawItem(Graphics graphics, int itemIndex, int x, int y) {
+        ((PElement) getItems().elementAt(itemIndex)).draw(graphics, x, y);
     }
 
     /**
@@ -94,15 +95,6 @@ public abstract class VerticalScrollView extends VerticalScrollableArea {
      * @return
      */
     public abstract PPrototypeElement getPrototype();
-
-    /**
-     * Вернуть наибольшее количество целых элементов которое может быть видимо в списке.
-     *
-     * @return
-     */
-    public int getShownItemsAmount() {
-        return getDrawRegion().getHeight() / getItemSize();
-    }
 
     /**
      * Вернуть вектор элементов списка.
@@ -129,4 +121,18 @@ public abstract class VerticalScrollView extends VerticalScrollableArea {
         this.margin = margin;
         setInitiated(false);
     }
+
+    public MotionListener getMotionListener() {
+        return motionListener;
+    }
+
+    /**
+     * Установить способ прокрутки списка.
+     *
+     * @param motionListener
+     */
+    public void setMotionListener(MotionListener motionListener) {
+        this.motionListener = motionListener;
+    }
+
 }

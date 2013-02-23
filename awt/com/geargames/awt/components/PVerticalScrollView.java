@@ -16,8 +16,8 @@ import java.util.Vector;
 public class PVerticalScrollView extends VerticalScrollView {
     private Vector items;
     private PPrototypeElement prototypeElement;
-    private Region touchRegion;
     private Region drawRegion;
+    private Region touchRegion;
 
     public PVerticalScrollView(PObject prototype) {
         Index index = prototype.getIndexBySlot(110);

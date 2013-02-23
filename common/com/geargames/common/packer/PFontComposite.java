@@ -2,6 +2,7 @@ package com.geargames.common.packer;
 
 import com.geargames.common.util.ArrayChar;
 import com.geargames.common.util.ArrayList;
+import com.geargames.common.String;
 
 /**
  * User: mikhail v. kutuzov, abarakov
@@ -14,7 +15,7 @@ public class PFontComposite extends PFont {
     private int baseLine;
     private int lastIndex = 0;
 
-    public static char DEFAULT_CHAR = '?';
+    public final static char DEFAULT_CHAR = '?';
     private PSprite defaultSprite = null;
 
     PFontComposite(ArrayList fonts) {
@@ -96,10 +97,18 @@ public class PFontComposite extends PFont {
         return width;
     }
 
-    public int getWidth(com.geargames.common.String characters) {
+    public int getWidth(String string) {
         int width = 0;
-        for(int i = 0; i < characters.length(); i++){
-            width += getWidth(characters.charAt(i));
+        for(int i = 0; i < string.length(); i++){
+            width += getWidth(string.charAt(i));
+        }
+        return width;
+    }
+
+    public int getWidth(String string, int start, int end) {
+        int width = 0;
+        for (int i = start; i < end; i++){
+            width += getWidth(string.charAt(i));
         }
         return width;
     }

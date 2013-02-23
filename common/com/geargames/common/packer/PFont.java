@@ -8,6 +8,7 @@ import com.geargames.common.util.ArrayChar;
  * Шрифт реализованный на спрайтах.
  */
 public abstract class PFont {
+
     /**
      * Вернуть спрайт указанного символа character.
      * @param character
@@ -34,15 +35,23 @@ public abstract class PFont {
      */
     public abstract int getWidth(char character);
 
+    public abstract int getWidth(ArrayChar character, int position, int length);
+
     /**
-     * Вернуть ширину строки символов characters, представленной данным шрифтом.
-     * @param characters
+     * Вернуть ширину строки символов string, представленной данным шрифтом.
+     * @param string
      * @return
      */
-    public abstract int getWidth(String characters);
+    public abstract int getWidth(String string);
 
-
-    public abstract int getWidth(ArrayChar character, int position, int length);
+    /**
+     * Вернуть ширину подстроки символов string, представленной данным шрифтом.
+     * @param string
+     * @param start
+     * @param end
+     * @return
+     */
+    public abstract int getWidth(String string, int start, int end);
 
     public byte getAscent(){
         return (byte)(getSize() - getBaseLine());

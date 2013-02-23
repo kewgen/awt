@@ -28,6 +28,8 @@ public interface Graphics {
 
     void drawString(String string, int x, int y, int anchor);
 
+    void drawSubstring(String string, int start, int end, int x, int y, int anchor);
+
     void drawRegion(Image image, int src_x, int src_y, int w, int h, int dst_x, int dst_y, PAffine affine);
 
     public void drawFrame(PFrame frame, int dst_x, int dst_y);
@@ -58,9 +60,11 @@ public interface Graphics {
 
     int getWidth(char character);
 
-    int getWidth(String characters);
-
     int getWidth(ArrayChar characters, int position, int length);
+
+    int getWidth(String string);
+
+    int getWidth(String string, int start, int end);
 
     Render getRender();
 
