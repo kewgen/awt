@@ -1,4 +1,4 @@
-﻿package com.geargames.awt.components;
+package com.geargames.awt.components;
 
 import com.geargames.awt.utils.*;
 import com.geargames.awt.utils.motions.InertMotionListener;

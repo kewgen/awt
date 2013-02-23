@@ -1,4 +1,4 @@
-﻿package com.geargames.awt.utils;
+package com.geargames.awt.utils;
 
 import com.geargames.Debug;
 import com.geargames.awt.Drawable;
