@@ -30,9 +30,8 @@ public class TextHelper {
      * @return массив состоящий из элементов [индекс первого символа подстроки][количество символов подстроки][координта подстроки на graphics по Х]
      */
     public static int[] textIndexing(String data, final Region region, Graphics graphics, int format) {
-        int count = (graphics.getWidth(data) / region.getWidth());
-        count *= 3;
-        count += getTagsAmount(data) + 1;
+        int count = 3 * (1 + graphics.getWidth(data) / region.getWidth());
+        count += getCarrigeDownsAmount(data) + 1;
         ArrayInt indexes = new ArrayInt(3 + (count * 3));
 
         ArrayChar characters = new ArrayChar(data.length());
@@ -52,18 +51,20 @@ public class TextHelper {
                 indexes.set(counter, activeIndex);
                 if (graphics.getWidth(characters, activeIndex, index - activeIndex) < region.getWidth()) {
                     indexes.set(counter + 1, index - activeIndex);
-                    indexes.set(counter + 2, ScrollHelper.getXTextBegin(format, region , graphics.getWidth(characters, activeIndex, index - activeIndex)));
+                    indexes.set(counter + 2, ScrollHelper.getXTextBegin(format, region, graphics.getWidth(characters, activeIndex, index - activeIndex)));
                     activeIndex = index + 1;
                     complete = true;
                 } else {
-                    if (previousIndex != activeIndex) {
+                    if (previousIndex - activeIndex > 1) {
                         indexes.set(counter + 1, previousIndex - activeIndex);
-                        indexes.set(counter + 2, ScrollHelper.getXTextBegin(format, region , graphics.getWidth(characters, activeIndex, previousIndex - activeIndex)));
-                        activeIndex = previousIndex + 1;
+                        indexes.set(counter + 2, ScrollHelper.getXTextBegin(format, region, graphics.getWidth(characters, activeIndex, previousIndex - activeIndex)));
+                        activeIndex = previousIndex;
+                        i--;
+                        continue;
                     } else {
                         //todo длинная строка
                         indexes.set(counter + 1, index - activeIndex);
-                        indexes.set(counter + 2, ScrollHelper.getXTextBegin(format, region , region.getWidth()));
+                        indexes.set(counter + 2, ScrollHelper.getXTextBegin(format, region, region.getWidth()));
                         activeIndex = index + 1;
                         complete = true;
                     }
@@ -71,17 +72,16 @@ public class TextHelper {
                 counter += 3;
             } else {
                 if (graphics.getWidth(characters, activeIndex, index - activeIndex) > region.getWidth()) {
-                    if (previousIndex != activeIndex) {
+                    if (previousIndex - activeIndex > 1) {
                         indexes.set(counter, activeIndex);
                         indexes.set(counter + 1, previousIndex - activeIndex);
                         indexes.set(counter + 2, ScrollHelper.getXTextBegin(format, region, graphics.getWidth(characters, activeIndex, previousIndex - activeIndex)));
-                        counter += 3;
-                        activeIndex = index + 1;
+                        activeIndex = previousIndex;
                     } else {
                         //todo длинная строка
                         indexes.set(counter, activeIndex);
                         indexes.set(counter + 1, index - activeIndex);
-                        indexes.set(counter + 2, ScrollHelper.getXTextBegin(format, region , region.getWidth()));
+                        indexes.set(counter + 2, ScrollHelper.getXTextBegin(format, region, region.getWidth()));
                         activeIndex = index + 1;
                         complete = true;
                     }
@@ -94,6 +94,7 @@ public class TextHelper {
             indexes.set(counter, activeIndex);
             indexes.set(counter + 1, previousIndex - activeIndex);
             indexes.set(counter + 2, ScrollHelper.getXTextBegin(format, region, graphics.getWidth(characters, activeIndex, previousIndex - activeIndex)));
+            counter += 3;
         }
         separators.free();
         int[] result = new int[counter];
@@ -176,7 +177,7 @@ public class TextHelper {
         return spaceIndex > carriageIndex ? (carriageIndex != -1 ? carriageIndex : spaceIndex) : (spaceIndex != -1 ? spaceIndex : carriageIndex);
     }
 
-    public static int getTagsAmount(com.geargames.common.String string) {
+    public static int getCarrigeDownsAmount(com.geargames.common.String string) {
         int length = string.length();
         int counter = 0;
         for (int i = 0; i < length; i++) {

@@ -22,7 +22,7 @@ public class TextArea extends VerticalScrollableArea {
     private Region region;
 
     private int[] indexes;
-    private final static String STR_ELIPSIS = String.valueOfC("...");
+    private final static String STR_ELLIPSIS = String.valueOfC("...");
     private int itemEllipsisIndex = -1;
     private int ellipsisOffsetX = 0;
 
@@ -51,7 +51,7 @@ public class TextArea extends VerticalScrollableArea {
         if (isEllipsis() && getShownItemsAmount() < getItemsAmount()) {
             // Многоточие будет добавлено
             itemEllipsisIndex = getShownItemsAmount() - 1;
-            int ellipsisWidth = graphics.getWidth(STR_ELIPSIS);
+            int ellipsisWidth = graphics.getWidth(STR_ELLIPSIS);
             int charIndex = indexes[itemEllipsisIndex * 3 + 0];
             int endCharIndex = indexes[itemEllipsisIndex * 3 + 1] + charIndex;
             int substringWidth = ellipsisWidth;
@@ -102,7 +102,7 @@ public class TextArea extends VerticalScrollableArea {
                 indexes[itemIndex * 3 + 0], indexes[itemIndex * 3 + 1],
                 x + indexes[itemIndex * 3 + 2], y + graphics.getAscent(), 0);
         if (itemIndex == itemEllipsisIndex) {
-            graphics.drawString(STR_ELIPSIS, x + ellipsisOffsetX, y + graphics.getAscent(), 0);
+            graphics.drawString(STR_ELLIPSIS, x + ellipsisOffsetX, y + graphics.getAscent(), 0);
         }
         graphics.setFont(oldFont);
     }
