@@ -66,8 +66,8 @@ public class TextArea extends VerticalScrollableArea {
                 charIndex++;
             }
             int offsetX = ScrollHelper.getXTextBegin(format, getDrawRegion(), substringWidth);
-            indexes[itemEllipsisIndex * 2 + 2] = offsetX;
-            indexes[itemEllipsisIndex * 2 + 1] = charIndex - indexes[itemEllipsisIndex * 3 + 0];
+            indexes[itemEllipsisIndex * 3 + 2] = offsetX;
+            indexes[itemEllipsisIndex * 3 + 1] = charIndex - indexes[itemEllipsisIndex * 3 + 0];
             ellipsisOffsetX = offsetX + substringWidth - ellipsisWidth;
         } else {
             // В добавлении многоточия нет необходимости
@@ -97,10 +97,9 @@ public class TextArea extends VerticalScrollableArea {
         graphics.setColor(color);
         PFont oldFont = graphics.getFont();
         graphics.setFont(font);
-        int startIndex = indexes[itemIndex * 3 + 0];
         graphics.drawSubstring(
                 text,
-                startIndex, indexes[itemIndex * 3 + 1] + startIndex,
+                indexes[itemIndex * 3 + 0], indexes[itemIndex * 3 + 1],
                 x + indexes[itemIndex * 3 + 2], y + graphics.getAscent(), 0);
         if (itemIndex == itemEllipsisIndex) {
             graphics.drawString(STR_ELIPSIS, x + ellipsisOffsetX, y + graphics.getAscent(), 0);

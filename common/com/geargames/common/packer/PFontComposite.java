@@ -98,16 +98,13 @@ public class PFontComposite extends PFont {
     }
 
     public int getWidth(String string) {
-        int width = 0;
-        for(int i = 0; i < string.length(); i++){
-            width += getWidth(string.charAt(i));
-        }
-        return width;
+        return getWidth(string, 0, string.length());
     }
 
-    public int getWidth(String string, int start, int end) {
+    public int getWidth(String string, int position, int length) {
         int width = 0;
-        for (int i = start; i < end; i++){
+        length += position;
+        for (int i = position; i < length; i++){
             width += getWidth(string.charAt(i));
         }
         return width;

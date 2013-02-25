@@ -66,7 +66,7 @@ public class PFontManager {
         ArrayList characters = baseFont.getCharacters();
         int length = characters.size();
         char firstIndex = baseFont.getFirstIndex();
-        PFontCharRange reSizedFont = new PFontCharRange(firstIndex, length, size, size >> 1);
+        PFontCharRange reSizedFont = new PFontCharRange(firstIndex, length, size, size / 2);
 
         for (int i = 0; i < length; i++) {
             PSprite oldSprite = (PSprite) characters.get(i);
@@ -85,8 +85,8 @@ public class PFontManager {
                     PFrame oldFrame = (PFrame) oldIndex.getPrototype();
                     PAffine affine = new PAffine(1);
                     affine.add(new Index(oldFrame, (int)((oldIndex.getX() * (double)size) / oldSize), (int)((oldIndex.getY() * (double)size) / oldSize)));
-                    affine.setScalingX(size*100/oldSize);
-                    affine.setScalingY(size*100/oldSize);
+                    affine.setScalingX(size * 100 / oldSize);
+                    affine.setScalingY(size * 100 / oldSize);
                     sprite.add(new Index(affine, 0, 0));
                 }
 
@@ -101,8 +101,8 @@ public class PFontManager {
                     PFrame oldFrame = (PFrame) oldIndex.getPrototype();
                     PAffine affine = new PAffine(1);
                     affine.add(new Index(oldFrame, (int)((oldIndex.getX() * (double)size) / oldSize), (int)((oldIndex.getY() * (double)size) / oldSize)));
-                    affine.setScalingX(size*100/oldSize);
-                    affine.setScalingY(size*100/oldSize);
+                    affine.setScalingX(size * 100 / oldSize);
+                    affine.setScalingY(size * 100 / oldSize);
                     sprite.add(new Index(affine, 0, 0));
                 }
             }

@@ -6,13 +6,15 @@ package com.geargames.common.util;
  * Time: 14:47
  */
 public class ArrayHelper {
-    public static int findNext(ArrayChar string, int position, char element){
-        int length = string.length();
-        for(int i = position; i < length; i++){
-            if(string.get(position) == element){
+
+    public static int findNext(ArrayChar characters, int position, char element) {
+        int length = characters.length();
+        for (int i = position; i < length; i++) {
+            if (characters.get(position) == element) {
                 return i;
             }
         }
         return -1;
     }
+
 }

@@ -20,7 +20,7 @@ public abstract class Drawable {
      * @param param
      * @param x
      * @param y
-     * @return true если дальнейшие события будут поглащаться этим объектом, иначе - false
+     * @return true, если дальнейшие события будут поглощаться этим объектом, иначе - false
      */
     public abstract boolean event(int code, int param, int x, int y);
 

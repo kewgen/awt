@@ -35,7 +35,14 @@ public abstract class PFont {
      */
     public abstract int getWidth(char character);
 
-    public abstract int getWidth(ArrayChar character, int position, int length);
+    /**
+     * Вернуть ширину подстроки символов characters, представленной данным шрифтом.
+     * @param characters
+     * @param position
+     * @param length
+     * @return
+     */
+    public abstract int getWidth(ArrayChar characters, int position, int length);
 
     /**
      * Вернуть ширину строки символов string, представленной данным шрифтом.
@@ -47,13 +54,13 @@ public abstract class PFont {
     /**
      * Вернуть ширину подстроки символов string, представленной данным шрифтом.
      * @param string
-     * @param start
-     * @param end
+     * @param position
+     * @param length
      * @return
      */
-    public abstract int getWidth(String string, int start, int end);
+    public abstract int getWidth(String string, int position, int length);
 
-    public byte getAscent(){
-        return (byte)(getSize() - getBaseLine());
+    public int getAscent(){
+        return getSize() - getBaseLine();
     }
 }

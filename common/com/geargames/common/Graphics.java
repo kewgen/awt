@@ -14,21 +14,21 @@ import java.io.IOException;
  * Time: 13:08
  */
 public interface Graphics {
-    int HCENTER = (1 << 0);
-    int VCENTER = (1 << 1);
-    int LEFT = (1 << 2);
-    int RIGHT = (1 << 3);
-    int TOP = (1 << 4);
-    int BOTTOM = (1 << 5);
+    int HCENTER  = 1 << 0;
+    int VCENTER  = 1 << 1;
+    int LEFT     = 1 << 2;
+    int RIGHT    = 1 << 3;
+    int TOP      = 1 << 4;
+    int BOTTOM   = 1 << 5;
     int BASELINE = 6;
-    int SOLID = 7;
-    int DOTTED = 8;
+    int SOLID    = 7;
+    int DOTTED   = 8;
 
     void drawImage(Image image, int x, int y, int anchor);
 
     void drawString(String string, int x, int y, int anchor);
 
-    void drawSubstring(String string, int start, int end, int x, int y, int anchor);
+    void drawSubstring(String string, int position, int length, int x, int y, int anchor);
 
     void drawRegion(Image image, int src_x, int src_y, int w, int h, int dst_x, int dst_y, PAffine affine);
 
@@ -64,7 +64,7 @@ public interface Graphics {
 
     int getWidth(String string);
 
-    int getWidth(String string, int start, int end);
+    int getWidth(String string, int position, int length);
 
     Render getRender();
 

@@ -248,7 +248,7 @@ public class TextHint extends PopUp {
             evaluatedRegion.setMinX(left + hMargin);
             evaluatedRegion.setWidth(regionWidth);
             int[] indexes = TextHelper.textIndexing(textArea.getText(), evaluatedRegion, graphics, Graphics.HCENTER);
-            int rowCount = indexes.length / 2;
+            int rowCount = indexes.length / 3;
             int regionHeight = rowCount * rowHeight < halfScreenH - doubleMargin ? rowCount * rowHeight : halfScreenH - doubleMargin;
             int skinAmount = ((doubleMargin + regionHeight) / getTopLeftSkin().getHeight()) + (regionHeight % getTopLeftSkin().getHeight() != 0 ? 1 : 0);
             int fullRegionHeight = skinAmount * getTopLeftSkin().getHeight();

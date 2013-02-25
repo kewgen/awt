@@ -15,7 +15,6 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.io.IOException;
 
-
 /**
  * Порт-wrapper класса Graphics для microedition
  */
@@ -255,11 +254,11 @@ public class Graphics implements com.geargames.common.Graphics {
         }
     }
 
-    public int getWidth(String string, int start, int end) {
+    public int getWidth(String string, int position, int length) {
         if (font != null) {
-            return font.getWidth(string, start, end);
+            return font.getWidth(string, position, length);
         } else {
-            return graphics.getFontMetrics().stringWidth(string.toString().substring(start, end));
+            return graphics.getFontMetrics().stringWidth(string.toString().substring(position, position + length));
         }
     }
 
@@ -356,31 +355,34 @@ public class Graphics implements com.geargames.common.Graphics {
     /**
      * Нарисовать часть строки string в координатах (x, y) с якорем anchor.
      *
-     * @param string исходная строка
-     * @param start  индекс первого символа отрисовываемой подстроки
-     * @param end    индекс последнего символа + 1 отрисовываемой подстроки
+     * @param string    исходная строка
+     * @param position  индекс первого символа отрисовываемой подстроки
+     * @param length    индекс последнего символа + 1 отрисовываемой подстроки
      * @param x
      * @param y
      * @param anchor
      */
-    public void drawSubstring(String string, int start, int end, int x, int y, int anchor) {
+    public void drawSubstring(String string, int position, int length, int x, int y, int anchor) {
         if (string == null) {
             return;
         }
         // TrimRight():
-        while (end > start && string.charAt(end-1) <= String.SPACE) {
-            end--;
+        int last = position + length - 1;
+        while (last >= position && string.charAt(last) <= String.SPACE) {
+            last--;
         }
+        length = last - position + 1;
+
         if (font != null) {
-            drawCustomSubstring(string, start, end, x, y, anchor);
+            drawRasterSubstring(string, position, length, x, y, anchor);
         } else {
-            String substring = string.substring(start, end);
+            String substring = string.substring(position, length + position);
             drawSystemString(substring, x, y, anchor);
         }
     }
 
     /**
-     * Нарисовать системным фонтом.
+     * Нарисовать строку string системным шрифтом (векторным).
      *
      * @param string
      * @param x
@@ -400,7 +402,7 @@ public class Graphics implements com.geargames.common.Graphics {
     }
 
     /**
-     * Нарисовать кастомным фонтом.
+     * Нарисовать строку string растровым шрифтом.
      *
      * @param string
      * @param x
@@ -408,29 +410,30 @@ public class Graphics implements com.geargames.common.Graphics {
      * @param anchor
      */
     public void drawCustomString(String string, int x, int y, int anchor) {
-        drawCustomSubstring(string, 0, string.length(), x, y, anchor);
+        drawRasterSubstring(string, 0, string.length(), x, y, anchor);
     }
 
     /**
-     * Нарисовать кастомным фонтом.
+     * Нарисовать строку string растровым шрифтом.
      *
-     * @param string исходная строка
-     * @param start  индекс первого символа отрисовываемой подстроки
-     * @param end    индекс последнего символа + 1 отрисовываемой подстроки
+     * @param string    исходная строка
+     * @param position  индекс первого символа отрисовываемой подстроки
+     * @param length    количество символов в отрисовываемой подстроке
      * @param x
      * @param y
      * @param anchor
      */
-    public void drawCustomSubstring(String string, int start, int end, int x, int y, int anchor) {
+    public void drawRasterSubstring(String string, int position, int length, int x, int y, int anchor) {
         switch (anchor) {
             case com.geargames.common.Graphics.HCENTER:
-                x -= getWidth(string, start, end) / 2;
+                x -= getWidth(string, position, length) / 2;
                 break;
             case com.geargames.common.Graphics.RIGHT:
-                x -= getWidth(string, start, end);
+                x -= getWidth(string, position, length);
                 break;
         }
-        for (int i = start; i < end; i++) {
+        length += position;
+        for (int i = position; i < length; i++) {
             char character = string.charAt(i);
             PSprite sprite = font.getSprite(character);
             sprite.draw(this, x, y);

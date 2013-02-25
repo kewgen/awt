@@ -83,7 +83,10 @@ public class PFontCharRange extends PFont {
     public void addSprite(char character, PSprite sprite) {
         int index = character - firstCharacter;
         if (index >= characters.size()) {
-            characters.add(index, sprite);
+            for (int i = characters.size(); i < index; i++) {
+                characters.add(null);
+            }
+            characters.add(sprite);
         } else {
             characters.set(index, sprite);
         }
@@ -108,16 +111,13 @@ public class PFontCharRange extends PFont {
     }
 
     public int getWidth(String string) {
-        int width = 0;
-        for(int i = 0; i < string.length(); i++){
-            width += getWidth(string.charAt(i));
-        }
-        return width;
+        return getWidth(string, 0, string.length());
     }
 
-    public int getWidth(String string, int start, int end) {
+    public int getWidth(String string, int position, int length) {
         int width = 0;
-        for (int i = start; i < end; i++){
+        length += position;
+        for (int i = position; i < length; i++){
             width += getWidth(string.charAt(i));
         }
         return width;
