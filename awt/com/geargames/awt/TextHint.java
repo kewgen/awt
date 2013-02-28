@@ -3,7 +3,6 @@ package com.geargames.awt;
 import com.geargames.awt.components.ScrollableArea;
 import com.geargames.awt.components.TextArea;
 import com.geargames.awt.utils.*;
-import com.geargames.common.Event;
 import com.geargames.common.Port;
 import com.geargames.common.Render;
 import com.geargames.common.String;
@@ -15,7 +14,6 @@ import com.geargames.common.util.Region;
 /**
  * Users: mikhail.kutuzov, abarakov
  * Date: 14.11.11
- * Time: 18:37
  */
 public class TextHint extends PopUp {
     private TextArea textArea;
@@ -37,7 +35,7 @@ public class TextHint extends PopUp {
     private Region edgeRegion;
     private Region evaluatedRegion;
     private LinearVanishingStrategy graphicsStrategy;
-    private ClickListener listener;
+    private TouchListener listener;
 
     private static TextHint instance;
 
@@ -45,13 +43,84 @@ public class TextHint extends PopUp {
     {
         if (instance == null) {
             instance = new TextHint();
-            instance.setClickListener(HintClickListener.getInstance());
         }
         return instance;
     }
 
+    private TextHint() {
+        textArea = new TextArea();
+        evaluatedRegion = new Region();
+        graphicsStrategy = new LinearVanishingStrategy(this);
+
+        setTouchListener(new HintTouchListener());
+
+        topLeftSkin      = new ItemSkin();
+        topMiddleSkin    = new ItemSkin();
+        topRightSkin     = new ItemSkin();
+        middleLeftSkin   = new ItemSkin();
+        middleMiddleSkin = new ItemSkin();
+        middleRightSkin  = new ItemSkin();
+        bottomLeftSkin   = new ItemSkin();
+        bottomMiddleSkin = new ItemSkin();
+        bottomRightSkin  = new ItemSkin();
+        initiated = false;
+    }
+
+    /**
+     * Показать подсказку.
+     * @param text            тест подсказки
+     * @param x               координата по оси X
+     * @param y               координата по оси Y
+     * @param stateChangeTime время, за которое подсказка появится или скроется (в миллисек)
+     * @param hideTimeout     время, через которое подсказка автоматически скроется (в миллисек)
+     * @param scrollable      если true, то текст подсказки можно будет скроллить
+     * @param font            шрифт, которым будет отрисовываться текст подсказки
+     */
+    public static void show(com.geargames.common.String text, int x, int y, int stateChangeTime, int hideTimeout,
+                            PFont font, boolean scrollable/*, int color, int margin*/) {
+        TextHint instance = getInstance();
+        instance.textArea.setText(text);
+        instance.textArea.setFont(font);
+        instance.textArea.setColor(0x000000);
+        instance.textArea.setFormat(Graphics.HCENTER | Graphics.TOP);
+        instance.textArea.setEllipsis(!scrollable);
+        instance.graphicsStrategy.setStateChangeTime(stateChangeTime); // setTransparencyTime(vanishTime);
+        instance.graphicsStrategy.setHideTimeout(hideTimeout);         // setTime(time);
+        instance.edgeRegion = new Region();
+        instance.margin = 10;
+        instance.setX(x);
+        instance.setY(y);
+        instance.initiated = false;
+        instance.graphicsStrategy.startShowing();
+    }
+
+    /**
+     * Показать подсказку нарисованную кастомным шрифтом.
+     *
+     * @param text
+     * @param x
+     * @param y
+     * @param font
+     * @return
+     */
+    public static void show(String text, int x, int y, PFont font) {
+        show(text, x, y, 100, 3000, font, false);
+    }
+
+    /**
+     * Показать подсказку нарисованную системным шрифтом по умолчанию.
+     *
+     * @param text
+     * @param x
+     * @param y
+     * @return
+     */
+    public static void show(String text, int x, int y) {
+        show(text, x, y, null);
+    }
+
     public void draw(Graphics graphics) {
-        graphicsStrategy.draw(graphics, this);
+        graphicsStrategy.draw(graphics);
     }
 
     public void superDraw(Graphics graphics) {
@@ -59,80 +128,11 @@ public class TextHint extends PopUp {
     }
 
     public boolean event(int code, int param, int x, int y) {
-        graphicsStrategy.event(code, param, x, y);
-        if (edgeRegion != null && listener != null && edgeRegion.isWithIn(x, y)) {
-            switch (code) {
-                case Event.EVENT_TOUCH_PRESSED:
-                    listener.onEvent(this, x, y);
-                    break;
-            }
+        if (listener != null /*&& edgeRegion != null && edgeRegion.isWithIn(x, y)*/) {
+            listener.onEvent(this, code, param, x, y);
         }
+        graphicsStrategy.event(code, param, x, y);
         return false;
-    }
-
-    private TextHint() {
-        textArea = new TextArea();
-
-        evaluatedRegion = new Region();
-        graphicsStrategy = new LinearVanishingStrategy();
-
-        topLeftSkin = new ItemSkin();
-        topMiddleSkin = new ItemSkin();
-        topRightSkin = new ItemSkin();
-        middleLeftSkin = new ItemSkin();
-        middleMiddleSkin = new ItemSkin();
-        middleRightSkin = new ItemSkin();
-        bottomLeftSkin = new ItemSkin();
-        bottomMiddleSkin = new ItemSkin();
-        bottomRightSkin = new ItemSkin();
-        initiated = false;
-    }
-
-    // TODO : Избавиться от метода
-    private void init(com.geargames.common.String text, PFont font, int color, boolean scrollable, int time, int vanishTime, int margin) {
-        textArea.setText(text);
-        textArea.setFont(font);
-        textArea.setColor(color);
-        textArea.setFormat(Graphics.HCENTER | Graphics.TOP);
-        textArea.setEllipsis(!scrollable);
-        graphicsStrategy.setTime(time);
-        graphicsStrategy.setTransparencyTime(vanishTime);
-        edgeRegion = new Region();
-        this.margin = margin;
-        initiated = false;
-    }
-
-    /**
-     * Покажем подсказку нарисованную кастомным шрифтом.
-     *
-     * @param data
-     * @param x
-     * @param y
-     * @param font
-     * @return
-     */
-    public static void show(String data, int x, int y, PFont font) {
-        getInstance();
-        instance.init(data, font, 0, false, 50, 10, 10);
-        instance.reset();
-        instance.setX(x);
-        instance.setY(y);
-    }
-
-    /**
-     * Покажем подсказку нарисованную системным шрифтом по умолчанию.
-     *
-     * @param data
-     * @param x
-     * @param y
-     * @return
-     */
-    public static void show(String data, int x, int y) {
-        show(data, x, y, null);
-    }
-
-    public void reset() {
-        graphicsStrategy.reset();
     }
 
     private void setBlocksSizes(int w1, int h1, int w2, int h2) {//размеры крайних и центрального блока
@@ -155,13 +155,13 @@ public class TextHint extends PopUp {
         initiated = false;
     }
 
-    private void setTime(int time) {
-        graphicsStrategy.setTime(time);
-    }
-
-    private void setVanishTime(int vanishTime) {
-        graphicsStrategy.setTransparencyTime(vanishTime);
-    }
+//    private void setTime(int time) {
+//        graphicsStrategy.setTime(time);
+//    }
+//
+//    private void setVanishTime(int vanishTime) {
+//        graphicsStrategy.setTransparencyTime(vanishTime);
+//    }
 
     protected ItemSkin getTopLeftSkin() {
         return topLeftSkin;
@@ -218,7 +218,8 @@ public class TextHint extends PopUp {
     }
 
     public void hide() {
-        setTime(0);
+        graphicsStrategy.startHiding();
+//        setTime(0);
     }
 
     protected Region getRegionToDraw(Graphics graphics) {
@@ -275,17 +276,16 @@ public class TextHint extends PopUp {
         return edgeRegion;
     }
 
-
     protected ScrollableArea getScrollableArea() {
         return textArea;
     }
 
-    private void setClickListener(ClickListener listener) {
+    private void setTouchListener(TouchListener listener) {
         this.listener = listener;
     }
 
     /**
-     * Установим скин подложки и размеры частей её составляющих.
+     * Установить скин подложки и размеры составляющих её частей.
      *
      * @param skin
      * @param render
@@ -313,18 +313,19 @@ public class TextHint extends PopUp {
     }
 
     public int getHeight() {
-        if(edgeRegion != null){
+        if (edgeRegion != null) {
             return edgeRegion.getHeight();
-        }else{
+        } else {
             return 0;
         }
     }
 
     public int getWidth() {
-        if(edgeRegion != null){
+        if (edgeRegion != null) {
             return edgeRegion.getWidth();
-        }else{
+        } else {
             return 0;
         }
     }
+
 }

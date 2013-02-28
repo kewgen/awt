@@ -1,6 +1,6 @@
 package com.geargames.awt.components;
 
-import com.geargames.common.*;
+import com.geargames.common.Graphics;
 import com.geargames.common.packer.IndexObject;
 import com.geargames.common.packer.PFont;
 import com.geargames.common.packer.PObject;
@@ -11,32 +11,32 @@ import com.geargames.common.packer.PObject;
  * Time: 13:06
  */
 public class PGradualSpinBox extends PValueComponent {
-    private short value;
+    private int value;
     private boolean initiated;
     private PLabel label;
     private PGradualSpinButton buttonUp;
     private PGradualSpinButton buttonDown;
 
     public PGradualSpinBox(PObject prototype) {
-        super(prototype);
-        initiated = false;
+        this(prototype, 0);
     }
 
-    public PGradualSpinBox(PObject prototype, short value) {
+    public PGradualSpinBox(PObject prototype, int value) {
         super(prototype);
         this.value = value;
+        setStep(1);
         initiated = false;
     }
 
     protected void createSlotElementByIndex(IndexObject index, PObject parentPrototype) {
         switch (index.getSlot()) {
             case 0:
-                buttonDown = new PGradualSpinButton((PObject)index.getPrototype(), false);
+                buttonDown = new PGradualSpinButton((PObject)index.getPrototype());
                 buttonDown.setBox(this);
                 addActiveChild(buttonDown, index);
                 break;
             case 1:
-                buttonUp = new PGradualSpinButton((PObject)index.getPrototype(), true);
+                buttonUp = new PGradualSpinButton((PObject)index.getPrototype());
                 buttonUp.setBox(this);
                 addActiveChild(buttonUp, index);
                 break;
@@ -45,11 +45,6 @@ public class PGradualSpinBox extends PValueComponent {
                 addPassiveChild(label, index);
                 break;
         }
-    }
-
-    public void setFps(int fps) {
-        buttonUp.setFps(fps);
-        buttonDown.setFps(fps);
     }
 
     public void draw(Graphics graphics, int x, int y) {
@@ -64,16 +59,22 @@ public class PGradualSpinBox extends PValueComponent {
         initiated = true;
     }
 
-    public short getValue() {
+    public int getValue() {
         return value;
     }
 
-    public void setValue(short value) {
+    public void setValue(int value) {
         this.value = value;
         initiated = false;
+    }
+
+    public void setStep(int step) {
+        buttonUp.setStep(step);
+        buttonDown.setStep(-step);
     }
 
     public void setFont(PFont font) {
         label.setFont(font);
     }
+
 }

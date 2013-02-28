@@ -19,6 +19,6 @@ public class VanishFinishAdviser extends FinishAdviser {
     }
 
     public boolean isFinished() {
-        return label.isTransparent();
+        return label.isFullTransparent();
     }
 }

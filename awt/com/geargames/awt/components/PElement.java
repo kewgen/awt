@@ -1,13 +1,14 @@
 package com.geargames.awt.components;
 
-import com.geargames.common.util.Region;
+import com.geargames.awt.AWTObject;
 import com.geargames.common.Graphics;
+import com.geargames.common.util.Region;
 
 /**
- * User: mikhail v. kutuzov
+ * User: mikhail v. kutuzov, abarakov
  * Базовый класс любого компонента пользовательского интерфейса.
  */
-public abstract class PElement {
+public abstract class PElement extends AWTObject {
     private int x;
     private int y;
 
@@ -18,16 +19,6 @@ public abstract class PElement {
      * @param y координата по оси Y в локальной системе координат объекта.
      */
     public abstract void draw(Graphics graphics, int x, int y);
-
-    /**
-     * Передать событие code нарисованному объекту.
-     * @param code
-     * @param param
-     * @param x координата по оси Х в локальной системе координат объекта.
-     * @param y координата по оси Y в локальной системе координат объекта.
-     * @return true если дальнейшие события будут поглащаться этим объектом, иначе - false
-     */
-    public abstract boolean event(int code, int param, int x, int y);
 
     /**
      * Вернуть область в рамках родительского компонента, которая содержит текущий объект.

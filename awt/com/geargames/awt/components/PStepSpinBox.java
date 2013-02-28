@@ -1,25 +1,30 @@
 package com.geargames.awt.components;
 
-import com.geargames.common.*;
+import com.geargames.common.Graphics;
 import com.geargames.common.packer.IndexObject;
 import com.geargames.common.packer.PFont;
 import com.geargames.common.packer.PObject;
 
 /**
  * Users: mikhail v. kutuzov, abarakov
- * Компонент содержит в себе кнопку "вверх" и "вниз" для добавления приращения к содержимому label.
+ * Компонент содержит в себе кнопки "вверх" и "вниз" для добавления приращения к содержимому label.
  */
 public class PStepSpinBox extends PValueComponent {
-    private short value;
+    private int value;
     private boolean initiated;
     private PLabel label;
     private PStepSpinButton buttonUp;
     private PStepSpinButton buttonDown;
 
     public PStepSpinBox(PObject prototype) {
+        this(prototype, 0);
+    }
+
+    public PStepSpinBox(PObject prototype, int value) {
         super(prototype);
+        this.value = value;
+        setStep(1);
         initiated = false;
-        setStep((byte)1);
     }
 
     protected void createSlotElementByIndex(IndexObject index, PObject parentPrototype) {
@@ -53,21 +58,22 @@ public class PStepSpinBox extends PValueComponent {
         initiated = true;
     }
 
-    public short getValue() {
+    public int getValue() {
         return value;
     }
 
-    public void setValue(short value) {
+    public void setValue(int value) {
         this.value = value;
         initiated = false;
     }
 
-    public void setStep(byte step) {
+    public void setStep(int step) {
         buttonUp.setStep(step);
-        buttonDown.setStep((byte)-step);
+        buttonDown.setStep(-step);
     }
 
     public void setFont(PFont font) {
         label.setFont(font);
     }
+
 }

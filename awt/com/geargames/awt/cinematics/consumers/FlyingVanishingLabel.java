@@ -4,7 +4,6 @@ import com.geargames.awt.VanishingLabel;
 import com.geargames.awt.cinematics.CMovingPoint;
 
 /**
- * Created by IntelliJ IDEA.
  * User: mikhail.kutuzov
  * Date: 10.12.11
  */
@@ -15,8 +14,8 @@ public class FlyingVanishingLabel {
         if (instance == null) {
             instance = new Flying();
             VanishingLabel label = new VanishingLabel();
-            label.setTime(50);
-            label.setTransparencyTime(50);
+            label.setHideTimeout(2000);
+            label.setStateChangeTime(1000);
             label.setColor(color);
             instance.setDrawable(label);
             CMovingPoint speed = new CMovingPoint();
@@ -29,7 +28,7 @@ public class FlyingVanishingLabel {
         ((VanishingLabel) instance.getDrawable()).setData(data);
         instance.setX(x);
         instance.setY(y);
-        ((VanishingLabel) instance.getDrawable()).reset();
+        ((VanishingLabel) instance.getDrawable()).show();
         instance.initiate();
         return instance;
     }

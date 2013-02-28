@@ -12,27 +12,27 @@ public class VanishingLabel extends Label {
     private LinearVanishingStrategy graphicsStrategy;
 
     public VanishingLabel() {
-        graphicsStrategy = new LinearVanishingStrategy();
+        graphicsStrategy = new LinearVanishingStrategy(this);
     }
 
-    public void setTransparencyTime(int vanishingTime) {
-        graphicsStrategy.setTransparencyTime(vanishingTime);
+    public void setHideTimeout(int time) {
+        graphicsStrategy.setHideTimeout(time);
     }
 
-    public void setTime(int time) {
-        graphicsStrategy.setTime(time);
+    public void setStateChangeTime(int time) {
+        graphicsStrategy.setStateChangeTime(time);
     }
 
-    public void reset() {
-        graphicsStrategy.reset();
+    public void show() {
+        graphicsStrategy.startShowing();
     }
 
-    public boolean isTransparent() {
-        return graphicsStrategy.isTransparent();
+    public boolean isFullTransparent() {
+        return graphicsStrategy.isFullTransparent();
     }
 
     public void draw(Graphics graphics) {
-        graphicsStrategy.draw(graphics, this);
+        graphicsStrategy.draw(graphics);
     }
 
     public void superDraw(Graphics graphics) {

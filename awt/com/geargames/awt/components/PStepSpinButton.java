@@ -3,18 +3,23 @@ package com.geargames.awt.components;
 import com.geargames.common.packer.PObject;
 
 /**
- * User: mikhail v. kutuzov
- * Кнопка которая даёт подчинённом PStepSpinBox приращение значения при каждом нажатии.
+ * Users: mikhail v. kutuzov, abarakov
+ * Кнопка которая даёт родительскому PStepSpinBox приращение значения при каждом нажатии.
  */
 public class PStepSpinButton extends PTouchButton {
-    private byte step;
+    private int step;
     private PStepSpinBox parentBox;
 
     public PStepSpinButton(PObject prototype) {
         super(prototype);
+        step = 1;
     }
 
-    public void setStep(byte step) {
+    public int getStep() {
+        return step;
+    }
+
+    public void setStep(int step) {
         this.step = step;
     }
 
@@ -23,6 +28,7 @@ public class PStepSpinButton extends PTouchButton {
     }
 
     public void action() {
-        parentBox.setValue((short)(parentBox.getValue() + step));
+        parentBox.setValue(parentBox.getValue() + step);
     }
+
 }

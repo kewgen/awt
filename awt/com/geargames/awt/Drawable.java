@@ -1,36 +1,21 @@
 package com.geargames.awt;
 
-
 import com.geargames.common.Graphics;
 
 /**
- * user: Mikhail V. Kutuzov
+ * users: Mikhail V. Kutuzov, abarakov
  * date: 20.11.11
- * time: 10:37
  * Базовый класс для сущностей которые могут быть нарисованы на экране
- * */
-public abstract class Drawable {
-    public static boolean DEBUG = true;//сдесь флаг менять нельзя, меняем из своего проекта!
+ */
+public abstract class Drawable extends AWTObject {
 
-    public abstract void draw(Graphics graphics);
+    public static boolean DEBUG = true; // Здесь флаг менять нельзя, меняем из своего проекта!
 
     /**
-     * Передать событие code нарисованному объекту.
-     * @param code
-     * @param param
-     * @param x
-     * @param y
-     * @return true, если дальнейшие события будут поглощаться этим объектом, иначе - false
+     * Нарисовать элемент на экране в точке (x, y).
+     * @param graphics
      */
-    public abstract boolean event(int code, int param, int x, int y);
-
-    public abstract void setY(int y);
-
-    public abstract void setX(int x);
-
-    public abstract int getX();
-
-    public abstract int getY();
+    public abstract void draw(Graphics graphics);
 
     /**
      * A method to be used to call an ancestor's drawing method.
@@ -39,6 +24,22 @@ public abstract class Drawable {
      */
     public void superDraw(Graphics graphics) {
     }
+
+    /**
+     * Смещение объекта относительно его родителя по оси X.
+     * @return
+     */
+    public abstract int getX();
+
+    public abstract void setX(int x);
+
+    /**
+     * Смещение объекта относительно его родителя по оси Y.
+     * @return
+     */
+    public abstract int getY();
+
+    public abstract void setY(int y);
 
     public abstract int getHeight();
 

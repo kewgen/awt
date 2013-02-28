@@ -1,31 +1,41 @@
 package com.geargames.common;
 
 /**
- * User: kewgen, mikhail kutuzov
+ * Users: kewgen, mikhail kutuzov
  * Date: 01.06.12
  * Time: 13:07
  */
 public class Event {
     public final static int EVENT_NULL = 0;
-    public static final byte EVENT_TICK = 1;
+    @Deprecated
+    public final static int EVENT_TICK = 1;
 
-    public final static int EVENT_KEY_PRESSED = 100;
-    public final static int EVENT_KEY_RELEASED = 101;
+    public final static int EVENT_KEY_PRESSED  = 100;
+    public final static int EVENT_KEY_RELEASED = 101; //todo: тоже самое, что EVENT_KEY_UP?
     public final static int EVENT_KEY_REPEATED = 102;
-    public final static int EVENT_KEY = 103;
-    public final static int EVENT_TOUCH_PRESSED = 105;
-    public final static int EVENT_TOUCH_RELEASED = 106;
-    public final static int EVENT_TOUCH_MOVED = 107;
+    public final static int EVENT_KEY          = 103;
+    public final static int EVENT_KEY_DOWN     = 111;
+    public final static int EVENT_KEY_UP       = 110;
+
+    public final static int EVENT_TOUCH_PRESSED      = 105;
+    public final static int EVENT_TOUCH_RELEASED     = 106;
+    public final static int EVENT_TOUCH_MOVED        = 107;
     public final static int EVENT_TOUCH_DOUBLE_CLICK = 108;
-    public final static int EVENT_TOUCH_LONG_CLICK = 109;
-    public final static int EVENT_KEY_UP = 110;
-    public final static int EVENT_KEY_DOWN = 111;
+    public final static int EVENT_TOUCH_LONG_CLICK   = 109;
+    public final static int EVENT_SYNTHETIC_CLICK    = 112;
 
-    public final static int EVENT_SYNTHETIC_CLICK = 112;
+    public final static int EVENT_TIMER = 120; // EVENT_TIMER_END
 
-    public final static int EVENT_TIMER_END = 120;
     public final static int EVENT_SYSEDIT_OK = 121;             //вышли из системного эдита
     public final static int EVENT_SYSEDIT_CANCEL = 122;
+
+    private int uid;        // ID сообщения
+    private int param;      // параметр сообщения
+    private int point_x;
+    private int point_y;
+    private Object data;    // данные сообщения
+
+    //todo:  point_x + param -> param0;  point_y -> param1
 
     public Event(int uid_, int param_, Object data_, int x_, int y_) {
         this.uid = uid_;
@@ -55,12 +65,5 @@ public class Event {
     public int getY() {
         return point_y;
     }
-
-    private int uid;                    // ID сообщения
-    private int param;                  // параметр сообщения
-    private int point_x;
-    private int point_y;
-    private Object data;                // данные сообщения
-
 
 }

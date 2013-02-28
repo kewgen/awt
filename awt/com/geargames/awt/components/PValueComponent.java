@@ -8,9 +8,11 @@ import com.geargames.common.packer.PObject;
  * Time: 16:07
  */
 public abstract class PValueComponent extends PContentPanel {
+
     public PValueComponent(PObject prototype) {
         super(prototype);
     }
 
-    public abstract short getValue();
+    public abstract int getValue();
+
 }

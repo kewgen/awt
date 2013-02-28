@@ -1,6 +1,8 @@
 package com.geargames.awt.components;
 
 import com.geargames.Debug;
+import com.geargames.awt.timers.TimerIdMap;
+import com.geargames.awt.timers.TimerManager;
 import com.geargames.common.Event;
 import com.geargames.common.packer.PObject;
 
@@ -10,64 +12,64 @@ import com.geargames.common.packer.PObject;
  * Time: 13:13
  */
 public class PGradualSpinButton extends PTouchButton {
-    private byte counter;
-    private int fps;
-    private int tickCounter;
     private PGradualSpinBox parentBox;
-    private byte direction = 0;
+    private int step;
+    private int tickCounter;
 
-    public PGradualSpinButton(PObject prototype, boolean isIncreaseDirection) {
+    public PGradualSpinButton(PObject prototype) {
         super(prototype);
+        this.step = 1;
         tickCounter = 0;
-        counter = 0;
-        this.direction = (byte) (isIncreaseDirection ? 1 : -1);
-    }
-
-    /**
-     * Вернуть число кадров в секунду для приложения.
-     * @return
-     */
-    public int getFps() {
-        return fps;
-    }
-
-    public void setFps(int fps) {
-        this.fps = fps;
-    }
-
-    protected void second() {
-        parentBox.setValue((short) (parentBox.getValue() + counter * direction));
-    }
-
-    public boolean event(int code, int param, int x, int y) {
-        if (code == Event.EVENT_TICK) {
-            if (isState()) {
-                if (tickCounter++ % fps == 0) {
-                    int seconds = tickCounter / fps;
-                    Debug.trace("tick counter " + tickCounter + " fps " + fps);
-                    Debug.trace("seconds " + seconds);
-                    if (seconds < 10) {
-                        counter = 1;
-                    } else if (seconds < 19) {
-                        counter = 10;
-                    } else {
-                        counter = 100;
-                    }
-                    second();
-                }
-            }
-            return false;
-        }
-        return super.event(code, param, x, y);
-    }
-
-    public void action() {
-//        parentBox.setValue((short) (parentBox.getValue() + (counter == 0 ? 1 : counter) * direction));
-        tickCounter = 0;
-        counter = 0;
     }
 
     public void setBox(PGradualSpinBox box) {
         this.parentBox = box;
     }
+
+    public int getStep() {
+        return step;
+    }
+
+    public void setStep(int step) {
+        this.step = step;
+    }
+
+    public boolean event(int code, int param, int x, int y) {
+        if (code == Event.EVENT_TOUCH_PRESSED) {
+            tickCounter = 0;
+            TimerManager.setSingleTimer(TimerIdMap.AWT_SPINBOX_BUTTON_TICK, 500, this);
+            parentBox.setValue(parentBox.getValue() + step);
+//            pulse(step);
+        } else
+        if (code == Event.EVENT_TOUCH_RELEASED) {
+            TimerManager.killTimer(TimerIdMap.AWT_SPINBOX_BUTTON_TICK);
+        } else
+        if (code == Event.EVENT_TIMER && param == TimerIdMap.AWT_SPINBOX_BUTTON_TICK) {
+            tickCounter++;
+            if (tickCounter >= 20) {
+                int value = step * 5;
+                value = ((parentBox.getValue() + value) / value) * value;
+                parentBox.setValue(value);
+            } else {
+                if (tickCounter == 1) {
+                    TimerManager.setPeriodicTimer(TimerIdMap.AWT_SPINBOX_BUTTON_TICK, 100, this);
+                }
+                parentBox.setValue(parentBox.getValue() + step);
+            }
+//            Debug.trace("value: " + parentBox.getValue());
+//            pulse(scalableStep);
+            return false;
+        }
+        return super.event(code, param, x, y);
+    }
+
+//    protected void pulse(int scalableStep) {
+//        parentBox.setValue(parentBox.getValue() + scalableStep);
+//    }
+
+    public void action() {
+//        pulse(step);
+//        tickCounter = 0;
+    }
+
 }

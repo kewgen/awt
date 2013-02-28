@@ -5,38 +5,55 @@ import com.geargames.common.packer.Index;
 import com.geargames.common.packer.PObject;
 
 /**
- * User: mikhail v. kutuzov
+ * Users: mikhail v. kutuzov, abarakov
  * Date: 03.12.12
- * Time: 21:11
+ * Абстрактный класс кнопки, предназначен для зачитывания структуры объекта.
+ * Кнопка может находиться в одном из двух состояний:
+ *     зажатом (при isState() == true);
+ *     отжатом (при isState() == false).
+ * Способ переключения состояния кнопки задается логикой работы классов-наследников.
+ * Пакерный объект-прототип кнопки должен содержать следующие спрайты:
+ *     s0   спрайт зажатой кнопки;
+ *     s1   спрайт отжатой кнопки;
+ *     s110 фрейм задающий размеры кнопки.
  */
 public abstract class PButton extends PObjectElement {
-    private Index pushed;
-    private Index popped;
+    private Index pushedSkin;
+    private Index poppedSkin;
     private boolean state;
 
     public PButton(PObject prototype) {
         super(prototype);
-        pushed = prototype.getIndexBySlot(0);
-        popped = prototype.getIndexBySlot(1);
+        pushedSkin = prototype.getIndexBySlot(0);
+        poppedSkin = prototype.getIndexBySlot(1);
         state = false;
     }
 
     public void draw(Graphics graphics, int x, int y) {
-        if (!state) {
-            popped.draw(graphics, x, y);
+        if (state) {
+            pushedSkin.draw(graphics, x, y);
         } else {
-            pushed.draw(graphics, x, y);
+            poppedSkin.draw(graphics, x, y);
         }
     }
 
-    public Index getPushed() {
-        return pushed;
+    /**
+     * Вернуть скин кнопки в зажатом состоянии
+     */
+    public Index getPushedSkin() {
+        return pushedSkin;
     }
 
-    public Index getPopped() {
-        return popped;
+    /**
+     * Вернуть скин кнопки в отжатом состоянии
+     */
+    public Index getPoppedSkin() {
+        return poppedSkin;
     }
 
+    /**
+     * Вернуть состояние кнопки. True, если кнопка зажата и false, если отжата
+     */
     public boolean isState() {
         return state;
     }
@@ -44,4 +61,7 @@ public abstract class PButton extends PObjectElement {
     public void setState(boolean state) {
         this.state = state;
     }
+
+    public abstract void action();
+
 }

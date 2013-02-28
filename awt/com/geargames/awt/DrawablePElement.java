@@ -7,9 +7,9 @@ import com.geargames.common.util.Region;
 import com.geargames.common.Graphics;
 
 /**
- * User: mikhail v. kutuzov
+ * User: mikhail v. kutuzov, abarakov
  * Обёртка для отображения PElement-ов как Drawable.
- * Отображает окно в точке (x; y) экрана - левый верхний угол окна. Соответсвено, совмещая левый верхний угол элемента
+ * Отображает окно в точке (x, y) экрана - левый верхний угол окна. Соответсвено, совмещая левый верхний угол элемента
  * с углом окна, отображаем элемент element и его содержимое в этом окне.
  * События в element посылаем так же по относительным от левого верхнего угла окна координатам.
  */
@@ -25,7 +25,7 @@ public class DrawablePElement extends Drawable {
     }
 
     /**
-     * Прорисовываем компонент прорисовки так, чтоб его левый верхний угол совпадал с координатами (0,0) окна.
+     * Прорисовываем компонент прорисовки так, чтобы его левый верхний угол совпадал с координатами (0, 0) окна.
      *
      * @param graphics
      */
@@ -131,32 +131,46 @@ public class DrawablePElement extends Drawable {
     }
 
     /**
-     * Настройка расположения окна для компонента прорисовки на экране, в случае
-     * простановки ему экранного якоря.
+     * Настройка расположения панелек верхнего уровня для компонента прорисовки на экране, в случае простановки ему
+     * экранного якоря.
      */
     public void init() {
         switch (anchor) {
             case Anchors.NONE_ANCHOR:
                 break;
+            case Anchors.TOP_LEFT_ANCHOR:
+            case Anchors.CENTER_LEFT_ANCHOR:
             case Anchors.BOTTOM_LEFT_ANCHOR:
-                setY(Port.getH());
                 setX(0);
                 break;
-            case Anchors.TOP_LEFT_ANCHOR:
-                setY(0);
-                setX(0);
+            case Anchors.TOP_CENTER_ANCHOR:
+            case Anchors.CENTER_CENTER_ANCHOR:
+            case Anchors.BOTTOM_CENTER_ANCHOR:
+                setX((Port.getScreenW() - element.getDrawRegion().getWidth()) / 2);
                 break;
             case Anchors.TOP_RIGHT_ANCHOR:
-                setX(Port.getW() - element.getDrawRegion().getWidth());
+            case Anchors.CENTER_RIGHT_ANCHOR:
+            case Anchors.BOTTOM_RIGHT_ANCHOR:
+                setX(Port.getScreenW() - element.getDrawRegion().getWidth()); //todo: getW или getScreenW?
+                break;
+        }
+        switch (anchor) {
+            case Anchors.NONE_ANCHOR:
+                break;
+            case Anchors.TOP_LEFT_ANCHOR:
+            case Anchors.TOP_CENTER_ANCHOR:
+            case Anchors.TOP_RIGHT_ANCHOR:
                 setY(0);
                 break;
-            case Anchors.CENTER_ANCHOR:
-                setX((Port.getScreenW() / 2) - element.getDrawRegion().getWidth() / 2);
-                setY((Port.getScreenH() / 2) - element.getDrawRegion().getHeight() / 2);
+            case Anchors.CENTER_LEFT_ANCHOR:
+            case Anchors.CENTER_CENTER_ANCHOR:
+            case Anchors.CENTER_RIGHT_ANCHOR:
+                setY((Port.getScreenH() - element.getDrawRegion().getHeight()) / 2);
                 break;
+            case Anchors.BOTTOM_LEFT_ANCHOR:
+            case Anchors.BOTTOM_CENTER_ANCHOR:
             case Anchors.BOTTOM_RIGHT_ANCHOR:
-                setX(Port.getW() - element.getDrawRegion().getWidth());
-                setY(Port.getH() - element.getDrawRegion().getHeight());
+                setY(Port.getScreenH() - element.getDrawRegion().getHeight()); //todo: getH или getScreenH?
                 break;
         }
     }

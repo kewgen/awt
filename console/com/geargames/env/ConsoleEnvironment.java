@@ -3,18 +3,19 @@ package com.geargames.env;
 import com.geargames.common.env.Environment;
 
 /**
- * User: mikhail v. kutuzov
+ * Users: mikhail v. kutuzov, abarakov
  * Date: 19.02.13
  * Time: 18:20
  */
-public class ConsoleEnvironment  extends Environment {
+public class ConsoleEnvironment extends Environment {
+
     private static ConsoleEnvironment instance;
 
     private ConsoleEnvironment() {
     }
 
-    public  static ConsoleEnvironment getInstance(){
-        if(instance == null){
+    public static ConsoleEnvironment getInstance() {
+        if (instance == null) {
             instance = new ConsoleEnvironment();
         }
         return instance;

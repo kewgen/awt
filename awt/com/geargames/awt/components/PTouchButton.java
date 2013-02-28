@@ -1,27 +1,22 @@
 package com.geargames.awt.components;
 
 import com.geargames.common.Event;
-import com.geargames.common.packer.Index;
-import com.geargames.common.packer.PFrame;
 import com.geargames.common.packer.PObject;
-import com.geargames.common.Graphics;
 
 /**
- * User: mikhail v. kutuzov
- * Абстрактный класс кнопка, предназначен для зачитывания объекта структуры
- * Общие требования к пакерному объекту-прототипу:
- * s0 спрайт нажат
- * s1 спрайт отжат
- * s110 размер компонента в виде фрейма
- * Для кнопки существует только одно действие action() и происходит оно по нажатию/отжатию на поверхности кнопки.
+ * Users: mikhail v. kutuzov, abarakov
+ * Абстрактный класс кнопки, на которую можно кликнуть, но при отжатии, кнопка возвращается в отжатое состояние.
+ * Для кнопки существует только одно действие action(), которое происходит по клику над поверхностью кнопки.
+ * Пакерный объект-прототип кнопки должен содержать следующие спрайты:
+ *     s0   спрайт зажатой кнопки;
+ *     s1   спрайт отжатой кнопки;
+ *     s110 фрейм задающий размеры кнопки.
  */
 public abstract class PTouchButton extends PButton {
 
     protected PTouchButton(PObject prototype) {
         super(prototype);
     }
-
-    public abstract void action();
 
     public boolean event(int code, int param, int x, int y) {
         switch (code) {
@@ -37,4 +32,5 @@ public abstract class PTouchButton extends PButton {
         }
         return false;
     }
+
 }

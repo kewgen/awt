@@ -4,16 +4,20 @@ import com.geargames.common.Event;
 import com.geargames.common.packer.PObject;
 
 /**
- * User: mikhail v. kutuzov
- * Кнопка переключающая своё состояние по клику с отжатого на зажатое и обратно.
+ * Users: mikhail v. kutuzov, abarakov
+ * Абстрактный класс кнопки, которая может переключаться между двумя состояниями - зажатая/отжатая. Переключение
+ * производится по клику над поверхностью кнопки.
+ * Для кнопки существует только одно действие action(), которое происходит при переключении состояния кнопки.
+ * Пакерный объект-прототип кнопки должен содержать следующие спрайты:
+ *     s0   спрайт зажатой кнопки;
+ *     s1   спрайт отжатой кнопки;
+ *     s110 фрейм задающий размеры кнопки.
  */
 public abstract class PToggleButton extends PButton {
 
     public PToggleButton(PObject prototype) {
         super(prototype);
     }
-
-    protected abstract void action();
 
     public boolean event(int code, int param, int x, int y) {
         if (code == Event.EVENT_TOUCH_PRESSED && getTouchRegion().isWithIn(x, y)) {
