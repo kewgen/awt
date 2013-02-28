@@ -39,6 +39,13 @@ public class TextHint extends PopUp {
 
     private static TextHint instance;
 
+    private int defaultStateChangeTime = 100;      // 0.1 сек
+    private int defaultHideTimeout     = 3000;     // 3 сек
+    private PFont defaultFont          = null;     // системный шрифт
+    private boolean defaultScrollable  = false;    //
+    private int defaultColor           = 0x000000; // черный
+    private int defaultMargin          = 10;       //
+
     public static TextHint getInstance()
     {
         if (instance == null) {
@@ -67,7 +74,8 @@ public class TextHint extends PopUp {
     }
 
     /**
-     * Показать подсказку.
+     * Показать подсказку с заданными настройками.
+     *
      * @param text            тест подсказки
      * @param x               координата по оси X
      * @param y               координата по оси Y
@@ -81,13 +89,13 @@ public class TextHint extends PopUp {
         TextHint instance = getInstance();
         instance.textArea.setText(text);
         instance.textArea.setFont(font);
-        instance.textArea.setColor(0x000000);
+        instance.textArea.setColor(instance.defaultColor);
         instance.textArea.setFormat(Graphics.HCENTER | Graphics.TOP);
         instance.textArea.setEllipsis(!scrollable);
         instance.graphicsStrategy.setStateChangeTime(stateChangeTime); // setTransparencyTime(vanishTime);
         instance.graphicsStrategy.setHideTimeout(hideTimeout);         // setTime(time);
         instance.edgeRegion = new Region();
-        instance.margin = 10;
+        instance.margin = instance.defaultMargin;
         instance.setX(x);
         instance.setY(y);
         instance.initiated = false;
@@ -95,7 +103,7 @@ public class TextHint extends PopUp {
     }
 
     /**
-     * Показать подсказку нарисованную кастомным шрифтом.
+     * Показать подсказку нарисованную растровым шрифтом и настройками по умолчанию.
      *
      * @param text
      * @param x
@@ -104,11 +112,12 @@ public class TextHint extends PopUp {
      * @return
      */
     public static void show(String text, int x, int y, PFont font) {
-        show(text, x, y, 100, 3000, font, false);
+        TextHint instance = getInstance();
+        show(text, x, y, instance.defaultStateChangeTime, instance.defaultHideTimeout, font, instance.defaultScrollable);
     }
 
     /**
-     * Показать подсказку нарисованную системным шрифтом по умолчанию.
+     * Показать подсказку нарисованную системным шрифтом по умолчанию и настройками по умолчанию.
      *
      * @param text
      * @param x
@@ -116,7 +125,9 @@ public class TextHint extends PopUp {
      * @return
      */
     public static void show(String text, int x, int y) {
-        show(text, x, y, null);
+        TextHint instance = getInstance();
+        show(text, x, y, instance.defaultStateChangeTime, instance.defaultHideTimeout, instance.defaultFont,
+                instance.defaultScrollable);
     }
 
     public void draw(Graphics graphics) {
@@ -276,7 +287,7 @@ public class TextHint extends PopUp {
         return edgeRegion;
     }
 
-    protected ScrollableArea getScrollableArea() {
+    public ScrollableArea getScrollableArea() {
         return textArea;
     }
 
@@ -306,6 +317,30 @@ public class TextHint extends PopUp {
         bottomMiddleSkin.setPrototype(render.getFrame(skin.getPID() + 7));
         bottomRightSkin.setPrototype(render.getFrame(skin.getPID() + 8));
         initiated = false;
+    }
+
+    public void setDefaultStateChangeTime(int time) {
+        defaultStateChangeTime = time;
+    }
+
+    public void setDefaultHideTimeout(int time) {
+        defaultHideTimeout = time;
+    }
+
+    public void setDefaultFont(PFont font) {
+        defaultFont = font;
+    }
+
+    public void setDefaultScrollable(boolean scrollable) {
+        defaultScrollable = scrollable;
+    }
+
+    public void setDefaultColor(int color) {
+        defaultColor = color;
+    }
+
+    public void setDefaultMargin(int margin) {
+        defaultMargin = margin;
     }
 
     public boolean isInitiated() {
