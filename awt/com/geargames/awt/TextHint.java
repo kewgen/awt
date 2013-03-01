@@ -39,12 +39,13 @@ public class TextHint extends PopUp {
 
     private static TextHint instance;
 
-    private int defaultStateChangeTime = 100;      // 0.1 сек
-    private int defaultHideTimeout     = 3000;     // 3 сек
-    private PFont defaultFont          = null;     // системный шрифт
-    private boolean defaultScrollable  = false;    //
-    private int defaultColor           = 0x000000; // черный
-    private int defaultMargin          = 10;       //
+    private int defaultShowingTime    = 150;      // 0.15 сек
+    private int defaultLifeTime       = 4000;     // 4 сек
+    private int defaultHidingTime     = 150;      // 0.15 сек
+    private PFont defaultFont         = null;     // системный шрифт
+    private boolean defaultScrollable = false;    //
+    private int defaultColor          = 0x000000; // черный
+    private int defaultMargin         = 10;       //
 
     public static TextHint getInstance()
     {
@@ -76,15 +77,16 @@ public class TextHint extends PopUp {
     /**
      * Показать подсказку с заданными настройками.
      *
-     * @param text            тест подсказки
-     * @param x               координата по оси X
-     * @param y               координата по оси Y
-     * @param stateChangeTime время, за которое подсказка появится или скроется (в миллисек)
-     * @param hideTimeout     время, через которое подсказка автоматически скроется (в миллисек)
-     * @param scrollable      если true, то текст подсказки можно будет скроллить
-     * @param font            шрифт, которым будет отрисовываться текст подсказки
+     * @param text         тест подсказки
+     * @param x            координата по оси X в локальной системе координат окна приложения
+     * @param y            координата по оси Y в локальной системе координат окна приложения
+     * @param showingTime  время, за которое подсказка появится (в миллисекундах)
+     * @param lifeTime     время, через которое подсказка автоматически скроется (в миллисекундах)
+     * @param hidingTime   время, за которое подсказка скроется (в миллисекундах)
+     * @param scrollable   если true, то текст подсказки можно будет скроллить
+     * @param font         шрифт, которым будет отрисовываться текст подсказки
      */
-    public static void show(com.geargames.common.String text, int x, int y, int stateChangeTime, int hideTimeout,
+    public static void show(com.geargames.common.String text, int x, int y, int showingTime, int lifeTime, int hidingTime,
                             PFont font, boolean scrollable/*, int color, int margin*/) {
         TextHint instance = getInstance();
         instance.textArea.setText(text);
@@ -92,8 +94,9 @@ public class TextHint extends PopUp {
         instance.textArea.setColor(instance.defaultColor);
         instance.textArea.setFormat(Graphics.HCENTER | Graphics.TOP);
         instance.textArea.setEllipsis(!scrollable);
-        instance.graphicsStrategy.setStateChangeTime(stateChangeTime); // setTransparencyTime(vanishTime);
-        instance.graphicsStrategy.setHideTimeout(hideTimeout);         // setTime(time);
+        instance.graphicsStrategy.setShowingTime(showingTime);
+        instance.graphicsStrategy.setLifeTime(lifeTime);        // setTransparencyTime(vanishTime);
+        instance.graphicsStrategy.setHidingTime(hidingTime);    // setTime(time);
         instance.edgeRegion = new Region();
         instance.margin = instance.defaultMargin;
         instance.setX(x);
@@ -113,7 +116,8 @@ public class TextHint extends PopUp {
      */
     public static void show(String text, int x, int y, PFont font) {
         TextHint instance = getInstance();
-        show(text, x, y, instance.defaultStateChangeTime, instance.defaultHideTimeout, font, instance.defaultScrollable);
+        show(text, x, y, instance.defaultShowingTime, instance.defaultLifeTime, instance.defaultHidingTime,
+                font, instance.defaultScrollable);
     }
 
     /**
@@ -126,8 +130,8 @@ public class TextHint extends PopUp {
      */
     public static void show(String text, int x, int y) {
         TextHint instance = getInstance();
-        show(text, x, y, instance.defaultStateChangeTime, instance.defaultHideTimeout, instance.defaultFont,
-                instance.defaultScrollable);
+        show(text, x, y, instance.defaultShowingTime, instance.defaultLifeTime, instance.defaultHidingTime,
+                instance.defaultFont, instance.defaultScrollable);
     }
 
     public void draw(Graphics graphics) {
@@ -142,7 +146,6 @@ public class TextHint extends PopUp {
         if (listener != null /*&& edgeRegion != null && edgeRegion.isWithIn(x, y)*/) {
             listener.onEvent(this, code, param, x, y);
         }
-        graphicsStrategy.event(code, param, x, y);
         return false;
     }
 
@@ -165,14 +168,6 @@ public class TextHint extends PopUp {
         textArea.setText(text);
         initiated = false;
     }
-
-//    private void setTime(int time) {
-//        graphicsStrategy.setTime(time);
-//    }
-//
-//    private void setVanishTime(int vanishTime) {
-//        graphicsStrategy.setTransparencyTime(vanishTime);
-//    }
 
     protected ItemSkin getTopLeftSkin() {
         return topLeftSkin;
@@ -230,7 +225,6 @@ public class TextHint extends PopUp {
 
     public void hide() {
         graphicsStrategy.startHiding();
-//        setTime(0);
     }
 
     protected Region getRegionToDraw(Graphics graphics) {
@@ -319,24 +313,56 @@ public class TextHint extends PopUp {
         initiated = false;
     }
 
-    public void setDefaultStateChangeTime(int time) {
-        defaultStateChangeTime = time;
+    public int getDefaultShowingTime() {
+        return defaultShowingTime;
     }
 
-    public void setDefaultHideTimeout(int time) {
-        defaultHideTimeout = time;
+    public void setDefaultShowingTime(int time) {
+        defaultShowingTime = time;
+    }
+
+    public int getDefaultLifeTime() {
+        return defaultLifeTime;
+    }
+
+    public void setDefaultLifeTime(int time) {
+        defaultLifeTime = time;
+    }
+
+    public int getDefaultHidingTime() {
+        return defaultHidingTime;
+    }
+
+    public void setDefaultHidingTime(int time) {
+        defaultHidingTime = time;
+    }
+
+    public PFont getDefaultFont() {
+        return defaultFont;
     }
 
     public void setDefaultFont(PFont font) {
         defaultFont = font;
     }
 
+    public boolean getDefaultScrollable() {
+        return defaultScrollable;
+    }
+
     public void setDefaultScrollable(boolean scrollable) {
         defaultScrollable = scrollable;
     }
 
+    public int getDefaultColor() {
+        return defaultColor;
+    }
+
     public void setDefaultColor(int color) {
         defaultColor = color;
+    }
+
+    public int getDefaultMargin() {
+        return defaultMargin;
     }
 
     public void setDefaultMargin(int margin) {

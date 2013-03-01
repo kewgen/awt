@@ -2,7 +2,6 @@ package com.geargames.awt;
 
 import com.geargames.Debug;
 import com.geargames.common.Event;
-import com.geargames.common.Render;
 
 import java.util.Vector;
 
@@ -19,11 +18,9 @@ public abstract class Application {
         instance = this;
     }
 
-    public static Application getInstance(){
+    public static Application getInstance() {
         return instance;
     }
-
-    public abstract Render getRender();
 
     // ----- Main loop -------------------------------------------------------------------------------------------------
 
@@ -31,7 +28,6 @@ public abstract class Application {
 
     // ----- Events control --------------------------------------------------------------------------------------------
 
-    // Очередь сообщений, дублёр предназначен для исключения добавления нового события в момент обработки списка событий
     private Vector msgQueue = new Vector(64);
 
     public void eventAdd(int eventid, int param, Object data) { //todo: Object -> AWTObject
@@ -48,23 +44,17 @@ public abstract class Application {
     }
 
     protected void eventProcess() {
-        try {
-            //передача указателей на хранилища событий для разнесения обработки и добавления событий
-            synchronized (msgQueue) {
-
-                while (!msgQueue.isEmpty()) {
-                    Event event = (Event) msgQueue.firstElement();
-                    msgQueue.remove(event); //перед вызовом события нужно его убрать из очереди на случай эксепта
-                    onEvent(event);
-                    event = null;//ObjC
-                }
-
+        while (!msgQueue.isEmpty()) {
+            try {
+                Event event = (Event) msgQueue.remove(0); // Перед вызовом события нужно его убрать из очереди на случай эксепта
+                onEvent(event);
+                event = null;//ObjC
+            } catch (Exception e) {
+                Debug.logEx(e);
             }
-//            if (Application.isTimer(Manager.TIMERID_KEYDELAY) && !Application.isTimer(Manager.TIMERID_KEYREPEAT))//TODO сделать один интервал на все фпс
-//                eventAdd(Event.EVENT_KEY_REPEATED, Manager.getInstance().getPressedKey(), null);
-        } catch (Exception e) {
-            Debug.logEx(e);
         }
+//        if (Application.isTimer(Manager.TIMERID_KEYDELAY) && !Application.isTimer(Manager.TIMERID_KEYREPEAT))//TODO сделать один интервал на все фпс
+//            eventAdd(Event.EVENT_KEY_REPEATED, Manager.getInstance().getPressedKey(), null);
     }
 
     // ----- Message handlers ------------------------------------------------------------------------------------------

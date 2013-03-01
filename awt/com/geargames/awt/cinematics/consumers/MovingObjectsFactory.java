@@ -60,8 +60,9 @@ public class MovingObjectsFactory {
     public static AcceleratedObject createFlyingVanishingLabel(String data, int x, int y, byte color) {
         Flying flying = new Flying();
         VanishingLabel label = new VanishingLabel();
-        label.setHideTimeout(1500);
-        label.setStateChangeTime(500);
+        label.setShowingTime(500);
+        label.setLifeTime(1500);
+        label.setHidingTime(500);
         label.setColor(color);
         flying.setDrawable(label);
         CMovingPoint speed = new CMovingPoint();

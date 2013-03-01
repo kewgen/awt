@@ -9,7 +9,6 @@ import com.geargames.common.packer.PObject;
 /**
  * Users: mikhail v. kutuzov, abarakov
  * Date: 27.12.12
- * Time: 13:13
  */
 public class PGradualSpinButton extends PTouchButton {
     private PGradualSpinBox parentBox;
@@ -43,8 +42,16 @@ public class PGradualSpinButton extends PTouchButton {
         } else
         if (code == Event.EVENT_TOUCH_RELEASED) {
             TimerManager.killTimer(TimerIdMap.AWT_SPINBOX_BUTTON_TICK);
-        } else
-        if (code == Event.EVENT_TIMER && param == TimerIdMap.AWT_SPINBOX_BUTTON_TICK) {
+        }
+        return super.event(code, param, x, y);
+    }
+
+    /**
+     * Метод вызывается каждый раз при срабатывании таймера.
+     * @param timerId - идентификатор сработавшего таймера, который вызвал данный метод.
+     */
+    public void onTimer(int timerId) {
+        if (timerId == TimerIdMap.AWT_SPINBOX_BUTTON_TICK) {
             tickCounter++;
             if (tickCounter >= 20) {
                 int value = step * 5;
@@ -58,9 +65,7 @@ public class PGradualSpinButton extends PTouchButton {
             }
 //            Debug.trace("value: " + parentBox.getValue());
 //            pulse(scalableStep);
-            return false;
         }
-        return super.event(code, param, x, y);
     }
 
 //    protected void pulse(int scalableStep) {

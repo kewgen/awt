@@ -8,14 +8,16 @@ import com.geargames.awt.cinematics.CMovingPoint;
  * Date: 10.12.11
  */
 public class FlyingVanishingLabel {
+
     private static Flying instance;
 
     public static Flying show(com.geargames.common.String data, int x, int y, byte color) {
         if (instance == null) {
             instance = new Flying();
             VanishingLabel label = new VanishingLabel();
-            label.setHideTimeout(2000);
-            label.setStateChangeTime(1000);
+            label.setShowingTime(500);
+            label.setLifeTime(2000);
+            label.setHidingTime(1000);
             label.setColor(color);
             instance.setDrawable(label);
             CMovingPoint speed = new CMovingPoint();
@@ -32,4 +34,5 @@ public class FlyingVanishingLabel {
         instance.initiate();
         return instance;
     }
+
 }

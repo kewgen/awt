@@ -19,11 +19,12 @@ public class LinearVanishingStrategy extends GraphicsStrategy {
     public final static byte HIDING_STATE  = 3; // Компонент становится невидимым
 
     private Drawable owner;
-    private byte state          = HIDDEN_STATE;
-    private int stateChangeTime = 100;
-    private int hideTimeout     = 2000;
-    private byte transparency   = 100;  // уровень прозрачности - число в интервале 0 .. 100, где 100 - полная прозрачность.
-    private int startTime       = 0;    // время начала процесса (появления/сокрытия).
+    private byte state        = HIDDEN_STATE;
+    private int showingTime   = 100;
+    private int lifeTime      = 2000; // hideTimeout
+    private int hidingTime    = 100;
+    private byte transparency = 100;  // уровень прозрачности - число в интервале 0 .. 100, где 100 - полная прозрачность.
+    private int startTime     = 0;    // время начала процесса (появления/сокрытия).
 
     public LinearVanishingStrategy(Drawable owner) {
         this.owner = owner;
@@ -43,19 +44,25 @@ public class LinearVanishingStrategy extends GraphicsStrategy {
     }
 
     public boolean event(int code, int param, int x, int y) {
-        if (code == Event.EVENT_TIMER && param == TimerIdMap.AWT_TEXTHINT_GRAPHICS_STRATEGY_TICK) {
+        return false;
+    }
+
+    /**
+     * Метод вызывается каждый раз при срабатывании таймера.
+     * @param timerId - идентификатор сработавшего таймера, который вызвал данный метод.
+     */
+    public void onTimer(int timerId) {
+        if (timerId == TimerIdMap.AWT_TEXTHINT_GRAPHICS_STRATEGY_TICK) {
             switch (state) {
                 case HIDDEN_STATE:
                     Debug.trace("LinearVanishingStrategy.event(): HIDDEN_STATE");
                     break;
                 case HIDING_STATE: {
-//                    int remainingTime = endTime - TimerManager.millisTime();
-//                    int elapsedTime = stateChangeTime - remainingTime;
                     //todo: Возможна вероятность перехода через 10-дневный скрок запуска приложения
                     // Это может привести к тому, что одно время было сохранено до перехода, а второе после,
                     // следовательно два этих времени недопустимо сравнивать
                     int elapsedTime = TimerManager.millisTime() - startTime;
-                    int currentTransparency = (int)((float)elapsedTime / stateChangeTime * 100);
+                    int currentTransparency = (int)((float)elapsedTime / hidingTime * 100);
                     Debug.trace("LinearVanishingStrategy.event(): HIDING_STATE: transparency=" + currentTransparency);
                     if (currentTransparency >= 100) {
                         transparency = 100;
@@ -71,7 +78,7 @@ public class LinearVanishingStrategy extends GraphicsStrategy {
                     // Это может привести к тому, что одно время было сохранено до перехода, а второе после,
                     // следовательно два этих времени недопустимо сравнивать
                     int elapsedTime = TimerManager.millisTime() - startTime;
-                    int currentTransparency = (int) (100 - (float)elapsedTime / stateChangeTime * 100);
+                    int currentTransparency = (int) (100 - (float)elapsedTime / showingTime * 100);
                     Debug.trace("LinearVanishingStrategy.event(): SHOWING_STATE: transparency=" + currentTransparency);
                     if (currentTransparency <= 0) {
                         transparency = 0;
@@ -83,7 +90,7 @@ public class LinearVanishingStrategy extends GraphicsStrategy {
                     break;
                 }
                 case SHOWN_STATE: {
-                    // Сработал таймер с интервалом hideTimeout
+                    // Сработал таймер с интервалом lifeTime
                     Debug.trace("LinearVanishingStrategy.event(): SHOWN_STATE");
                     startHiding();
                     break;
@@ -93,14 +100,13 @@ public class LinearVanishingStrategy extends GraphicsStrategy {
                     break;
             }
         }
-        return false;
     }
 
     /**
      * Начать процесс отображения компонента.
      */
     public void startShowing() {
-        if (stateChangeTime == 0 || state == SHOWN_STATE) {
+        if (showingTime == 0 || state == SHOWN_STATE) {
             // Компонент должен появиться мгновенно.
             state = SHOWN_STATE;
             transparency = 0;
@@ -113,7 +119,7 @@ public class LinearVanishingStrategy extends GraphicsStrategy {
             // Компонент должен быть отображен
             if (state == HIDING_STATE) {
                 // Компонент находится в стадии сокрытия
-                int elapsedTime = (int)(stateChangeTime * (100.0 - transparency) / 100.0);
+                int elapsedTime = (int)(showingTime * (100.0 - transparency) / 100.0);
                 startTime = TimerManager.millisTime() - elapsedTime; // Оформим начало процесса "задним числом"
             } else {
                 // Компонент скрыт
@@ -127,7 +133,7 @@ public class LinearVanishingStrategy extends GraphicsStrategy {
 
     private void starDelayedHiding() {
         // Запустим таймер на автоматическое скрытие компонента спустя hideTimeout миллисекунд.
-        TimerManager.setSingleTimer(TimerIdMap.AWT_TEXTHINT_GRAPHICS_STRATEGY_TICK, hideTimeout, this);
+        TimerManager.setSingleTimer(TimerIdMap.AWT_TEXTHINT_GRAPHICS_STRATEGY_TICK, lifeTime, this);
     }
 
     /**
@@ -137,7 +143,7 @@ public class LinearVanishingStrategy extends GraphicsStrategy {
         if (state == HIDDEN_STATE || state == HIDING_STATE) {
             // Игнорируем вызов метода, т.к. компонент либо уже полностью скрыт, либо находится в стадии сокрытия.
         } else
-        if (stateChangeTime == 0) {
+        if (hidingTime == 0) {
             // Компонент должен скрыться мгновенно.
             state = HIDDEN_STATE;
             transparency = 100;
@@ -146,7 +152,7 @@ public class LinearVanishingStrategy extends GraphicsStrategy {
             // Компонент должен быть скрыт
             if (state == SHOWING_STATE) {
                 // Компонент находится в стадии появления
-                int elapsedTime = (int)(stateChangeTime * transparency / 100.0);
+                int elapsedTime = (int)(hidingTime * transparency / 100.0);
                 startTime = TimerManager.millisTime() - elapsedTime; // Оформим начало процесса "задним числом"
             } else {
                 // Компонент был отображен
@@ -174,28 +180,41 @@ public class LinearVanishingStrategy extends GraphicsStrategy {
     }
 
     /**
-     * Вернуть время, через которое компонент будет автоматически скрыт (в миллисек)
-     * @return
+     * Вернуть время, за которое компонент будет плавно переведен из состояния полностью невидим, в состояние полностью
+     * видим.
+     * @return Время в миллисекундах.
      */
-    public int getHideTimeout() {
-        return hideTimeout;
+    public int getShowingTime() {
+        return showingTime;
     }
 
-    public void setHideTimeout(int time) {
-        this.hideTimeout = time;
+    public void setShowingTime(int time) {
+        this.showingTime = time;
     }
 
     /**
-     * Вернуть время, за которое компонент изменит свое состояние видимости (в миллисек). Например, это время, за
-     * которое компонент будет плавно переведен из состояния полностью видим, в состояние полностью невидим.
-     * @return
+     * Вернуть время, через которое компонент начнет процесс автоматического сокрытия.
+     * @return Время в миллисекундах.
      */
-    public int getStateChangeTime() {
-        return stateChangeTime;
+    public int getLifeTime() {
+        return lifeTime;
     }
 
-    public void setStateChangeTime(int time) {
-        this.stateChangeTime = time;
+    public void setLifeTime(int time) {
+        this.lifeTime = time;
+    }
+
+    /**
+     * Вернуть время, за которое компонент будет плавно переведен из состояния полностью видим, в состояние полностью
+     * невидим.
+     * @return Время в миллисекундах.
+     */
+    public int getHidingTime() {
+        return hidingTime;
+    }
+
+    public void setHidingTime(int time) {
+        this.hidingTime = time;
     }
 
     public boolean isFullTransparent() {

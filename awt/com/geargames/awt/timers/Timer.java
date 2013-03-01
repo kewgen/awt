@@ -18,9 +18,20 @@ public /*abstract*/ class Timer {
     // nextActivate, lastActivated
     private int timeActivate;          // Время срабатывания таймера. Время в данном контексте - это время относительно
                                        // времени старта системы
-    private AWTObject callBackElement; // Элемент, которому следует сообщать о срабатывании таймера
+    private AWTObject callBackElement; // Элемент, которому будет сообщено о срабатывании таймера
     // isMultiple
-    private boolean isPeriodic;        // true, если таймер должен выполняться многократно
+//  private boolean isPeriodic;        // true, если таймер должен выполняться многократно
+    private byte data;
+
+    private final static byte TIMER_TYPE_MASK     = 0x07; // 0b00000111
+    private final static byte TIMER_STATE_MASK    = 0x18; // 0b00011000
+
+    public  final static byte SINGLE_TIMER_TYPE   = 1;    // 0b00000001  // ONESHOT_TIMER
+    public  final static byte PERIODIC_TIMER_TYPE = 2;    // 0b00000010
+    public  final static byte TICK_TIMER_TYPE     = 3;    // 0b00000011
+
+    private final static byte NEED_INITIATE_STATE = 8;    // 0b00001000
+//  private final static byte NEED_KILL_STATE     = 16;   // 0b00010000
 
     protected Timer() {
 
@@ -29,17 +40,17 @@ public /*abstract*/ class Timer {
     /**
      * Вызывается при инициализации таймера.
      */
-    public void init(int id, int interval, AWTObject callBackElement, boolean isPeriodic) {
+    public void init(int id, int interval, byte timerType, AWTObject callBackElement) {
         this.id              = id;
         this.timeActivate    = interval == 0 ? 0 : TimerManager.millisTime() + interval;
         this.interval        = interval;
         this.callBackElement = callBackElement;
-        this.isPeriodic      = isPeriodic;
+        this.data            = (byte) (timerType + NEED_INITIATE_STATE);
 //        needInitiate();
     }
 
     protected void initiate() {
-
+        data = (byte) (data & ~TIMER_STATE_MASK);
     }
 
 //    public void reset() {
@@ -92,17 +103,37 @@ public /*abstract*/ class Timer {
 
     // needNextActivation, needReActivation
     public int getNextTimeActivation() {
-        return (isPeriodic && interval > 0 ? timeActivate + interval : -1); // interval==0 - случай игнорируется
+        return (isPeriodicTimer() && interval > 0 ? timeActivate + interval : -1); // interval == 0 - случай игнорируется
     }
 
     public AWTObject getCallBackElement() {
         return callBackElement;
     }
 
-    // isMultiple
-    public boolean isPeriodic() {
-        return isPeriodic;
+    public byte getTimerType() {
+        return (byte) (data & TIMER_TYPE_MASK);
     }
+
+    public boolean isSingleTimer() {
+        return (data & TIMER_TYPE_MASK) == SINGLE_TIMER_TYPE;
+    }
+
+    // isMultipleTimer
+    public boolean isPeriodicTimer() {
+        return (data & TIMER_TYPE_MASK) == PERIODIC_TIMER_TYPE;
+    }
+
+    public boolean isTickTimer() {
+        return (data & TIMER_TYPE_MASK) == TICK_TIMER_TYPE;
+    }
+
+    public boolean isNeedInitiate() {
+        return (data & TIMER_STATE_MASK) == NEED_INITIATE_STATE;
+    }
+
+//    public boolean isNeedKill() {
+//        return (data & TIMER_STATE_MASK) == NEED_KILL_STATE;
+//    }
 
 //    /**
 //     * Запустить таймер.
@@ -122,7 +153,8 @@ public /*abstract*/ class Timer {
      * Вызывается каждый раз при срабатывании таймера.
      */
     protected void onTimer() {
-        Application.getInstance().eventAdd(Event.EVENT_TIMER, id, callBackElement);
+//        Application.getInstance().eventAdd(Event.EVENT_TIMER, id, callBackElement);
+        callBackElement.onTimer(id);
     }
 
 }
@@ -179,4 +211,7 @@ public /*abstract*/ class Timer {
 // * Date: 23.02.13 12:00
 // */
 //public class DelayTimer {
+//}
+//
+//public class TickTimer {
 //}

@@ -4,9 +4,8 @@ import com.geargames.awt.utils.LinearVanishingStrategy;
 import com.geargames.common.Graphics;
 
 /**
- * User: mikhail.kutuzov
+ * User: mikhail.kutuzov, abarakov
  * Date: 27.11.11
- * Time: 20:50
  */
 public class VanishingLabel extends Label {
     private LinearVanishingStrategy graphicsStrategy;
@@ -15,12 +14,16 @@ public class VanishingLabel extends Label {
         graphicsStrategy = new LinearVanishingStrategy(this);
     }
 
-    public void setHideTimeout(int time) {
-        graphicsStrategy.setHideTimeout(time);
+    public void setShowingTime(int time) {
+        graphicsStrategy.setShowingTime(time);
     }
 
-    public void setStateChangeTime(int time) {
-        graphicsStrategy.setStateChangeTime(time);
+    public void setLifeTime(int time) {
+        graphicsStrategy.setLifeTime(time);
+    }
+
+    public void setHidingTime(int time) {
+        graphicsStrategy.setHidingTime(time);
     }
 
     public void show() {
@@ -39,8 +42,4 @@ public class VanishingLabel extends Label {
         super.draw(graphics);
     }
 
-    public boolean event(int code, int param, int x, int y) {
-        graphicsStrategy.event(code, param, x, y);
-        return false;
-    }
 }

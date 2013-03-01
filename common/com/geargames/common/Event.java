@@ -24,6 +24,7 @@ public class Event {
     public final static int EVENT_TOUCH_LONG_CLICK   = 109;
     public final static int EVENT_SYNTHETIC_CLICK    = 112;
 
+    @Deprecated
     public final static int EVENT_TIMER = 120; // EVENT_TIMER_END
 
     public final static int EVENT_SYSEDIT_OK = 121;             //вышли из системного эдита
