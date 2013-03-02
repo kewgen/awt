@@ -65,6 +65,7 @@ public class LinearVanishingStrategy extends GraphicsStrategy {
                     int currentTransparency = (int)((float)elapsedTime / hidingTime * 100);
                     Debug.trace("LinearVanishingStrategy.event(): HIDING_STATE: transparency=" + currentTransparency);
                     if (currentTransparency >= 100) {
+                        // Компонент стал полностью прозрачным
                         transparency = 100;
                         state = HIDDEN_STATE;
                         TimerManager.killTimer(TimerIdMap.AWT_TEXTHINT_GRAPHICS_STRATEGY_TICK);
@@ -81,6 +82,7 @@ public class LinearVanishingStrategy extends GraphicsStrategy {
                     int currentTransparency = (int) (100 - (float)elapsedTime / showingTime * 100);
                     Debug.trace("LinearVanishingStrategy.event(): SHOWING_STATE: transparency=" + currentTransparency);
                     if (currentTransparency <= 0) {
+                        // Компонент стал полностью непрозрачным
                         transparency = 0;
                         state = SHOWN_STATE;
                         starDelayedHiding();

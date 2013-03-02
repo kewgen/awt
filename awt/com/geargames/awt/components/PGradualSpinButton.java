@@ -14,6 +14,7 @@ public class PGradualSpinButton extends PTouchButton {
     private PGradualSpinBox parentBox;
     private int step;
     private int tickCounter;
+    private int timerId;
 
     public PGradualSpinButton(PObject prototype) {
         super(prototype);
@@ -35,13 +36,15 @@ public class PGradualSpinButton extends PTouchButton {
 
     public boolean event(int code, int param, int x, int y) {
         if (code == Event.EVENT_TOUCH_PRESSED) {
+            Debug.trace("PGradualSpinButton: Event = EVENT_TOUCH_PRESSED");
             tickCounter = 0;
-            TimerManager.setSingleTimer(TimerIdMap.AWT_SPINBOX_BUTTON_TICK, 500, this);
+            timerId = TimerManager.setSingleTimer(500, this);
             parentBox.setValue(parentBox.getValue() + step);
 //            pulse(step);
         } else
         if (code == Event.EVENT_TOUCH_RELEASED) {
-            TimerManager.killTimer(TimerIdMap.AWT_SPINBOX_BUTTON_TICK);
+            Debug.trace("PGradualSpinButton: Event = EVENT_TOUCH_RELEASED");
+            TimerManager.killTimer(timerId);
         }
         return super.event(code, param, x, y);
     }
@@ -51,7 +54,7 @@ public class PGradualSpinButton extends PTouchButton {
      * @param timerId - идентификатор сработавшего таймера, который вызвал данный метод.
      */
     public void onTimer(int timerId) {
-        if (timerId == TimerIdMap.AWT_SPINBOX_BUTTON_TICK) {
+        if (timerId == this.timerId) {
             tickCounter++;
             if (tickCounter >= 20) {
                 int value = step * 5;
@@ -59,7 +62,7 @@ public class PGradualSpinButton extends PTouchButton {
                 parentBox.setValue(value);
             } else {
                 if (tickCounter == 1) {
-                    TimerManager.setPeriodicTimer(TimerIdMap.AWT_SPINBOX_BUTTON_TICK, 100, this);
+                    TimerManager.setPeriodicTimer(this.timerId, 100, this);
                 }
                 parentBox.setValue(parentBox.getValue() + step);
             }

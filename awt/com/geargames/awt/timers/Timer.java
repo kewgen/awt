@@ -31,7 +31,7 @@ public /*abstract*/ class Timer {
     public  final static byte TICK_TIMER_TYPE     = 3;    // 0b00000011
 
     private final static byte NEED_INITIATE_STATE = 8;    // 0b00001000
-//  private final static byte NEED_KILL_STATE     = 16;   // 0b00010000
+    private final static byte KILLED_STATE        = 16;   // 0b00010000
 
     protected Timer() {
 
@@ -45,12 +45,16 @@ public /*abstract*/ class Timer {
         this.timeActivate    = interval == 0 ? 0 : TimerManager.millisTime() + interval;
         this.interval        = interval;
         this.callBackElement = callBackElement;
-        this.data            = (byte) (timerType + NEED_INITIATE_STATE);
+        this.data            = (byte) ((timerType /*& TIMER_TYPE_MASK*/) | NEED_INITIATE_STATE);
 //        needInitiate();
     }
 
     protected void initiate() {
         data = (byte) (data & ~TIMER_STATE_MASK);
+    }
+
+    protected void killed() {
+        data = (byte) (data | KILLED_STATE);
     }
 
 //    public void reset() {
@@ -61,9 +65,9 @@ public /*abstract*/ class Timer {
 //        TimerManager.getInstance().timerRequiredInitiate(this);
 //    }
 
-    public void optimize(int subtractor) {
-        timeActivate -= subtractor;
-    }
+//    public void optimize(int subtractor) {
+//        timeActivate -= subtractor;
+//    }
 
 //    public boolean getEnabled() {
 //        return enabled;
@@ -103,11 +107,16 @@ public /*abstract*/ class Timer {
 
     // needNextActivation, needReActivation
     public int getNextTimeActivation() {
-        return (isPeriodicTimer() && interval > 0 ? timeActivate + interval : -1); // interval == 0 - случай игнорируется
+        return timeActivate + interval;
     }
 
     public AWTObject getCallBackElement() {
         return callBackElement;
+    }
+
+    @Deprecated
+    public byte getData() {
+        return data;
     }
 
     public byte getTimerType() {
@@ -131,9 +140,9 @@ public /*abstract*/ class Timer {
         return (data & TIMER_STATE_MASK) == NEED_INITIATE_STATE;
     }
 
-//    public boolean isNeedKill() {
-//        return (data & TIMER_STATE_MASK) == NEED_KILL_STATE;
-//    }
+    public boolean isKilled() {
+        return (data & TIMER_STATE_MASK) == KILLED_STATE;
+    }
 
 //    /**
 //     * Запустить таймер.

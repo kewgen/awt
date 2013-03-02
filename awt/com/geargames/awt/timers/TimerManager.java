@@ -45,6 +45,10 @@ public class TimerManager {
 
 //    private final static int TIMER_OPTIMIZE_SUBTRACTOR = 864000000; // 10 дней в миллисекундах = 10*24*60*60*1000
 
+    private final static byte UPDATE_STATUS_NONE        = 0; // метод update не выполняется
+    private final static byte TICK_TIMERS_UPDATE_STATUS = 1; // в методе update апдейтятся tick-таймеры
+    private final static byte TIMERS_UPDATE_STATUS      = 2; // в методе update апдейтятся таймеры
+
 //    private static TimerManager instance;
     private static Random random = null; //todo: Думается, что рандом-генератор должен быть один на всю программу
 
@@ -52,7 +56,7 @@ public class TimerManager {
 
     // Время старта приложения, с него начинаются все отсчеты таймеров (в миллисекундах)
     // Такой baseTime нужен в случае, если компьютер/устройство работает бесперерывно уже более 10 суток
-    private static long baseTime = ConsoleEnvironment.getInstance().nanoTime() / 1000000;
+    private static long baseTime = ConsoleEnvironment.getInstance().nanoTime() / 1000000; //todo: ConsoleEnvironment?
 
     /**
      * Вернуть время в миллисекундах
@@ -84,9 +88,9 @@ public class TimerManager {
     private static ArrayList unusedTimers       = new ArrayList(16);
     private static ArrayList unusedTimersAssist = new ArrayList(8);  //todo: можно попробовать избавиться от этого списка
 
-    private static int     lastTime       = millisTime(); // Время последнего обновления таймеров (в миллисекундах)
-    private static boolean isUpdateWorked = false;        // True, если в настоящий момент выполняется метод update().
-    private static int     nextDinamicId  = DINAMIC_TIMER_ID_MIN; // id, который будет присвоен следующему таймеру.
+    private static int  lastTime      = millisTime();         // Время последнего обновления таймеров (в миллисекундах)
+    private static byte updateStatus  = UPDATE_STATUS_NONE;   // Что в настоящий момент выполняется в методе update()
+    private static int  nextDinamicId = DINAMIC_TIMER_ID_MIN; // id, который будет присвоен следующему таймеру.
 
 //    public TimerManager() {
 //        //todo: Какие значения capacity выбрать?
@@ -119,11 +123,8 @@ public class TimerManager {
      * Вернуть id таймера, который еще не занят.
      * @return
      */
-    // generateTimerId
     //todo: тип id-шника - int или short?
-    private static int getNewTimerId() {
-        // Если выбрать тип short как timerId, то при большом количестве созданных таймеров (>5000), id которым был
-        // присвоен самим менеджером, данный метод может начать тормозить.
+    private static int generateTimerId() {
 //        int id;
 //        do {
 //          id = random.nextInt(DINAMIC_TIMER_ID_MAX - DINAMIC_TIMER_ID_MIN + 1) + DINAMIC_TIMER_ID_MAX;
@@ -164,6 +165,7 @@ public class TimerManager {
                     timerId, interval, timerType, callBackElement.getClass().getName()
             ));
         }
+        killTimer(timerId);
         if (DEBUG && timerIds.containsKey(timerId)) {
             Debug.assertMsg(String.valueOfC(java.lang.String.format(
                     "TimerManager.setTimer(): Put timerId that is already in timerIds (" +
@@ -171,7 +173,6 @@ public class TimerManager {
                     timerId, interval, timerType, callBackElement.getClass().getName()
             )), false);
         }
-        killTimer(timerId);
         Timer timer;
         if (!unusedTimers.isEmpty()) {
             timer = (Timer)unusedTimers.remove(unusedTimers.size() - 1);
@@ -201,7 +202,7 @@ public class TimerManager {
      * @return
      */
     public static int setSingleTimer(int interval, AWTObject callBackElement) {
-        return setTimer(getNewTimerId(), interval, Timer.SINGLE_TIMER_TYPE, callBackElement);
+        return setTimer(generateTimerId(), interval, Timer.SINGLE_TIMER_TYPE, callBackElement);
     }
 
     /**
@@ -222,7 +223,7 @@ public class TimerManager {
      * @return
      */
     public static int setPeriodicTimer(int interval, AWTObject callBackElement) {
-        return setTimer(getNewTimerId(), interval, Timer.PERIODIC_TIMER_TYPE, callBackElement);
+        return setTimer(generateTimerId(), interval, Timer.PERIODIC_TIMER_TYPE, callBackElement);
     }
 
     /**
@@ -242,7 +243,7 @@ public class TimerManager {
      * @return
      */
     public static int setTickTimer(AWTObject callBackElement) {
-        return setTimer(getNewTimerId(), 0, Timer.TICK_TIMER_TYPE, callBackElement);
+        return setTimer(generateTimerId(), 0, Timer.TICK_TIMER_TYPE, callBackElement);
     }
 
     /**
@@ -260,27 +261,36 @@ public class TimerManager {
         }
     }
 
-    public static void clearTimers() {
-        if (isUpdateWorked) {
-            unusedTimersAssist.addAll(timers);
-            unusedTimersAssist.addAll(tickTimers);
-            unusedTimersAssist.addAll(initiateTimers);
-        } else {
-            unusedTimers.addAll(timers);
-            unusedTimers.addAll(tickTimers);
-            unusedTimers.addAll(initiateTimers);
-        }
-        if (!timers.isEmpty()) {
-            if (isUpdateWorked) {
-                Timer timer = (Timer)timers.get(timers.size() - 1);
-                timer.setInterval(0); // Это для того, чтобы таймер не пересоздался в методе update
-            }
-            timers.clear();
-        }
-        tickTimers.clear();
-        initiateTimers.clear();
-        timerIds.clear();
-    }
+//    /**
+//     * Остановить и удалить все таймеры.
+//     */
+//    public static void clearTimers() {
+//        if (!timers.isEmpty()) {
+//            if (updateStatus == TIMERS_UPDATE_STATUS) {
+//                Timer timer = (Timer)timers.get(timers.size() - 1);
+//                timer.setInterval(0);              // Это для того, чтобы таймер не пересоздался в методе update
+//                //todo: все таймеры сразу можно помещать в список unusedTimers, все кроме последнего таймера, который может еще использоваться
+//                unusedTimersAssist.addAll(timers); // Все таймеры будут удалены сразу по окончанию цикла апдейта таймеров
+//            } else {
+//                unusedTimers.addAll(timers);
+//                timers.clear();
+//            }
+//        }
+//        if (!tickTimers.isEmpty()) {
+//            if (updateStatus == TICK_TIMERS_UPDATE_STATUS) {
+//                unusedTimersAssist.addAll(tickTimers); // Все tick-таймеры будут удалены сразу по окончанию цикла апдейта tick-таймеров
+//            } else {
+//                unusedTimers.addAll(tickTimers);
+//                tickTimers.clear();
+//            }
+//        }
+//        if (!initiateTimers.isEmpty()) {
+//            unusedTimers.addAll(initiateTimers);
+//            initiateTimers.clear();
+//        }
+//
+//        timerIds.clear();
+//    }
 
     // ----- Функции поиска таймеров -----------------------------------------------------------------------------------
 
@@ -298,64 +308,82 @@ public class TimerManager {
     private static void releaseTimer(Timer timer) {
         if (STACK_TRACE) {
             Debug.trace(java.lang.String.format(
-                    "TimerManager.releaseTimer(timerId=%d; interval=%d; timerType=%d; class of element='%s')",
-                    timer.getId(), timer.getInterval(), timer.getTimerType(), timer.getCallBackElement().getClass().getName()
+                    "TimerManager.releaseTimer(timerId=%d; interval=%d; timerType=%d; timerData=%d; updateStatus=%d; " +
+                    "class of element='%s')",
+                    timer.getId(), timer.getInterval(), timer.getTimerType(), timer.getData(), updateStatus,
+                    timer.getCallBackElement().getClass().getName()
             ));
         }
-        timer.setInterval(0); // Это для того, чтобы таймер не пересоздался в методе update
+//        timer.setInterval(0); // Это для того, чтобы таймер не пересоздался в методе update
+        if (timer.isKilled()) {
+            return;
+        }
 
+        //todo: Таймер следует удалять по заранее известному индексу. С другой стороны, индекс мог уже измениться
         if (timer.isNeedInitiate()) {
             initiateTimers.remove(timer);
+            unusedTimers.add(timer);
         } else {
             switch (timer.getTimerType()) {
                 case Timer.SINGLE_TIMER_TYPE:
                 case Timer.PERIODIC_TIMER_TYPE:
-                    timers.remove(timers);
+                    timers.remove(timer);
+                    if (updateStatus == TIMERS_UPDATE_STATUS) {
+                        unusedTimersAssist.add(timer); // Таймер будет удален сразу по окончанию цикла апдейта tick-таймеров
+                    } else {
+                        unusedTimers.add(timer);
+                    }
                     break;
                 case Timer.TICK_TIMER_TYPE:
-                    tickTimers.remove(timers);
+                    if (updateStatus == TICK_TIMERS_UPDATE_STATUS) {
+                        unusedTimersAssist.add(timer); // Таймер будет удален сразу по окончанию цикла апдейта таймеров
+                    } else {
+                        tickTimers.remove(timer);
+                        unusedTimers.add(timer);
+                    }
                     break;
+                default:
+                    //todo: это error
+                    Debug.warning(String.valueOfC(java.lang.String.format(
+                            "TimerManager.releaseTimer(): illegal timerType (timerId=%d; interval=%d; timerType=%d; class of element='%s')",
+                            timer.getId(), timer.getInterval(), timer.getTimerType(), timer.getCallBackElement().getClass().getName()
+                    )));
             }
         }
         timerIds.remove(timer.getId());
+        timer.killed();
 
-        if (DEBUG) {
-            // Убеждаемся, что таймера нет ни в одном списке
-            if (timers.contains(timer)) {
-                Debug.assertMsg(String.valueOfC(java.lang.String.format(
-                        "TimerManager.releaseTimer(): Timer is still in the list 'timers' (id=%d; interval=%d; " +
-                        "timerType=%d; class of element='%s')",
-                        timer.getId(), timer.getInterval(), timer.getTimerType(), timer.getCallBackElement().getClass().getName()
-                )), false);
-            }
-            if (tickTimers.contains(timer)) {
-                Debug.assertMsg(String.valueOfC(java.lang.String.format(
-                        "TimerManager.releaseTimer(): Timer is still in the list 'tickTimers' (id=%d; interval=%d; " +
-                        "timerType=%d; class of element='%s')",
-                        timer.getId(), timer.getInterval(), timer.getTimerType(), timer.getCallBackElement().getClass().getName()
-                )), false);
-            }
-            if (initiateTimers.contains(timer)) {
-                Debug.assertMsg(String.valueOfC(java.lang.String.format(
-                        "TimerManager.releaseTimer(): Timer is still in the list 'initiateTimers' (id=%d; interval=%d; " +
-                        "timerType=%d; class of element='%s')",
-                        timer.getId(), timer.getInterval(), timer.getTimerType(), timer.getCallBackElement().getClass().getName()
-                )), false);
-            }
-            if (timerIds.containsValue(timer)) {
-                Debug.assertMsg(String.valueOfC(java.lang.String.format(
-                        "TimerManager.releaseTimer(): Timer is still in the list 'timerIds' (id=%d; interval=%d; " +
-                                "timerType=%d; class of element='%s')",
-                        timer.getId(), timer.getInterval(), timer.getTimerType(), timer.getCallBackElement().getClass().getName()
-                )), false);
-            }
-        }
-
-        if (isUpdateWorked) {
-            unusedTimersAssist.add(timer);
-        } else {
-            unusedTimers.add(timer);
-        }
+//        if (DEBUG) {
+//            // Убеждаемся, что таймера нет ни в одном списке
+//            if (timers.contains(timer)) {
+//                Debug.assertMsg(String.valueOfC(java.lang.String.format(
+//                        "TimerManager.releaseTimer(): Timer is still in the list 'timers' (id=%d; interval=%d; " +
+//                        "timerType=%d; class of element='%s')",
+//                        timer.getId(), timer.getInterval(), timer.getTimerType(), timer.getCallBackElement().getClass().getName()
+//                )), false);
+//            }
+//            if (tickTimers.contains(timer)) {
+//                Debug.assertMsg(String.valueOfC(java.lang.String.format(
+//                        "TimerManager.releaseTimer(): Timer is still in the list 'tickTimers' (id=%d; interval=%d; " +
+//                        "timerType=%d; class of element='%s')",
+//                        timer.getId(), timer.getInterval(), timer.getTimerType(), timer.getCallBackElement().getClass().getName()
+//                )), false);
+//            }
+//            if (initiateTimers.contains(timer)) {
+//                Debug.assertMsg(String.valueOfC(java.lang.String.format(
+//                        "TimerManager.releaseTimer(): Timer is still in the list 'initiateTimers' (id=%d; interval=%d; " +
+//                        "timerType=%d; class of element='%s')",
+//                        timer.getId(), timer.getInterval(), timer.getTimerType(), timer.getCallBackElement().getClass().getName()
+//                )), false);
+//            }
+//            if (timerIds.containsValue(timer)) {
+//                Debug.assertMsg(String.valueOfC(java.lang.String.format(
+//                        "TimerManager.releaseTimer(): Timer is still in the list 'timerIds' (id=%d; interval=%d; " +
+//                                "timerType=%d; class of element='%s')",
+//                        timer.getId(), timer.getInterval(), timer.getTimerType(), timer.getCallBackElement().getClass().getName()
+//                )), false);
+//            }
+//        }
     }
 
 //    /**
@@ -406,13 +434,15 @@ public class TimerManager {
                 ));
             }
         }
-        if (isUpdateWorked) {
+        if (updateStatus != UPDATE_STATUS_NONE) {
             //todo: это error
-            Debug.warning(String.valueOfC("TimerManager.update(): Method was called at the time, when it is already running"));
+            Debug.warning(String.valueOfC("TimerManager.update(): Method was called at the time, when it is already running (" + updateStatus + ")"));
         }
-        isUpdateWorked = true;
         try {
-            // Инициализация таймеров
+            if (DEBUG && !unusedTimersAssist.isEmpty()) {
+                Debug.warning(String.valueOfC("TimerManager.update(): list unusedTimersAssist is not empty (size=" + unusedTimersAssist.size() + ")"));
+            }
+            // Отложенная инициализация таймеров
             for (int i = 0; i < initiateTimers.size(); i++) {
                 Timer timer = (Timer)initiateTimers.get(i);
                 if (timer.isTickTimer()) {
@@ -425,7 +455,8 @@ public class TimerManager {
             }
             initiateTimers.clear();
 
-            //todo: использовать типа списка LinkedList
+            //todo: использовать тип списка LinkedList
+            updateStatus = TICK_TIMERS_UPDATE_STATUS;
             for (int i = 0; i < tickTimers.size(); i++) {
                 //todo: список может измениться, таймеры могут быть удалены, перемещны, изменены
                 Timer timer = (Timer)tickTimers.get(i);
@@ -440,13 +471,19 @@ public class TimerManager {
                             timer.getCallBackElement().getClass().getName()
                     ));
                 }
-                try{
+                try {
                     timer.onTimer();
                 } catch (Exception e) {
                     Debug.logEx(e);
                 }
             }
+            if (!unusedTimersAssist.isEmpty()) {
+                tickTimers.removeAll(unusedTimersAssist);
+                unusedTimers.addAll(unusedTimersAssist);
+                unusedTimersAssist.clear();
+            }
 
+            updateStatus = TIMERS_UPDATE_STATUS;
             while (!timers.isEmpty()) {
                 Timer timer = (Timer)timers.get(timers.size() - 1);
                 int timeActivation = timer.getTimeActivate();
@@ -463,54 +500,58 @@ public class TimerManager {
                         ));
                     }
                     //todo: А если в обработчике таймера что-то сделать с этим таймером (остановить, запустить повторно, изменить)?
-                    try{
+                    try {
                         timer.onTimer();
                     } catch (Exception e) {
                         Debug.logEx(e);
                     }
 
-                    int nextTimeActivation = timer.getNextTimeActivation();
-                    if (DEBUG) {
-                        if (nextTimeActivation != -1 && timeActivation >= nextTimeActivation) {
-                            Debug.assertMsg(String.valueOfC(java.lang.String.format(
-                                    "TimerManager.update(): timeActivation >= nextTimeActivation " +
-                                            "(id=%d; interval=%d; timerType=%d; " +
-                                            "timeActivation=%d; nextTimeActivation=%d; lastTime=%d; newTime=%d; " +
-                                            "class of element='%s')",
-                                    timer.getId(), timer.getInterval(), timer.getTimerType(),
-                                    timeActivation, nextTimeActivation, lastTime, newTime,
-                                    timer.getCallBackElement().getClass().getName()
-                            )), false);
+                    if (!timer.isKilled()) {
+                        if (timer.isPeriodicTimer()) {
+                            int nextTimeActivation = timer.getNextTimeActivation();
+                            if (DEBUG) {
+                                if (nextTimeActivation != -1 && timeActivation >= nextTimeActivation) {
+                                    Debug.assertMsg(String.valueOfC(java.lang.String.format(
+                                            "TimerManager.update(): timeActivation >= nextTimeActivation " +
+                                                    "(id=%d; interval=%d; timerType=%d; " +
+                                                    "timeActivation=%d; nextTimeActivation=%d; lastTime=%d; newTime=%d; " +
+                                                    "class of element='%s')",
+                                            timer.getId(), timer.getInterval(), timer.getTimerType(),
+                                            timeActivation, nextTimeActivation, lastTime, newTime,
+                                            timer.getCallBackElement().getClass().getName()
+                                    )), false);
+                                }
+                                if (nextTimeActivation != -1 && lastTime >= nextTimeActivation) {
+                                    Debug.assertMsg(String.valueOfC(java.lang.String.format(
+                                            "TimerManager.update(): nextTimeActivation <= lastTime " +
+                                                    "(id=%d; interval=%d; timerType=%d; " +
+                                                    "timeActivation=%d; nextTimeActivation=%d; lastTime=%d; newTime=%d; " +
+                                                    "class of element='%s')",
+                                            timer.getId(), timer.getInterval(), timer.getTimerType(),
+                                            timeActivation, nextTimeActivation, lastTime, newTime,
+                                            timer.getCallBackElement().getClass().getName()
+                                    )), false);
+                                }
+                            }
+                            // Таймер требует повторной активации, поэтому он должен быть обновлен и перемещен в списке.
+                            movingLastTimer(nextTimeActivation);
+                            timer.setTimeActivate(nextTimeActivation);
+                        } else {
+                            releaseTimer(timer);
                         }
-                        if (nextTimeActivation != -1 && lastTime >= nextTimeActivation) {
-                            Debug.assertMsg(String.valueOfC(java.lang.String.format(
-                                    "TimerManager.update(): nextTimeActivation <= lastTime " +
-                                            "(id=%d; interval=%d; timerType=%d; " +
-                                            "timeActivation=%d; nextTimeActivation=%d; lastTime=%d; newTime=%d; " +
-                                            "class of element='%s')",
-                                    timer.getId(), timer.getInterval(), timer.getTimerType(),
-                                    timeActivation, nextTimeActivation, lastTime, newTime,
-                                    timer.getCallBackElement().getClass().getName()
-                            )), false);
-                        }
-                    }
-
-                    if (nextTimeActivation >= 0) {
-                        // Таймер требует повторной активации, поэтому он должен быть обновлен и перемещен в списке.
-                        movingLastTimer(nextTimeActivation);
-                        timer.setTimeActivate(nextTimeActivation);
-                    } else {
-                        releaseTimer(timer);
                     }
                 } else {
                     // Если очередной таймер не сработал, значит и другие, более поздние, не должны сработать.
                     break;
                 }
             }
-            lastTime = newTime;
+            if (!unusedTimersAssist.isEmpty()) {
+//                timers.removeAll(unusedTimersAssist); //todo: точно не нужно?
+                unusedTimers.addAll(unusedTimersAssist);
+                unusedTimersAssist.clear();
+            }
 
-            unusedTimers.addAll(unusedTimersAssist);
-            unusedTimersAssist.clear();
+            lastTime = newTime;
 
 //            // Нормализация времени таймеров
 //            if (lastTime >= TIMER_OPTIMIZE_SUBTRACTOR) {
@@ -523,7 +564,7 @@ public class TimerManager {
 //                }
 //            }
         } finally {
-            isUpdateWorked = false;
+            updateStatus = UPDATE_STATUS_NONE;
         }
     }
 }
