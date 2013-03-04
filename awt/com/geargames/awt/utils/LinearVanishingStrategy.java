@@ -4,7 +4,6 @@ import com.geargames.Debug;
 import com.geargames.awt.Drawable;
 import com.geargames.awt.timers.TimerIdMap;
 import com.geargames.awt.timers.TimerManager;
-import com.geargames.common.Event;
 import com.geargames.common.Graphics;
 
 /**
@@ -13,6 +12,7 @@ import com.geargames.common.Graphics;
  */
 public class LinearVanishingStrategy extends GraphicsStrategy {
 
+    private final static boolean DEBUG = false;
     public final static byte HIDDEN_STATE  = 0; // Компонент невидим/скрыт
     public final static byte SHOWING_STATE = 1; // Компонент появляется
     public final static byte SHOWN_STATE   = 2; // Компонент появился
@@ -55,7 +55,9 @@ public class LinearVanishingStrategy extends GraphicsStrategy {
         if (timerId == TimerIdMap.AWT_TEXTHINT_GRAPHICS_STRATEGY_TICK) {
             switch (state) {
                 case HIDDEN_STATE:
-                    Debug.trace("LinearVanishingStrategy.event(): HIDDEN_STATE");
+                    if (DEBUG) {
+                        Debug.trace("LinearVanishingStrategy.event(): HIDDEN_STATE");
+                    }
                     break;
                 case HIDING_STATE: {
                     //todo: Возможна вероятность перехода через 10-дневный скрок запуска приложения
@@ -63,7 +65,9 @@ public class LinearVanishingStrategy extends GraphicsStrategy {
                     // следовательно два этих времени недопустимо сравнивать
                     int elapsedTime = TimerManager.millisTime() - startTime;
                     int currentTransparency = (int)((float)elapsedTime / hidingTime * 100);
-                    Debug.trace("LinearVanishingStrategy.event(): HIDING_STATE: transparency=" + currentTransparency);
+                    if (DEBUG) {
+                        Debug.trace("LinearVanishingStrategy.event(): HIDING_STATE: transparency=" + currentTransparency);
+                    }
                     if (currentTransparency >= 100) {
                         // Компонент стал полностью прозрачным
                         transparency = 100;
@@ -80,7 +84,9 @@ public class LinearVanishingStrategy extends GraphicsStrategy {
                     // следовательно два этих времени недопустимо сравнивать
                     int elapsedTime = TimerManager.millisTime() - startTime;
                     int currentTransparency = (int) (100 - (float)elapsedTime / showingTime * 100);
-                    Debug.trace("LinearVanishingStrategy.event(): SHOWING_STATE: transparency=" + currentTransparency);
+                    if (DEBUG) {
+                        Debug.trace("LinearVanishingStrategy.event(): SHOWING_STATE: transparency=" + currentTransparency);
+                    }
                     if (currentTransparency <= 0) {
                         // Компонент стал полностью непрозрачным
                         transparency = 0;
@@ -93,12 +99,16 @@ public class LinearVanishingStrategy extends GraphicsStrategy {
                 }
                 case SHOWN_STATE: {
                     // Сработал таймер с интервалом lifeTime
-                    Debug.trace("LinearVanishingStrategy.event(): SHOWN_STATE");
+                    if (DEBUG) {
+                        Debug.trace("LinearVanishingStrategy.event(): SHOWN_STATE");
+                    }
                     startHiding();
                     break;
                 }
                 default:
-                    Debug.trace("LinearVanishingStrategy.event(): unknown");
+                    if (DEBUG) {
+                        Debug.trace("LinearVanishingStrategy.event(): unknown");
+                    }
                     break;
             }
         }

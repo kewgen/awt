@@ -37,8 +37,8 @@ import java.util.Random;
  */
 public class TimerManager {
 
-    private final static boolean DEBUG       = true;
-    private final static boolean STACK_TRACE = true;
+    private final static boolean DEBUG       = false;
+    private final static boolean STACK_TRACE = false;
 
     public final static int DINAMIC_TIMER_ID_MIN = 20001;
     public final static int DINAMIC_TIMER_ID_MAX = Integer.MAX_VALUE;
