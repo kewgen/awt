@@ -196,7 +196,4 @@ public class TextArea extends VerticalScrollableArea {
         setInitiated(false);
     }
 
-    public boolean isVisible() {
-        return true;
-    }
 }

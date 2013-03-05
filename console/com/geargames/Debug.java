@@ -74,7 +74,7 @@ public class Debug {
 
     public static void trace(boolean key, String message) {
         if(key)
-            log(message);
+            trace(message.toString());
     }
 
     public static void warning(String message) {

@@ -23,9 +23,9 @@ public abstract class HorizontalScrollView extends HorizontalScrollableArea {
         setInitiated(false);
     }
 
-    public boolean event(int code, int param, int x, int y) {
+    public boolean onEvent(int code, int param, int x, int y) {
         int number;
-        boolean result = super.event(code, param, x, y);
+        boolean result = super.onEvent(code, param, x, y);
         if (getTouchRegion().isWithIn(x, y)) {
             if (code != Event.EVENT_TICK) {
                 number = getItemAtLinearPosition(x);
@@ -39,12 +39,12 @@ public abstract class HorizontalScrollView extends HorizontalScrollableArea {
                         case Event.EVENT_TOUCH_RELEASED:
                             if (Math.abs(touchX - x) <= Port.TOUCH_ROUND && Math.abs(touchY - y) <= Port.TOUCH_ROUND) {
                                 getMotionListener().onClick(number);
-                                ((PElement) getItems().elementAt(number)).event(code, param, x, y);
-                                ((PElement) getItems().elementAt(number)).event(Event.EVENT_SYNTHETIC_CLICK, number, x, y);
+                                ((PElement) getItems().elementAt(number)).onEvent(code, param, x, y);
+                                ((PElement) getItems().elementAt(number)).onEvent(Event.EVENT_SYNTHETIC_CLICK, number, x, y);
                             }
                             return result;
                     }
-                    ((PElement) getItems().elementAt(number)).event(code, param, x, y);
+                    ((PElement) getItems().elementAt(number)).onEvent(code, param, x, y);
                 }
             }
         }

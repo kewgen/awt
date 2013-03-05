@@ -1,8 +1,6 @@
 package com.geargames.awt.timers;
 
-import com.geargames.awt.AWTObject;
-import com.geargames.awt.Application;
-import com.geargames.common.Event;
+import com.geargames.awt.Eventable;
 
 /**
  * User: abarakov
@@ -18,20 +16,20 @@ public /*abstract*/ class Timer {
     // nextActivate, lastActivated
     private int timeActivate;          // Время срабатывания таймера. Время в данном контексте - это время относительно
                                        // времени старта системы
-    private AWTObject callBackElement; // Элемент, которому будет сообщено о срабатывании таймера
+    private Eventable callBackElement; // Элемент, которому будет сообщено о срабатывании таймера
     // isMultiple
 //  private boolean isPeriodic;        // true, если таймер должен выполняться многократно
-    private byte data;
+    private byte data; // state
 
-    private final static byte TIMER_TYPE_MASK     = 0x07; // 0b00000111
-    private final static byte TIMER_STATE_MASK    = 0x18; // 0b00011000
+    private static final byte TIMER_TYPE_MASK     = 0x07; // 0b00000111
+    private static final byte TIMER_STATE_MASK    = 0x18; // 0b00011000
 
-    public  final static byte SINGLE_TIMER_TYPE   = 1;    // 0b00000001  // ONESHOT_TIMER
-    public  final static byte PERIODIC_TIMER_TYPE = 2;    // 0b00000010
-    public  final static byte TICK_TIMER_TYPE     = 3;    // 0b00000011
+    public  static final byte SINGLE_TIMER_TYPE   = 1;    // 0b00000001  // ONESHOT_TIMER
+    public  static final byte PERIODIC_TIMER_TYPE = 2;    // 0b00000010
+    public  static final byte TICK_TIMER_TYPE     = 3;    // 0b00000011
 
-    private final static byte NEED_INITIATE_STATE = 8;    // 0b00001000
-    private final static byte KILLED_STATE        = 16;   // 0b00010000
+    private static final byte NEED_INITIATE_STATE = 8;    // 0b00001000
+    private static final byte KILLED_STATE        = 16;   // 0b00010000
 
     protected Timer() {
 
@@ -40,7 +38,7 @@ public /*abstract*/ class Timer {
     /**
      * Вызывается при инициализации таймера.
      */
-    public void init(int id, int interval, byte timerType, AWTObject callBackElement) {
+    public void init(int id, int interval, byte timerType, Eventable callBackElement) {
         this.id              = id;
         this.timeActivate    = interval == 0 ? 0 : TimerManager.millisTime() + interval;
         this.interval        = interval;
@@ -110,7 +108,7 @@ public /*abstract*/ class Timer {
         return timeActivate + interval;
     }
 
-    public AWTObject getCallBackElement() {
+    public Eventable getCallBackElement() {
         return callBackElement;
     }
 

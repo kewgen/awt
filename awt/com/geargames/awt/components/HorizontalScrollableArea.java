@@ -58,7 +58,7 @@ public abstract class HorizontalScrollableArea extends ScrollableArea {
     /**
      * Выполнение всех манипуляций на один игровой тик
      */
-    public boolean event(int code, int param, int x, int y) {
+    public boolean onEvent(int code, int param, int x, int y) {
         if (getMotionListener() == null) {
             return false;
         }

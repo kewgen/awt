@@ -17,10 +17,6 @@ public class PSimplePrototype extends PElement {
         region = new Region();
     }
 
-    public boolean event(int code, int param, int x, int y) {
-        return false;
-    }
-
     public Prototype getPrototype() {
         return prototype;
     }
@@ -45,7 +41,4 @@ public class PSimplePrototype extends PElement {
         prototype.draw(graphics, x, y);
     }
 
-    public boolean isVisible() {
-        return true;
-    }
 }

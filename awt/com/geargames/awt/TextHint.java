@@ -142,7 +142,7 @@ public class TextHint extends PopUp {
         super.draw(graphics);
     }
 
-    public boolean event(int code, int param, int x, int y) {
+    public boolean onEvent(int code, int param, int x, int y) {
         if (listener != null /*&& edgeRegion != null && edgeRegion.isWithIn(x, y)*/) {
             listener.onEvent(this, code, param, x, y);
         }

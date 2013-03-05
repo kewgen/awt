@@ -15,10 +15,6 @@ public class PPrototypeElement extends PElement {
     public PPrototypeElement() {
     }
 
-    public boolean event(int code, int param, int x, int y) {
-        return false;
-    }
-
     public Prototype getPrototype() {
         return prototype;
     }
@@ -43,7 +39,4 @@ public class PPrototypeElement extends PElement {
         prototype.draw(graphics, x, y);
     }
 
-    public boolean isVisible() {
-        return true;
-    }
 }

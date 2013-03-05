@@ -76,4 +76,10 @@ public class PStepSpinBox extends PValueComponent {
         label.setFont(font);
     }
 
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        buttonUp.setEnabled(enabled);
+        buttonDown.setEnabled(enabled);
+    }
+
 }

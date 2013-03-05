@@ -7,7 +7,7 @@ import com.geargames.common.String;
 
 /**
  * User: mikhail v. kutuzov
- * Легкая метка, для рисования на панели содержимого.
+ * Легкая метка, для рисования на панели текстовых строк.
  */
 public abstract class PLabel extends PElement {
     private String text;
@@ -15,7 +15,7 @@ public abstract class PLabel extends PElement {
     private byte anchor;
 
     public PLabel(IndexObject index){
-        setAnchor((byte)(1<<index.getShift()));
+        setAnchor((byte)(1 << index.getShift()));
     }
 
     public PLabel() {
@@ -52,7 +52,4 @@ public abstract class PLabel extends PElement {
         this.text = text;
     }
 
-    public boolean isVisible() {
-        return true;
-    }
 }

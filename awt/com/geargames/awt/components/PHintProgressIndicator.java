@@ -13,8 +13,4 @@ public class PHintProgressIndicator extends PSpriteProgressIndicator {
         super(prototype);
     }
 
-    public boolean event(int code, int param, int x, int y) {
-        return false;
-    }
-
 }

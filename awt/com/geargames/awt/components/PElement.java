@@ -1,6 +1,6 @@
 package com.geargames.awt.components;
 
-import com.geargames.awt.AWTObject;
+import com.geargames.awt.Eventable;
 import com.geargames.common.Graphics;
 import com.geargames.common.util.Region;
 
@@ -8,15 +8,24 @@ import com.geargames.common.util.Region;
  * User: mikhail v. kutuzov, abarakov
  * Базовый класс любого компонента пользовательского интерфейса.
  */
-public abstract class PElement extends AWTObject {
+public abstract class PElement extends Eventable {
+
+    private static final byte VISIBLED_STATE = 1 << 0;
+    private static final byte ENABLED_STATE  = 1 << 1;
+
     private int x;
     private int y;
+    private byte state;
+
+    public PElement() {
+        state = VISIBLED_STATE | ENABLED_STATE;
+    }
 
     /**
      * Нарисовать элемент на экране в точке (x, y).
-     * @param graphics
-     * @param x координата по оси Х в локальной системе координат объекта.
-     * @param y координата по оси Y в локальной системе координат объекта.
+     * @param graphics графический контекст, на котором должен быть нарисован объект.
+     * @param x        координата по оси Х в локальной системе координат объекта.
+     * @param y        координата по оси Y в локальной системе координат объекта.
      */
     public abstract void draw(Graphics graphics, int x, int y);
 
@@ -33,7 +42,7 @@ public abstract class PElement extends AWTObject {
     public abstract Region getTouchRegion();
 
     /**
-     * Смещение объекта относительно его родителя по оси X.
+     * Вернуть смещение объекта относительно его родителя по оси X.
      * @return
      */
     public int getX() {
@@ -45,22 +54,48 @@ public abstract class PElement extends AWTObject {
     }
 
     /**
-     * Смещение объекта относительно его родителя по оси Y.
+     * Вернуть смещение объекта относительно его родителя по оси Y.
      * @return
      */
     public int getY() {
         return y;
     }
 
-
     public void setY(int y) {
         this.y = y;
     }
 
-    //TODO нужно ли элементу игровой панели становиться не видимым на этой панели? по-моему - нет.
     /**
-     * Видим ли компонент на своём родителе.
+     * Вернет true, если компонент видим на своём родителе.
      * @return
      */
-    public abstract boolean isVisible();
+    // isVisible
+    public boolean getVisible() {
+        return (state & VISIBLED_STATE) == VISIBLED_STATE;
+    }
+
+    public void setVisible(boolean visible) {
+        if (visible) {
+            state = (byte) (state | VISIBLED_STATE);
+        } else {
+            state = (byte) (state & ~VISIBLED_STATE);
+        }
+    }
+
+    /**
+     * Вернет true, если компонент включен, т.е. компоненту разрешается обработка сообщений.
+     * @return
+     */
+    public boolean getEnabled() {
+        return (state & ENABLED_STATE) == ENABLED_STATE;
+    }
+
+    public void setEnabled(boolean enabled) {
+        if (enabled) {
+            state = (byte) (state | ENABLED_STATE);
+        } else {
+            state = (byte) (state & ~ENABLED_STATE);
+        }
+    }
+
 }

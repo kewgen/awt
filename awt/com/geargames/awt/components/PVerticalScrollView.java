@@ -91,10 +91,6 @@ public class PVerticalScrollView extends VerticalScrollView {
         return touchRegion;
     }
 
-    public boolean isVisible() {
-        return true;
-    }
-
     public void initiate(Graphics graphics) {
         setInitiated(true);
     }
