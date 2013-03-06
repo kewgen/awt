@@ -51,7 +51,7 @@ public abstract class PPanelManager {
                 preDeafElements.clear();
             }
             int size = callableElements.size();
-            for (int i = size - 1; i >= 0; i++) {
+            for (int i = size - 1; i >= 0; i--) {
                 Drawable element = (Drawable) callableElements.get(i);
                 if (element.event(code, param, x, y)) {
                     break;
