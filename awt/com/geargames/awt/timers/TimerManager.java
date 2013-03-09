@@ -131,15 +131,17 @@ public class TimerManager {
 //        } while (timerIds.containsKey(id));
 //        return id;
 
+        if (nextDinamicId < 0 || nextDinamicId > DINAMIC_TIMER_ID_MAX) {
+            nextDinamicId = DINAMIC_TIMER_ID_MIN;
+        }
         while (timerIds.containsKey(nextDinamicId)) {
-            nextDinamicId++;
+            if (nextDinamicId == DINAMIC_TIMER_ID_MAX) {
+                nextDinamicId = DINAMIC_TIMER_ID_MIN;
+            } else {
+                nextDinamicId++;
+            }
         }
-        int id = nextDinamicId;
-        nextDinamicId++;
-        if (id < 0 || id > DINAMIC_TIMER_ID_MAX) {
-            Debug.warning(String.valueOfC("Id out of range (id=" + nextDinamicId + ")"));
-        }
-        return id;
+        return nextDinamicId++;
     }
 
     // ----- Создание и удаление таймеров ------------------------------------------------------------------------------
