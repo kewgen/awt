@@ -42,8 +42,6 @@ public interface Graphics {
 
     void setClip(int x, int y, int w, int h);
 
-    void clipRect(int x, int y, int w, int h);
-
     void resetClip();
 
     void setColor(int color);

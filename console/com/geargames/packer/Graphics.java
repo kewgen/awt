@@ -36,7 +36,7 @@ public class Graphics implements com.geargames.common.Graphics {
         if (image_cash[frame_id] == null) {//bufering
             try {
                 Image img_ = Image.createImage(w, h);
-                Graphics graphics_ = img_.getGraphics();
+                Graphics graphics_ = new Graphics(((Image) image).getImage());
                 graphics_.drawImage(image, 0 - src_x, 0 - src_y, 0);
                 image_cash[frame_id] = img_.getImage();
             } catch (IOException e) {
@@ -86,12 +86,6 @@ public class Graphics implements com.geargames.common.Graphics {
             graphics2D.setComposite(compositeOriginal);
         }
 
-
-        //Без буферизации
-//        graphics.setClip(dst_x, dst_y, w, h);
-//        graphics.drawImage(image.getImage(), dst_x - src_x, dst_y - src_y, null);
-//        graphics.setClip(0, 0, Port.getW(), Port.getH());
-        //graphics.drawRegion(image.getImage(), src_x, src_y, w, h, mirror, dst_x, dst_y, anchor);
     }
 
     public void drawFrame(PFrame frame, int dst_x, int dst_y) {
@@ -101,7 +95,7 @@ public class Graphics implements com.geargames.common.Graphics {
         if (image_cash[frame_id] == null) {//buffering
             try {
                 Image img_ = Image.createImage(frame.getWidth(), frame.getHeight());
-                Graphics graphics_ = img_.getGraphics();
+                Graphics graphics_ = new Graphics(img_.getImage());
                 graphics_.drawImage(frame.getImage(), 0 - frame.getSrcX(), 0 - frame.getSrcY(), 0);
                 image_cash[frame_id] = img_.getImage();
             } catch (IOException e) {
@@ -175,14 +169,6 @@ public class Graphics implements com.geargames.common.Graphics {
 
     public void fillRect(int x, int y, int w, int h) {
         graphics.fillRect(x, y, w, h);
-    }
-
-    public void clipRect(int x, int y, int w, int h) {
-        graphics.clipRect(x, y, w, h);
-    }
-
-    public void setClip(Object object) {
-        graphics.setClip(null);
     }
 
     public void setClip(int x, int y, int w, int h) {

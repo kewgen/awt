@@ -12,10 +12,6 @@ public interface Image {
 
     Image getRescaledImage(int w, int h) throws IOException;
 
-    Image getSubImage(int x, int y, int w, int h);
-
-    Graphics getGraphics();
-
     int getWidth();
 
     int getHeight();

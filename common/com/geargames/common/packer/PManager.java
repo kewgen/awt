@@ -43,7 +43,7 @@ public abstract class PManager implements com.geargames.common.Render {
         for (int i = 0; i < count; i++) {
             images.add(graphics.createImage());
         }
-        loadImagesFromStream(graphics, is);
+        loadImagesFromStream(graphics, is, count);
         isImagesLoaded = true;
         end();
     }
@@ -358,14 +358,12 @@ public abstract class PManager implements com.geargames.common.Render {
 
 
 
-    public void loadImagesFromStream(Graphics graphics, InputStream is) {//инициализация имиджей из пакетов
+    public void loadImagesFromStream(Graphics graphics, InputStream is, int count) {//инициализация имиджей из пакетов
         try {
-            int img_count = 16;//картинок в каждом пакете
             DataInputStream dis = new DataInputStream(is);
-            readImages(dis, graphics, img_count, 0);
+            readImages(dis, graphics, count, 0);
             dis.close();
             dis = null;//for ObjC - autoreleased
-            System.gc();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -392,8 +390,6 @@ public abstract class PManager implements com.geargames.common.Render {
             addImage(img_cur, graphics, data, size);
 
             data.free();
-            System.gc();
-            Thread.yield();//после загрузки очередной картинки даём возможность перерисоваться
         }
     }
 
