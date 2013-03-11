@@ -1,7 +1,5 @@
 package com.geargames.awt.components;
 
-import com.geargames.Debug;
-import com.geargames.awt.timers.TimerIdMap;
 import com.geargames.awt.timers.TimerManager;
 import com.geargames.common.Event;
 import com.geargames.common.packer.PObject;
@@ -36,14 +34,11 @@ public class PGradualSpinButton extends PTouchButton {
 
     public boolean event(int code, int param, int x, int y) {
         if (code == Event.EVENT_TOUCH_PRESSED) {
-//            Debug.trace("PGradualSpinButton: Event = EVENT_TOUCH_PRESSED");
             tickCounter = 0;
             timerId = TimerManager.setSingleTimer(500, this);
             parentBox.setValue(parentBox.getValue() + step);
-//            pulse(step);
         } else
         if (code == Event.EVENT_TOUCH_RELEASED) {
-//            Debug.trace("PGradualSpinButton: Event = EVENT_TOUCH_RELEASED");
             TimerManager.killTimer(timerId);
         }
         return super.event(code, param, x, y);
@@ -66,18 +61,10 @@ public class PGradualSpinButton extends PTouchButton {
                 }
                 parentBox.setValue(parentBox.getValue() + step);
             }
-//            Debug.trace("value: " + parentBox.getValue());
-//            pulse(scalableStep);
         }
     }
 
-//    protected void pulse(int scalableStep) {
-//        parentBox.setValue(parentBox.getValue() + scalableStep);
-//    }
-
     public void action() {
-//        pulse(step);
-//        tickCounter = 0;
     }
 
 }

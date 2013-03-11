@@ -1,10 +1,11 @@
 package com.geargames.packer;
 
+import com.geargames.ConsoleDebug;
 import com.geargames.common.Port;
 import com.geargames.common.Render;
 import com.geargames.common.String;
+import com.geargames.common.env.SystemEnvironment;
 import com.geargames.common.packer.PAffine;
-import com.geargames.Debug;
 import com.geargames.Manager;
 import com.geargames.common.packer.PFont;
 import com.geargames.common.packer.PFrame;
@@ -20,142 +21,95 @@ import java.io.IOException;
  */
 public class Graphics implements com.geargames.common.Graphics {
 
-    public Graphics(java.awt.Graphics g) {
-        graphics = g;
+    public Graphics(java.awt.Graphics graphics) {
+        this.graphics = graphics;
     }
 
     public void onCache(int len) {//включить кеширование картинок
         if (image_cash == null) image_cash = new java.awt.Image[len];
     }
 
-    public void addTexture(com.geargames.common.Image image) {}
-
-    public void drawRegion(com.geargames.common.Image image, int src_x, int src_y, int w, int h, int dst_x, int dst_y, PAffine affine) {
-        if (image_cash == null) return;
-        int frame_id = ((Image) image).frame_id;
-        if (image_cash[frame_id] == null) {//bufering
-            try {
-                Image img_ = Image.createImage(w, h);
-                Graphics graphics_ = new Graphics(((Image) image).getImage());
-                graphics_.drawImage(image, 0 - src_x, 0 - src_y, 0);
-                image_cash[frame_id] = img_.getImage();
-            } catch (IOException e) {
-                Debug.logEx(e);
-            }
-        }
-
-        //отрисовка без отражения
-        if (affine == null) {
-            graphics.drawImage(image_cash[frame_id], dst_x, dst_y, null);
-            return;
-        }
-
-        //отрисовка с аффинными преобразованиями
-        Graphics2D graphics2D = (Graphics2D) graphics;
-        AffineTransform transformOriginal = graphics2D.getTransform();
-        AffineTransform transformNew = (AffineTransform) (transformOriginal.clone());
-        int dx = 0;
-        int dy = 0;
-        java.awt.Image awtImage = image_cash[frame_id];
-        Composite compositeOriginal = graphics2D.getComposite();//сохраняем прозрачность
-        if (affine.getTransparency() > 0) {
-            float alpha = 1 - ((float) affine.getTransparency() / 100);
-            graphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-        }
-        if (affine.getRotate() != 0) {
-            transformNew.rotate((float) affine.getRotate() * Math.PI / 180.0, dst_x - affine.getX(), dst_y - affine.getY());
-        }
-        if (affine.getScalingX() != 100 || affine.getScalingY() != 100) {
-            int smooth = java.awt.Image.SCALE_SMOOTH;
-            if (w + h > 350) smooth = java.awt.Image.SCALE_FAST;
-            awtImage = awtImage.getScaledInstance(w * affine.getScalingX() / 100, h * affine.getScalingY() / 100, smooth);
-        }
-        if (affine.isHmirror()) {
-            transformNew.scale(-1, 1);
-            dx = (dst_x << 1) + w;
-        }
-        if (affine.isVmirror()) {
-            transformNew.scale(1, -1);
-            dy = (dst_y << 1) + h;
-        }
-        graphics2D.setTransform(transformNew);
-        graphics2D.drawImage(awtImage, dst_x - dx, dst_y - dy, null);
-        graphics2D.setTransform(transformOriginal);
-        if (affine.getTransparency() > 0) {
-            //graphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
-            graphics2D.setComposite(compositeOriginal);
-        }
-
+    public void addTexture(com.geargames.common.Image image) {
     }
 
     public void drawFrame(PFrame frame, int dst_x, int dst_y) {
-        if (image_cash == null) return;
-        int frame_id = frame.getBid();
+        switch (frame.getType()) {
+            case Render.T_FRAME:
+                if (image_cash == null) {
+                    return;
+                }
+                int frame_id = frame.getPID();
 
-        if (image_cash[frame_id] == null) {//buffering
-            try {
-                Image img_ = Image.createImage(frame.getWidth(), frame.getHeight());
-                Graphics graphics_ = new Graphics(img_.getImage());
-                graphics_.drawImage(frame.getImage(), 0 - frame.getSrcX(), 0 - frame.getSrcY(), 0);
-                image_cash[frame_id] = img_.getImage();
-            } catch (IOException e) {
-                Debug.logEx(e);
-            }
-        }
+                if (image_cash[frame_id] == null) {//buffering
+                    try {
+                        Image img_ = Image.createImage(frame.getWidth(), frame.getHeight());
+                        Graphics tmp = new Graphics(img_.getImage());
+                        tmp.drawImage(frame.getImage(), 0 - frame.getSrcX(), 0 - frame.getSrcY());
+                        image_cash[frame_id] = img_.getImage();
+                    } catch (IOException e) {
+                        ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).logEx(e);
+                    }
+                }
 
 
-        PAffine affine = frame.getAffine();
-        //отрисовка без отражения
-        if (affine == null) {
-            if (scale == 100 && (dst_x + frame.getWidth() < 0 || dst_y + frame.getHeight() < 0 || dst_x > Port.getScaledW() || dst_y > Port.getScaledH()))
-                return;
-            graphics.drawImage(image_cash[frame_id], dst_x, dst_y, null);
-            return;
+                PAffine affine = frame.getAffine();
+                //отрисовка без отражения
+                if (affine == null) {
+                    if (scale == 100 && (dst_x + frame.getWidth() < 0 || dst_y + frame.getHeight() < 0 || dst_x > Port.getScaledW() || dst_y > Port.getScaledH())) {
+                        return;
+                    }
+                    graphics.drawImage(image_cash[frame_id], dst_x, dst_y, null);
+                    return;
+                }
+
+                //отрисовка с аффинными преобразованиями
+                Graphics2D graphics2D = (Graphics2D) graphics;
+                AffineTransform transformOriginal = graphics2D.getTransform();
+                AffineTransform transformNew = (AffineTransform) (transformOriginal.clone());
+                int dx = 0;
+                int dy = 0;
+                java.awt.Image awtImage = image_cash[frame_id];
+                Composite compositeOriginal = graphics2D.getComposite();//сохраняем прозрачность
+                if (affine.getTransparency() > 0) {
+                    float alpha = 1 - ((float) affine.getTransparency() / 100);
+                    graphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+                }
+                if (affine.getRotate() != 0) {
+                    transformNew.rotate((float) affine.getRotate() * Math.PI / 180.0, dst_x - affine.getX(), dst_y - affine.getY());
+                }
+                if (affine.getScalingX() != 100 || affine.getScalingY() != 100) {
+                    int smooth = java.awt.Image.SCALE_SMOOTH;
+                    if (frame.getWidth() + frame.getHeight() > 350) {
+                        smooth = java.awt.Image.SCALE_FAST;
+                    }
+                    awtImage = awtImage.getScaledInstance((frame.getWidth() * affine.getScalingX()) / 100, (frame.getHeight() * affine.getScalingY()) / 100, smooth);
+                }
+                if (affine.isHmirror()) {
+                    transformNew.scale(-1, 1);
+                    dx = (dst_x << 1) + frame.getWidth();
+                }
+                if (affine.isVmirror()) {
+                    transformNew.scale(1, -1);
+                    dy = (dst_y << 1) + frame.getHeight();
+                }
+                graphics2D.setTransform(transformNew);
+                graphics2D.drawImage(awtImage, dst_x - dx, dst_y - dy, null);
+                graphics2D.setTransform(transformOriginal);
+                if (affine.getTransparency() > 0) {
+                    graphics2D.setComposite(compositeOriginal);
+                }
+                break;
+            case Render.T_DYNAMIC_FRAME:
+                int width = frame.getWidth();
+                int height = frame.getHeight();
+                graphics.drawImage(((Image) frame.getImage()).getImage(), 0 - frame.getSrcX(), 0 - frame.getSrcY(), frame.getWidth() - frame.getSrcX(), frame.getHeight() - frame.getSrcY(), dst_x, dst_y, dst_x + width, dst_y + height, null);
+                break;
         }
 
-        //отрисовка с аффинными преобразованиями
-        Graphics2D graphics2D = (Graphics2D) graphics;
-        AffineTransform transformOriginal = graphics2D.getTransform();
-        AffineTransform transformNew = (AffineTransform) (transformOriginal.clone());
-        int dx = 0;
-        int dy = 0;
-        java.awt.Image awtImage = image_cash[frame_id];
-        Composite compositeOriginal = graphics2D.getComposite();//сохраняем прозрачность
-        if (affine.getTransparency() > 0) {
-            float alpha = 1 - ((float) affine.getTransparency() / 100);
-            graphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-        }
-        if (affine.getRotate() != 0) {
-            transformNew.rotate((float) affine.getRotate() * Math.PI / 180.0, dst_x - affine.getX(), dst_y - affine.getY());
-        }
-        if (affine.getScalingX() != 100 || affine.getScalingY() != 100) {
-            int smooth = java.awt.Image.SCALE_SMOOTH;
-            if (frame.getWidth() + frame.getHeight() > 350) smooth = java.awt.Image.SCALE_FAST;
-            awtImage = awtImage.getScaledInstance((frame.getWidth() * affine.getScalingX()) / 100, (frame.getHeight() * affine.getScalingY()) / 100, smooth);
-        }
-        if (affine.isHmirror()) {
-            transformNew.scale(-1, 1);
-            dx = (dst_x << 1) + frame.getWidth();
-        }
-        if (affine.isVmirror()) {
-            transformNew.scale(1, -1);
-            dy = (dst_y << 1) + frame.getHeight();
-        }
-        graphics2D.setTransform(transformNew);
-        graphics2D.drawImage(awtImage, dst_x - dx, dst_y - dy, null);
-        graphics2D.setTransform(transformOriginal);
-        if (affine.getTransparency() > 0) {
-            graphics2D.setComposite(compositeOriginal);
-        }
     }
 
-    public void drawImage(com.geargames.common.Image image, int x, int y, int anchor) {
-        if (anchor == (HCENTER | VCENTER)) {
-            int w = image.getWidth();
-            int h = image.getHeight();
-            x -= w / 2;
-            y -= h / 2;
-        }
+
+    public void drawImage(com.geargames.common.Image image, int x, int y) {
         graphics.drawImage(((Image) image).getImage(), x, y, null);
     }
 
@@ -269,7 +223,9 @@ public class Graphics implements com.geargames.common.Graphics {
     public void setScale(int scale) {//масштабирования 0..200, 100 - оригинал
         this.scale = scale;
         double alpha = (double) scale / 100;
-        if (affineTransformOriginal == null) affineTransformOriginal = ((Graphics2D) graphics).getTransform();
+        if (affineTransformOriginal == null) {
+            affineTransformOriginal = ((Graphics2D) graphics).getTransform();
+        }
         ((Graphics2D) graphics).scale(alpha, alpha);
     }
 
@@ -277,9 +233,6 @@ public class Graphics implements com.geargames.common.Graphics {
         scale = 100;
         ((Graphics2D) graphics).setTransform(affineTransformOriginal);
     }
-
-    public void loadTexture(com.geargames.common.Image image) {
-    }//затычка андроид OpenGL
 
     public com.geargames.common.Image createImage(byte[] array, int i, int data_len) throws IOException {
         return Image.createImage(array, i, data_len);
@@ -341,9 +294,9 @@ public class Graphics implements com.geargames.common.Graphics {
     /**
      * Нарисовать часть строки string в координатах (x, y) с якорем anchor.
      *
-     * @param string    исходная строка
-     * @param position  индекс первого символа отрисовываемой подстроки
-     * @param length    индекс последнего символа + 1 отрисовываемой подстроки
+     * @param string   исходная строка
+     * @param position индекс первого символа отрисовываемой подстроки
+     * @param length   индекс последнего символа + 1 отрисовываемой подстроки
      * @param x
      * @param y
      * @param anchor
@@ -402,9 +355,9 @@ public class Graphics implements com.geargames.common.Graphics {
     /**
      * Нарисовать строку string растровым шрифтом.
      *
-     * @param string    исходная строка
-     * @param position  индекс первого символа отрисовываемой подстроки
-     * @param length    количество символов в отрисовываемой подстроке
+     * @param string   исходная строка
+     * @param position индекс первого символа отрисовываемой подстроки
+     * @param length   количество символов в отрисовываемой подстроке
      * @param x
      * @param y
      * @param anchor

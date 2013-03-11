@@ -1,8 +1,9 @@
 package com.geargames.packer;
 
-import com.geargames.Debug;
 import com.geargames.Manager;
-import com.geargames.common.Port;
+import com.geargames.common.*;
+import com.geargames.common.String;
+import com.geargames.common.env.SystemEnvironment;
 
 /**
  * Port-wrapper for microedition
@@ -11,12 +12,12 @@ public class Canvas extends java.awt.Canvas {
 
     public Canvas(Manager manager, int scaleMin, int scaleMax) {
         isTouchSupport = true;
-        Debug.trace("Canvas.Touch "+(isTouchSupport ? "is supported." : "is not supported."));
+        SystemEnvironment.getInstance().getDebug().trace(com.geargames.common.String.valueOfC("Canvas.Touch " + (isTouchSupport ? "is supported." : "is not supported.")));
     }
 
     public void paint(java.awt.Graphics g) {
         super.paint(g);
-        Debug.trace("paint");
+        SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("paint"));
     }
 
     public void repaintStart() {//метод Android
@@ -132,7 +133,7 @@ public class Canvas extends java.awt.Canvas {
                 return (char) keyCode;
 
         } catch (Exception e) {
-            Debug.trace("checking QWERTY key."+e.toString());
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("checking QWERTY key." + e.toString()));
         }
         return retval;
     }

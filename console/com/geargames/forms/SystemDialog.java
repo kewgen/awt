@@ -1,6 +1,6 @@
 package com.geargames.forms;
 
-import com.geargames.Debug;
+import com.geargames.common.env.SystemEnvironment;
 
 import javax.swing.*;
 
@@ -18,7 +18,7 @@ public abstract class SystemDialog extends com.geargames.common.SystemDialog {
     }
 
     protected Object onCreateDialog(int id) {
-        Debug.trace("Dialog." + text);
+        SystemEnvironment.getInstance().getDebug().trace(com.geargames.common.String.valueOfC("Dialog.").concat(text));
         int action = -1;
         switch (type) {
             case ONE_BUTTON:

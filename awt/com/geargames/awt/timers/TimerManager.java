@@ -1,11 +1,11 @@
 package com.geargames.awt.timers;
 
-import com.geargames.Debug;
+import com.geargames.ConsoleDebug;
 import com.geargames.awt.AWTObject;
+import com.geargames.common.env.SystemEnvironment;
 import com.geargames.common.util.ArrayList;
 import com.geargames.common.util.HashMap;
 import com.geargames.common.String;
-import com.geargames.env.ConsoleEnvironment;
 
 import java.util.Random;
 
@@ -56,14 +56,14 @@ public class TimerManager {
 
     // Время старта приложения, с него начинаются все отсчеты таймеров (в миллисекундах)
     // Такой baseTime нужен в случае, если компьютер/устройство работает бесперерывно уже более 10 суток
-    private static long baseTime = ConsoleEnvironment.getInstance().nanoTime() / 1000000; //todo: ConsoleEnvironment?
+    private static long baseTime = SystemEnvironment.getInstance().getEnvironment().nanoTime() / 1000000; //todo: ConsoleEnvironment?
 
     /**
      * Вернуть время в миллисекундах
      */
     //todo: Перенести метод millisTime() в класс Environment
     public static int millisTime() {
-        long time = ConsoleEnvironment.getInstance().nanoTime() / 1000000; // Перевод из наносекунд в миллисекунды.
+        long time = SystemEnvironment.getInstance().getEnvironment().nanoTime() / 1000000; // Перевод из наносекунд в миллисекунды.
         time -= baseTime;  // Нормализация времени.
         return (int) time;
     }
@@ -137,7 +137,7 @@ public class TimerManager {
         int id = nextDinamicId;
         nextDinamicId++;
         if (id < 0 || id > DINAMIC_TIMER_ID_MAX) {
-            Debug.warning(String.valueOfC("Id out of range (id=" + nextDinamicId + ")"));
+            SystemEnvironment.getInstance().getDebug().warning(String.valueOfC("Id out of range (id=" + nextDinamicId + ")"));
         }
         return id;
     }
@@ -160,18 +160,18 @@ public class TimerManager {
     // createTimer
     private static int setTimer(int timerId, int interval, byte timerType, AWTObject callBackElement) {
         if (STACK_TRACE) {
-            Debug.trace(java.lang.String.format(
-                    "TimerManager.setTimer(timerId=%d; interval=%d; timerType=%d; class of element='%s')",
-                    timerId, interval, timerType, callBackElement.getClass().getName()
-            ));
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("TimerManager.setTimer").concat(
+            String.valueOfC("timer id = ").concatI(timerId)).concat(
+            String.valueOfC("interval = ").concatI(interval)).concat(
+            String.valueOfC("timer type = ").concatI(timerType)));
         }
         killTimer(timerId);
         if (DEBUG && timerIds.containsKey(timerId)) {
-            Debug.assertMsg(String.valueOfC(java.lang.String.format(
-                    "TimerManager.setTimer(): Put timerId that is already in timerIds (" +
-                            "id=%d; interval=%d; timerType=%d; class of element='%s')",
-                    timerId, interval, timerType, callBackElement.getClass().getName()
-            )), false);
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("TimerManager.setTimer").concat(
+            String.valueOfC("Put timerId that is already in timerIds")).concat(
+            String.valueOfC("timer id = ").concatI(timerId)).concat(
+            String.valueOfC("interval = ").concatI(interval)).concat(
+            String.valueOfC("timer type = ").concatI(timerType)));
         }
         Timer timer;
         if (!unusedTimers.isEmpty()) {
@@ -253,7 +253,7 @@ public class TimerManager {
     // deleteTimer, removeTimer, releaseTimer
     public static void killTimer(int timerId) {
         if (STACK_TRACE) {
-            Debug.trace("TimerManager.killTimer(timerId=" + timerId + ")");
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("TimerManager.killTimer(timerId=").concat(timerId).concatC(")"));
         }
         Timer timer = findTimer(timerId);
         if (timer != null) {
@@ -307,12 +307,11 @@ public class TimerManager {
     // removeTimer
     private static void releaseTimer(Timer timer) {
         if (STACK_TRACE) {
-            Debug.trace(java.lang.String.format(
-                    "TimerManager.releaseTimer(timerId=%d; interval=%d; timerType=%d; timerData=%d; updateStatus=%d; " +
-                    "class of element='%s')",
-                    timer.getId(), timer.getInterval(), timer.getTimerType(), timer.getData(), updateStatus,
-                    timer.getCallBackElement().getClass().getName()
-            ));
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("TimerManager.releaseTimer").concat(
+            String.valueOfC("timer id = ").concatI(timer.getId())).concat(
+            String.valueOfC("interval = ").concatI(timer.getInterval())).concat(
+            String.valueOfC("timer type = ").concatI(timer.getTimerType())).concat(
+            String.valueOfC("timer status = ").concatI(updateStatus)));
         }
 //        timer.setInterval(0); // Это для того, чтобы таймер не пересоздался в методе update
         if (timer.isKilled()) {
@@ -344,58 +343,15 @@ public class TimerManager {
                     break;
                 default:
                     //todo: это error
-                    Debug.warning(String.valueOfC(java.lang.String.format(
-                            "TimerManager.releaseTimer(): illegal timerType (timerId=%d; interval=%d; timerType=%d; class of element='%s')",
-                            timer.getId(), timer.getInterval(), timer.getTimerType(), timer.getCallBackElement().getClass().getName()
-                    )));
+                    SystemEnvironment.getInstance().getDebug().warning(String.valueOfC("\"TimerManager.releaseTimer(): illegal timerType").concat(
+                    String.valueOfC("timer id = ").concatI(timer.getId())).concat(
+                    String.valueOfC("interval = ").concatI(timer.getInterval())).concat(
+                    String.valueOfC("timer type = ").concatI(timer.getTimerType())));
             }
         }
         timerIds.remove(timer.getId());
         timer.killed();
-
-//        if (DEBUG) {
-//            // Убеждаемся, что таймера нет ни в одном списке
-//            if (timers.contains(timer)) {
-//                Debug.assertMsg(String.valueOfC(java.lang.String.format(
-//                        "TimerManager.releaseTimer(): Timer is still in the list 'timers' (id=%d; interval=%d; " +
-//                        "timerType=%d; class of element='%s')",
-//                        timer.getId(), timer.getInterval(), timer.getTimerType(), timer.getCallBackElement().getClass().getName()
-//                )), false);
-//            }
-//            if (tickTimers.contains(timer)) {
-//                Debug.assertMsg(String.valueOfC(java.lang.String.format(
-//                        "TimerManager.releaseTimer(): Timer is still in the list 'tickTimers' (id=%d; interval=%d; " +
-//                        "timerType=%d; class of element='%s')",
-//                        timer.getId(), timer.getInterval(), timer.getTimerType(), timer.getCallBackElement().getClass().getName()
-//                )), false);
-//            }
-//            if (initiateTimers.contains(timer)) {
-//                Debug.assertMsg(String.valueOfC(java.lang.String.format(
-//                        "TimerManager.releaseTimer(): Timer is still in the list 'initiateTimers' (id=%d; interval=%d; " +
-//                        "timerType=%d; class of element='%s')",
-//                        timer.getId(), timer.getInterval(), timer.getTimerType(), timer.getCallBackElement().getClass().getName()
-//                )), false);
-//            }
-//            if (timerIds.containsValue(timer)) {
-//                Debug.assertMsg(String.valueOfC(java.lang.String.format(
-//                        "TimerManager.releaseTimer(): Timer is still in the list 'timerIds' (id=%d; interval=%d; " +
-//                                "timerType=%d; class of element='%s')",
-//                        timer.getId(), timer.getInterval(), timer.getTimerType(), timer.getCallBackElement().getClass().getName()
-//                )), false);
-//            }
-//        }
     }
-
-//    /**
-//     * Добавить таймер timer в список на инициализацию.
-//     * @param timer
-//     */
-//    public static void timerRequiredInitiate(Timer timer) {
-//        if (/*timer.getEnabled() &&*/ !initiateTimers.contains(timer)) {
-//            initiateTimers.add(timer);
-//        }
-//        //to do: А что, если таймер уже есть в списке timers?
-//    }
 
     private static void movingLastTimer(int timeActivation) {
         // Данный код одновременно реализует две функциональности:
@@ -428,19 +384,21 @@ public class TimerManager {
         int newTime = millisTime();
         if (false && STACK_TRACE) {
             if (initiateTimers.size() > 0 || timers.size() > 0) {
-                Debug.trace(java.lang.String.format(
-                        "TimerManager.update(initiateTimers.size()=%d; timers.size()=%d; lastTime=%d; newTime=%d; deltaTime=%d)",
-                        initiateTimers.size(), timers.size(), lastTime, newTime, newTime - lastTime
-                ));
+                SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("TimerManager.update").concat(
+                String.valueOfC("initiateTimers.size() = ").concatI(initiateTimers.size())).concat(
+                String.valueOfC("timers.size() = ").concatI(timers.size())).concat(
+                String.valueOfC("last time = ").concatI(lastTime)).concat(
+                String.valueOfC("new time = ").concatI(newTime)).concat(
+                String.valueOfC("delta time = ").concatI(newTime - lastTime)));
             }
         }
         if (updateStatus != UPDATE_STATUS_NONE) {
             //todo: это error
-            Debug.warning(String.valueOfC("TimerManager.update(): Method was called at the time, when it is already running (" + updateStatus + ")"));
+            SystemEnvironment.getInstance().getDebug().warning(String.valueOfC("TimerManager.update(): Method was called at the time, when it is already running (").concatI(updateStatus).concat(")"));
         }
         try {
             if (DEBUG && !unusedTimersAssist.isEmpty()) {
-                Debug.warning(String.valueOfC("TimerManager.update(): list unusedTimersAssist is not empty (size=" + unusedTimersAssist.size() + ")"));
+                SystemEnvironment.getInstance().getDebug().warning(String.valueOfC("TimerManager.update(): list unusedTimersAssist is not empty (size=").concatI(unusedTimersAssist.size()).concat(")"));
             }
             // Отложенная инициализация таймеров
             for (int i = 0; i < initiateTimers.size(); i++) {
@@ -461,20 +419,19 @@ public class TimerManager {
                 //todo: список может измениться, таймеры могут быть удалены, перемещны, изменены
                 Timer timer = (Timer)tickTimers.get(i);
                 if (STACK_TRACE) {
-                    Debug.trace(java.lang.String.format(
-                            "TimerManager.update(): timer.onTickTimer(" +
-                                    "id=%d; interval=%d; timerType=%d; " +
-                                    "timeActivation=%d; nextTimeActivation=%d; lastTime=%d; newTime=%d; " +
-                                    "class of element='%s')",
-                            timer.getId(), timer.getInterval(), timer.getTimerType(),
-                            timer.getTimeActivate(), timer.getNextTimeActivation(), lastTime, newTime,
-                            timer.getCallBackElement().getClass().getName()
-                    ));
+                    SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("TimerManager.update(): timer.onTickTimer").concat(
+                    String.valueOfC("timer id=").concatI(timer.getId())).concat(
+                    String.valueOfC("interval=").concatI(timer.getInterval())).concat(
+                    String.valueOfC("timer type=").concatI(timer.getTimerType())).concat(
+                    String.valueOfC("time activation=").concatI(timer.getTimeActivate())).concat(
+                    String.valueOfC("next time activation=").concatI(timer.getNextTimeActivation())).concat(
+                    String.valueOfC("last time =").concatI(lastTime)).concat(
+                    String.valueOfC("new time =").concatI(newTime)));
                 }
                 try {
                     timer.onTimer();
                 } catch (Exception e) {
-                    Debug.logEx(e);
+                    ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).logEx(e);
                 }
             }
             if (!unusedTimersAssist.isEmpty()) {
@@ -489,21 +446,20 @@ public class TimerManager {
                 int timeActivation = timer.getTimeActivate();
                 if (timeActivation <= newTime) {
                     if (STACK_TRACE) {
-                        Debug.trace(java.lang.String.format(
-                                "TimerManager.update(): timer.onTimer(" +
-                                "id=%d; interval=%d; timerType=%d; " +
-                                "timeActivation=%d; nextTimeActivation=%d; lastTime=%d; newTime=%d; " +
-                                "class of element='%s')",
-                                timer.getId(), timer.getInterval(), timer.getTimerType(),
-                                timeActivation, timer.getNextTimeActivation(), lastTime, newTime,
-                                timer.getCallBackElement().getClass().getName()
-                        ));
+                        SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("TimerManager.update(): timer.onTimer").concat(
+                        String.valueOfC("timer id=").concatI(timer.getId())).concat(
+                        String.valueOfC("interval=").concatI(timer.getInterval())).concat(
+                        String.valueOfC("timer type=").concatI(timer.getTimerType())).concat(
+                        String.valueOfC("time activation=").concatI(timer.getTimeActivate())).concat(
+                        String.valueOfC("next time activation=").concatI(timer.getNextTimeActivation())).concat(
+                        String.valueOfC("last time =").concatI(lastTime)).concat(
+                        String.valueOfC("new time =").concatI(newTime)));
                     }
                     //todo: А если в обработчике таймера что-то сделать с этим таймером (остановить, запустить повторно, изменить)?
                     try {
                         timer.onTimer();
                     } catch (Exception e) {
-                        Debug.logEx(e);
+                        ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).logEx(e);
                     }
 
                     if (!timer.isKilled()) {
@@ -511,26 +467,24 @@ public class TimerManager {
                             int nextTimeActivation = timer.getNextTimeActivation();
                             if (DEBUG) {
                                 if (nextTimeActivation != -1 && timeActivation >= nextTimeActivation) {
-                                    Debug.assertMsg(String.valueOfC(java.lang.String.format(
-                                            "TimerManager.update(): timeActivation >= nextTimeActivation " +
-                                                    "(id=%d; interval=%d; timerType=%d; " +
-                                                    "timeActivation=%d; nextTimeActivation=%d; lastTime=%d; newTime=%d; " +
-                                                    "class of element='%s')",
-                                            timer.getId(), timer.getInterval(), timer.getTimerType(),
-                                            timeActivation, nextTimeActivation, lastTime, newTime,
-                                            timer.getCallBackElement().getClass().getName()
-                                    )), false);
+                                    SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("TimerManager.update(): timeActivation >= nextTimeActivation ").concat(
+                                    String.valueOfC("timer id=").concatI(timer.getId())).concat(
+                                    String.valueOfC("interval=").concatI(timer.getInterval())).concat(
+                                    String.valueOfC("timer type=").concatI(timer.getTimerType())).concat(
+                                    String.valueOfC("time activation=").concatI(timer.getTimeActivate())).concat(
+                                    String.valueOfC("next time activation=").concatI(timer.getNextTimeActivation())).concat(
+                                    String.valueOfC("last time =").concatI(lastTime)).concat(
+                                    String.valueOfC("new time =").concatI(newTime)));
                                 }
                                 if (nextTimeActivation != -1 && lastTime >= nextTimeActivation) {
-                                    Debug.assertMsg(String.valueOfC(java.lang.String.format(
-                                            "TimerManager.update(): nextTimeActivation <= lastTime " +
-                                                    "(id=%d; interval=%d; timerType=%d; " +
-                                                    "timeActivation=%d; nextTimeActivation=%d; lastTime=%d; newTime=%d; " +
-                                                    "class of element='%s')",
-                                            timer.getId(), timer.getInterval(), timer.getTimerType(),
-                                            timeActivation, nextTimeActivation, lastTime, newTime,
-                                            timer.getCallBackElement().getClass().getName()
-                                    )), false);
+                                    SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("TimerManager.update(): nextTimeActivation <= lastTime ").concat(
+                                    String.valueOfC("timer id=").concatI(timer.getId())).concat(
+                                    String.valueOfC("interval=").concatI(timer.getInterval())).concat(
+                                    String.valueOfC("timer type=").concatI(timer.getTimerType())).concat(
+                                    String.valueOfC("time activation=").concatI(timer.getTimeActivate())).concat(
+                                    String.valueOfC("next time activation=").concatI(timer.getNextTimeActivation())).concat(
+                                    String.valueOfC("last time =").concatI(lastTime)).concat(
+                                    String.valueOfC("new time =").concatI(newTime)));
                                 }
                             }
                             // Таймер требует повторной активации, поэтому он должен быть обновлен и перемещен в списке.

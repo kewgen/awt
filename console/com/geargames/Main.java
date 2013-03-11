@@ -1,14 +1,22 @@
 package com.geargames;
 
 
+import com.geargames.common.env.SystemEnvironment;
+import com.geargames.env.ConsoleEnvironment;
+
 import java.io.IOException;
 
 /** @author ewgen */
-public abstract class Main extends Logger{
+public abstract class Main extends Logger {
 
     /** @param args the command line arguments */
     public static boolean IS_JAR;
 
+    protected Main() {
+        SystemEnvironment systemEnvironment = SystemEnvironment.getInstance();
+        systemEnvironment.setDebug(new ConsoleDebug());
+        systemEnvironment.setEnvironment(ConsoleEnvironment.getInstance());
+    }
 
     public void commonMain(String[] args) throws IOException {
         if (args != null) {

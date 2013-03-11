@@ -1,8 +1,11 @@
 package com.geargames.awt.utils.motions;
 
-import com.geargames.Debug;
+import com.geargames.ConsoleDebug;
 import com.geargames.awt.Drawable;
 import com.geargames.awt.utils.MotionListener;
+import com.geargames.common.*;
+import com.geargames.common.String;
+import com.geargames.common.env.SystemEnvironment;
 
 /**
  * user: Mikhail V. Kutuzov
@@ -55,7 +58,7 @@ public class ElasticInertMotionListener extends MotionListener {
         storedMove = 0;
         draggingTicks = 0;
         if (Drawable.DEBUG) {
-            Debug.trace("TOUCH:" + y);
+            SystemEnvironment.getInstance().getDebug().trace(com.geargames.common.String.valueOfC("TOUCH:").concat(y));
         }
     }
 
@@ -66,8 +69,8 @@ public class ElasticInertMotionListener extends MotionListener {
             storedMove += move;
             value = y;
             if (Drawable.DEBUG) {
-                Debug.trace("MOVE: " + move);
-                Debug.trace("POSITION: " + position);
+                SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("MOVE: ").concat(move));
+                SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("POSITION: ").concat(position));
             }
         }
     }
@@ -86,8 +89,8 @@ public class ElasticInertMotionListener extends MotionListener {
                 }
                 position += storedMove * accelerator;
                 if (Drawable.DEBUG) {
-                    Debug.trace("INERCIA = " + storedMove);
-                    Debug.trace("POSITION = " + position);
+                    SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("INERCIA = ").concat(storedMove));
+                    SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("POSITION = ").concat(position));
                 }
             } else {
                 if (position > top) {
@@ -126,14 +129,14 @@ public class ElasticInertMotionListener extends MotionListener {
 
     public void onRelease(int y) {
         if (Drawable.DEBUG) {
-            Debug.trace("RELEASED");
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("RELEASED"));
         }
         released = true;
     }
 
     public void onOutOfBounds() {
         if (Drawable.DEBUG) {
-            Debug.trace("OUT OF BOUNDS");
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("OUT OF BOUNDS"));
         }
         released = true;
     }

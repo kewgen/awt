@@ -1,9 +1,10 @@
 package com.geargames.awt.utils;
 
-import com.geargames.Debug;
+import com.geargames.ConsoleDebug;
 import com.geargames.awt.Drawable;
 import com.geargames.common.String;
 import com.geargames.common.Graphics;
+import com.geargames.common.env.SystemEnvironment;
 import com.geargames.common.util.ArrayChar;
 import com.geargames.common.util.ArrayHelper;
 import com.geargames.common.util.ArrayInt;
@@ -161,7 +162,7 @@ public class TextHelper {
         len = graphics.getWidth(tmp.substring(previousEnd + 1));
         len = (len > length ? len : length);
         if (Drawable.DEBUG) {
-            Debug.trace("the longest word length " + len);
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("the longest word length ").concat(len));
         }
         string.free();
         return len;

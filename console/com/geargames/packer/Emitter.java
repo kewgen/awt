@@ -1,7 +1,7 @@
 package com.geargames.packer;
 
-import com.geargames.Debug;
 import com.geargames.common.Render;
+import com.geargames.common.env.SystemEnvironment;
 import com.geargames.common.packer.Particle;
 import com.geargames.common.packer.Particles;
 import com.geargames.common.util.ArrayList;
@@ -84,7 +84,7 @@ public class Emitter extends com.geargames.common.packer.EmitProcess {
     private void drawCommon(Graphics g, int pid, int type, int px, int py, int tick) {
         switch (type) {
             case com.geargames.common.Render.T_FRAME:
-                g.getRender().getFrame(pid).draw(g, px, py, null);
+                g.getRender().getFrame(pid).draw(g, px, py);
                 break;
             case com.geargames.common.Render.T_SPRITE:
                 g.getRender().getSprite(pid).draw(g,px, py);
@@ -93,7 +93,7 @@ public class Emitter extends com.geargames.common.packer.EmitProcess {
                 g.getRender().getAnimation(pid).draw(g, px, py, tick);
                 break;
             default:
-                Debug.logEx(new IllegalArgumentException("Packer element type not found:" + type));
+                SystemEnvironment.getInstance().getDebug().trace(com.geargames.common.String.valueOfC("Packer element type not found:").concat(type));
         }
     }
 
@@ -113,7 +113,6 @@ public class Emitter extends com.geargames.common.packer.EmitProcess {
     private short emitter_render_dx, emitter_render_dy;
 
 
-    @Override
     public String toString() {
         return "Emitter{" +
                 "render_type=" + render_type +

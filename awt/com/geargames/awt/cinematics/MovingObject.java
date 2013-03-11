@@ -1,9 +1,9 @@
 package com.geargames.awt.cinematics;
 
-import com.geargames.Debug;
+import com.geargames.ConsoleDebug;
 import com.geargames.awt.Drawable;
-import com.geargames.common.Event;
-import com.geargames.common.Graphics;
+import com.geargames.common.*;
+import com.geargames.common.env.SystemEnvironment;
 
 import java.util.Vector;
 
@@ -79,7 +79,7 @@ public abstract class MovingObject extends Drawable {
                         }
                         getFinishAdviser().onTick();
                         if (Drawable.DEBUG) {
-                            Debug.trace((int) getPoint().getX() + " " + (int) getPoint().getY());
+                            SystemEnvironment.getInstance().getDebug().trace(com.geargames.common.String.valueOfI((int) getPoint().getX()).concat(" ").concatI((int) getPoint().getY()));
                         }
                         getPoint().move();
                     } else {

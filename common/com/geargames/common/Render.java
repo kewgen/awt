@@ -16,6 +16,7 @@ public interface Render {
     byte T_UNIT = 3;
     byte T_UNIT_SCRIPT = 4;
     byte T_OBJ = 5;
+    byte T_DYNAMIC_FRAME = 6;
     byte T_EMITTER = 11;
     byte T_AFFINE = 12;
 

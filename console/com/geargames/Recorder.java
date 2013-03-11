@@ -1,5 +1,6 @@
 package com.geargames;
 
+import com.geargames.common.env.SystemEnvironment;
 import com.geargames.common.util.ArrayByte;
 
 import java.io.*;
@@ -51,10 +52,12 @@ public class Recorder {
             fos.write(data);
             dos.close();
 
-            if (DEBUG_RMS) Debug.trace("Recorder.RMSStoreSave, path " + file.getAbsolutePath());
+            if (DEBUG_RMS) {
+                SystemEnvironment.getInstance().getDebug().trace(com.geargames.common.String.valueOfC("Recorder.RMSStoreSave, path ").concat(file.getAbsolutePath()));
+            }
             return true;
         } catch (IOException e) {
-            Debug.logEx(e);
+            ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).logEx(e);
         }
         return false;
     }
@@ -74,10 +77,12 @@ public class Recorder {
             fos.write(data);
             dos.close();
 
-            if (DEBUG_RMS) Debug.trace("Recorder.RMSStoreSave, path " + file.getAbsolutePath());
+            if (DEBUG_RMS) {
+                SystemEnvironment.getInstance().getDebug().trace(com.geargames.common.String.valueOfC("Recorder.RMSStoreSave, path " + file.getAbsolutePath()));
+            }
             return true;
         } catch (IOException e) {
-            Debug.logEx(e);
+            ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).logEx(e);
         }
         return false;
     }
@@ -96,9 +101,11 @@ public class Recorder {
 
             if (isEncoded) Recorder.xoreArray(Recorder.key, data, 0, data.length);
 
-            if (DEBUG_RMS) Debug.trace("Recorder.RMSStoreRead, path " + file.getAbsolutePath());
+            if (DEBUG_RMS) {
+                SystemEnvironment.getInstance().getDebug().trace(com.geargames.common.String.valueOfC("Recorder.RMSStoreRead, path ").concat(file.getAbsolutePath()));
+            }
         } catch (IOException e) {
-            Debug.logEx(e);
+            ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).logEx(e);
         }
         return new ArrayByte(data, 0);
     }
@@ -117,10 +124,10 @@ public class Recorder {
             dis = new DataInputStream(fis);
 
             if (DEBUG_RMS){
-                Debug.trace("Recorder.RMSStoreStreamRead, path " + file.getAbsolutePath());
+                SystemEnvironment.getInstance().getDebug().trace(com.geargames.common.String.valueOfC("Recorder.RMSStoreStreamRead, path " + file.getAbsolutePath()));
             }
         } catch (IOException e) {
-            Debug.logEx(e);
+            ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).logEx(e);
         }
         return dis;
     }
@@ -131,7 +138,7 @@ public class Recorder {
         if (!file.delete()) return false;
 
         if (DEBUG_RMS){
-            Debug.trace("Recorder.RMSStoreClean, path " + file.getAbsolutePath());
+            ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).trace(com.geargames.common.String.valueOfC("Recorder.RMSStoreClean, path " + file.getAbsolutePath()));
         }
         return true;
     }

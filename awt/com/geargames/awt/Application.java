@@ -1,7 +1,8 @@
 package com.geargames.awt;
 
-import com.geargames.Debug;
+import com.geargames.ConsoleDebug;
 import com.geargames.common.Event;
+import com.geargames.common.env.SystemEnvironment;
 
 import java.util.Vector;
 
@@ -37,7 +38,7 @@ public abstract class Application {
     public void eventAdd(int eventid, int param, Object data, int x, int y) {
         boolean normalSize = msgQueue.size() < 64;
         if (!normalSize) {
-            Debug.warning(com.geargames.common.String.valueOfC("Queue length exceed 64 events (length=" + msgQueue.size() + ")"));
+            SystemEnvironment.getInstance().getDebug().warning(com.geargames.common.String.valueOfC("Queue length exceed 64 events (length=" + msgQueue.size() + ")"));
         }
         Event event = new Event(eventid, param, data, x, y);
         msgQueue.addElement(event);
@@ -50,7 +51,7 @@ public abstract class Application {
                 onEvent(event);
                 event = null;//ObjC
             } catch (Exception e) {
-                Debug.logEx(e);
+                ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).logEx(e);
             }
         }
 //        if (Application.isTimer(Manager.TIMERID_KEYDELAY) && !Application.isTimer(Manager.TIMERID_KEYREPEAT))//TODO сделать один интервал на все фпс

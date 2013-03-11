@@ -1,6 +1,7 @@
 package com.geargames.network;
 
-import com.geargames.Debug;
+import com.geargames.ConsoleDebug;
+import com.geargames.common.env.SystemEnvironment;
 
 /**
  * Created by IntelliJ IDEA.
@@ -11,11 +12,11 @@ import com.geargames.Debug;
 public class SendHTTP extends com.geargames.common.network.SendHTTP {
 
     public void log(java.lang.String msg) {
-        Debug.trace(msg);
+        SystemEnvironment.getInstance().getDebug().trace(com.geargames.common.String.valueOfC(msg));
     }
 
     public void logEx(Exception exception) {
-        Debug.logEx(exception);
+        ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).logEx(exception);
     }
 
 }

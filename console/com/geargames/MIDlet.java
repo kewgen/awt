@@ -2,6 +2,7 @@ package com.geargames;
 
 import com.geargames.common.Port;
 import com.geargames.common.String;
+import com.geargames.common.env.SystemEnvironment;
 import com.geargames.common.network.HTTPCounter;
 import com.geargames.common.util.HashMap;
 import com.geargames.packer.Canvas;
@@ -44,9 +45,9 @@ public abstract class MIDlet extends JFrame implements HTTPCounter {
                     uri = new java.net.URI(url.toString());
                     desktop.browse(uri);
                 } catch (IOException e) {
-                    Debug.logEx(e);
+                    ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).logEx(e);
                 } catch (java.net.URISyntaxException e) {
-                    Debug.logEx(e);
+                    ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).logEx(e);
                 }
             }
         }
@@ -54,7 +55,7 @@ public abstract class MIDlet extends JFrame implements HTTPCounter {
     }
 
     public void notifyDestroyed() {
-        Debug.trace("MIDlet.notifyDestroyed");
+        SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("MIDlet.notifyDestroyed"));
         System.exit(0);
     }
 
@@ -64,7 +65,7 @@ public abstract class MIDlet extends JFrame implements HTTPCounter {
             //абсолютный путь - "/res.."
             //относительный - "res.." относительно папки класса
             java.lang.String p = "/res" + path;
-            Debug.trace("MIDlet.getResourceAsStream, name:" + p);
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("MIDlet.getResourceAsStream, name:").concat(p));
             return getClass().getResourceAsStream(p);//иЗНУТРи ЖАРА!
         } else {
             File file = new File("./res" + path);
@@ -254,12 +255,12 @@ public abstract class MIDlet extends JFrame implements HTTPCounter {
         try {
             platformRequest(str, true);
         } catch (Exception e) {
-            Debug.logEx(e);
+            ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).logEx(e);
         }
     }
 
     public void progressDialogShow(com.geargames.common.String string) {
-        Debug.log(string);
+        SystemEnvironment.getInstance().getDebug().log(string);
     }
 
     public void progressDialogClose() {

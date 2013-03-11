@@ -49,8 +49,8 @@ public abstract class PopUp extends Drawable {
                         itemSkin = getMiddleMiddleSkin();
                     }
                 }
-                ((PFrame)itemSkin.getPrototype()).draw(graphics, width,
-                        getY() + itemSkin.getHeight() * j, null);
+                itemSkin.getPrototype().draw(graphics, width,
+                        getY() + itemSkin.getHeight() * j);
             }
             width += itemSkin.getWidth();
         }

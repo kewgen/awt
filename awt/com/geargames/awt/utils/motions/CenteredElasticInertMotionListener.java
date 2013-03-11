@@ -1,8 +1,11 @@
 package com.geargames.awt.utils.motions;
 
-import com.geargames.Debug;
+import com.geargames.ConsoleDebug;
 import com.geargames.awt.Drawable;
 import com.geargames.awt.utils.MotionListener;
+import com.geargames.common.*;
+import com.geargames.common.String;
+import com.geargames.common.env.SystemEnvironment;
 
 /**
  * user: Mikhail V. Kutuzov
@@ -66,7 +69,7 @@ public class CenteredElasticInertMotionListener extends MotionListener {
         storedMove = 0;
         draggingTicks = 0;
         if (Drawable.DEBUG) {
-            Debug.trace("TOUCH:" + y);
+            SystemEnvironment.getInstance().getDebug().trace(com.geargames.common.String.valueOfC("TOUCH:").concatI(y));
         }
     }
 
@@ -77,8 +80,8 @@ public class CenteredElasticInertMotionListener extends MotionListener {
         value = y;
         storedMove += move;
         if (Drawable.DEBUG) {
-            Debug.trace("MOVE: " + move);
-            Debug.trace("POSITION: " + position);
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("MOVE: ").concatI(move));
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("POSITION: ").concatI(position));
         }
     }
 
@@ -96,8 +99,8 @@ public class CenteredElasticInertMotionListener extends MotionListener {
                 }
                 position += storedMove * accelerator;
                 if (Drawable.DEBUG) {
-                    Debug.trace("INERTIA = " + storedMove);
-                    Debug.trace("POSITION = " + position);
+                    SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("INERTIA = ").concatI(storedMove));
+                    SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("POSITION = ").concatI(position));
                 }
             } else {
                 if (relativeClickedPosition == -1) {
@@ -157,14 +160,14 @@ public class CenteredElasticInertMotionListener extends MotionListener {
 
     public void onRelease(int y) {
         if (Drawable.DEBUG) {
-            Debug.trace("RELEASED");
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("RELEASED"));
         }
         released = true;
     }
 
     public void onOutOfBounds() {
         if (Drawable.DEBUG) {
-            Debug.trace("OUT OF BOUNDS");
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("OUT OF BOUNDS"));
         }
         released = true;
     }
@@ -189,11 +192,11 @@ public class CenteredElasticInertMotionListener extends MotionListener {
         relativeClickedPosition = number * itemSize;
         if (!instinctPosition) {
             if (Drawable.DEBUG) {
-                Debug.trace("" + number);
-                Debug.trace("" + relativeClickedPosition + " " + position);
-                Debug.trace("" + position + " + " + window + " = ");
-                Debug.trace("" + (position + window - itemDiff));
-                Debug.trace("" + center);
+                SystemEnvironment.getInstance().getDebug().trace(String.valueOfI(number));
+                SystemEnvironment.getInstance().getDebug().trace(String.valueOfI(relativeClickedPosition).concatC(" ").concatI(position));
+                SystemEnvironment.getInstance().getDebug().trace(String.valueOfI(position).concatC(" ").concatI(window));
+                SystemEnvironment.getInstance().getDebug().trace(String.valueOfI(position + window - itemDiff));
+                SystemEnvironment.getInstance().getDebug().trace(String.valueOfI(center));
             }
         } else {
             position = center - relativeClickedPosition;
