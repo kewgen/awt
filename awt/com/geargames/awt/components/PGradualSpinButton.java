@@ -8,7 +8,7 @@ import com.geargames.common.packer.PObject;
  * Users: mikhail v. kutuzov, abarakov
  * Date: 27.12.12
  */
-public class PGradualSpinButton extends PTouchButton {
+public class PGradualSpinButton extends PButton {
 
     private static final int REPEAT_DELAY    = 500;
     private static final int REPEAT_INTERVAL = 100;
