@@ -20,9 +20,6 @@ public class StubMotionListener extends MotionListener {
     public void onMove(int y) {
     }
 
-    public void onTick() {
-    }
-
     public int getTop() {
         return position;
     }
@@ -47,4 +44,5 @@ public class StubMotionListener extends MotionListener {
     public boolean isCentered() {
         return false;
     }
+
 }

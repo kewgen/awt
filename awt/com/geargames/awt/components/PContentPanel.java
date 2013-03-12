@@ -97,45 +97,37 @@ public abstract class PContentPanel extends PObjectElement {
      * @return
      */
     public boolean onEvent(int code, int param, int x, int y) {
-        if (code == Event.EVENT_TICK) {
-            int size = getActiveChildren().size();
-            for (int i = 0; i < size; i++) {
-                PElement child = (PElement) getActiveChildren().get(i);
-                child.onEvent(code, param, 0, 0);
-            }
-        } else {
-            //todo: если dedicatedConsumer стал невидимым или выключенным у него следует отобрать все права на захват всех событий
-            if (dedicatedConsumer != null) {
-                if (dedicatedConsumer.getVisible() && dedicatedConsumer.getEnabled()) {
-                    if (!dedicatedConsumer.onEvent(code, param, x - dedicatedConsumer.getX(), y - dedicatedConsumer.getY())) {
-//                        dedicatedConsumer = null;
-//                    } else {
-//                        return true;
-                    }
-                    if (code == Event.EVENT_TOUCH_RELEASED) {
-                        dedicatedConsumer = null;
-                        return false;
-                    } else
-                        return true;
-                } else {
-                    dedicatedConsumer = null;
+        //todo: если dedicatedConsumer стал невидимым или выключенным, у него следует отобрать все права на захват всех событий
+        if (dedicatedConsumer != null) {
+            if (dedicatedConsumer.getVisible() && dedicatedConsumer.getEnabled()) {
+                if (!dedicatedConsumer.onEvent(code, param, x - dedicatedConsumer.getX(), y - dedicatedConsumer.getY())) {
+//                    dedicatedConsumer = null;
+//                } else {
+//                    return true;
                 }
+                if (code == Event.EVENT_TOUCH_RELEASED) {
+                    dedicatedConsumer = null;
+                    return false;
+                } else
+                    return true;
+            } else {
+                dedicatedConsumer = null;
             }
-            for (int i = getActiveChildren().size() - 1; i >= 0; i--) {
-                PElement child = (PElement) getActiveChildren().get(i);
-                if (child.getVisible()) {
-                    int clientX = x - child.getX();
-                    int clientY = y - child.getY();
-                    if (child.getTouchRegion().isWithIn(clientX, clientY)) {
-                        if (child.getEnabled()) {
-                            boolean res = child.onEvent(code, param, clientX, clientY);
-                            if (res && code == Event.EVENT_TOUCH_PRESSED) {
-                                dedicatedConsumer = child;
-                                return true;
-                            }
+        }
+        for (int i = getActiveChildren().size() - 1; i >= 0; i--) {
+            PElement child = (PElement) getActiveChildren().get(i);
+            if (child.getVisible()) {
+                int clientX = x - child.getX();
+                int clientY = y - child.getY();
+                if (child.getTouchRegion().isWithIn(clientX, clientY)) {
+                    if (child.getEnabled()) {
+                        boolean res = child.onEvent(code, param, clientX, clientY);
+                        if (res && code == Event.EVENT_TOUCH_PRESSED) {
+                            dedicatedConsumer = child;
+                            return true;
                         }
-                        return false;
                     }
+                    return false;
                 }
             }
         }

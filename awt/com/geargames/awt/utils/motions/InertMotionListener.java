@@ -2,16 +2,19 @@ package com.geargames.awt.utils.motions;
 
 import com.geargames.Debug;
 import com.geargames.awt.Drawable;
+import com.geargames.awt.timers.OnTimerListener;
+import com.geargames.awt.timers.TimerManager;
 import com.geargames.awt.utils.MotionListener;
+import com.geargames.common.String;
 
 /**
- * @author Mikhail_Kutuzov
- *         created: 09.02.12  18:57
- *         Инертный (сохраняющий свою скорость на столько, на сколько мал параметр inertness по сравеннию с divider) MotionListener.
- *         По смыслу инерции никогда не следует держать inertness <= divider (это будет случай когда менющка не сможет затормозить ,
- *         пока не докатиться до своего края)
+ * @author mikhail v. kutuzov
+ * created: 09.02.12  18:57
+ * Инертный (сохраняющий свою скорость на столько, на сколько мал параметр inertness по сравеннию с divider) MotionListener.
+ * По смыслу инерции никогда не следует держать inertness <= divider (это будет случай когда менюшка не сможет
+ * затормозить, пока не докатится до своего края).
  */
-public class InertMotionListener extends MotionListener {
+public class InertMotionListener extends MotionListener implements OnTimerListener {
     private int divider;
     private int accelerator;
     private int window;
@@ -27,10 +30,13 @@ public class InertMotionListener extends MotionListener {
     private int backSpeed;
     private boolean released;
 
+    private int timerId;
+
     public InertMotionListener() {
         divider = 100;
         accelerator = 2;
         inertness = 110;
+        timerId = TimerManager.NULL_TIMER;
     }
 
     public void create(int top, int down, int window) {
@@ -47,7 +53,7 @@ public class InertMotionListener extends MotionListener {
     }
 
     public void onTouch(int y) {
-        released = false;
+        endMoving();
         value = y;
         move = 0;
         storedMove = 0;
@@ -70,21 +76,47 @@ public class InertMotionListener extends MotionListener {
         }
     }
 
-    public void onTick() {
-        if (released) {
+    private void startMoving() {
+        if (Drawable.DEBUG) {
+            Debug.log(String.valueOfC("startMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
+        }
+        released = true;
+        if (timerId != TimerManager.NULL_TIMER) {
+            TimerManager.setTickTimer(timerId, this);
+        } else {
+            timerId = TimerManager.setTickTimer(this);
+        }
+    }
+
+    private void endMoving() {
+        if (Drawable.DEBUG) {
+            Debug.log(String.valueOfC("endMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
+        }
+        released = false;
+        if (timerId != TimerManager.NULL_TIMER) {
+            TimerManager.killTimer(timerId);
+            timerId = TimerManager.NULL_TIMER;
+        }
+    }
+
+    public void onTimer(int timerId) {
+        if (timerId != this.timerId) {
+            return;
+        }
+        if (released) { //todo: это условие обязательно?
             if (storedMove != 0) {
                 if (position + window <= down || position >= top) {
                     storedMove = 0;
                 } else {
                     storedMove *= divider;
                     storedMove /= inertness;
-                    if (draggingTicks != 0) {
+                    if (draggingTicks != 0) { //todo: это зачем?
                         storedMove /= draggingTicks;
                     }
                 }
-                position += storedMove;
+                position += storedMove/* * accelerator*/; //todo: умножение на accelerator?
                 if (Drawable.DEBUG) {
-                    Debug.trace("INERCIA = " + storedMove);
+                    Debug.trace("INERTIA = " + storedMove);
                     Debug.trace("POSITION = " + position);
                 }
             } else {
@@ -98,11 +130,14 @@ public class InertMotionListener extends MotionListener {
                         Debug.trace("return down" + " position=" + position + " window=" + window + " down=" + down + " top=" + top);
                     }
                     position += down - window - position > backSpeed ? backSpeed : down - window - position;
+                } else {
+                    endMoving(); //todo: Только здесь останавливать таймер?
                 }
             }
             draggingTicks = 0;
         } else {
             draggingTicks++;
+            endMoving(); //todo: Здесь надо останавливать таймер?
         }
     }
 
@@ -122,14 +157,14 @@ public class InertMotionListener extends MotionListener {
         if (Drawable.DEBUG) {
             Debug.trace("RELEASED");
         }
-        released = true;
+        startMoving();
     }
 
     public void onOutOfBounds() {
         if (Drawable.DEBUG) {
             Debug.trace("OUT OF BOUNDS");
         }
-        released = true;
+        startMoving();
     }
 
     public void onClick(int number) {
@@ -162,4 +197,5 @@ public class InertMotionListener extends MotionListener {
     public void setInertness(int inertness) {
         this.inertness = inertness;
     }
+
 }

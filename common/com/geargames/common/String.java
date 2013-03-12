@@ -49,6 +49,10 @@ public class String {
         return new String(string.append(value));
     }
 
+    public String concatB(boolean value) {
+        return new String(string.append(value));
+    }
+
     public char charAt(int index) {
         return string.charAt(index);
     }

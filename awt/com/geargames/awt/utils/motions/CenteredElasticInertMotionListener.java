@@ -2,18 +2,20 @@ package com.geargames.awt.utils.motions;
 
 import com.geargames.Debug;
 import com.geargames.awt.Drawable;
+import com.geargames.awt.timers.OnTimerListener;
+import com.geargames.awt.timers.TimerManager;
 import com.geargames.awt.utils.MotionListener;
+import com.geargames.common.String;
 
 /**
- * user: Mikhail V. Kutuzov
- * date: 15.01.12
- * time: 12:54
+ * Users: mikhail v. kutuzov, abarakov
+ * Date: 15.01.12 12:54
  * Центрующийся (дискретно позиционируется по пунктам меню), инертный MotionListener с функцией доводчика в позицию.
  *
  * @see InertMotionListener
  * @see ElasticInertMotionListener
  */
-public class CenteredElasticInertMotionListener extends MotionListener {
+public class CenteredElasticInertMotionListener extends MotionListener implements OnTimerListener {
     private int divider;
     private int accelerator;
     private int relativeClickedPosition;
@@ -34,10 +36,13 @@ public class CenteredElasticInertMotionListener extends MotionListener {
     private boolean released;
     public boolean instinctPosition;
 
+    private int timerId;
+
     public CenteredElasticInertMotionListener() {
         divider = 100;
         accelerator = 1;
         inertness = 110;
+        timerId = TimerManager.NULL_TIMER;
     }
 
     public void create(int center, int itemOffset, int window, int itemSize) {
@@ -52,15 +57,15 @@ public class CenteredElasticInertMotionListener extends MotionListener {
         this.relativeClickedPosition = -1;
         this.center = center;
         this.itemDiff = itemSize + itemOffset;
-        this.released = true;
-        instinctPosition = false;
-        itemsAmount = window / itemSize;
-        move = 0;
-        value = 0;
+        this.released = false;
+        this.instinctPosition = false;
+        this.itemsAmount = window / itemSize;
+        this.move = 0;
+        this.value = 0;
     }
 
     public void onTouch(int y) {
-        released = false;
+        endMoving();
         value = y;
         move = 0;
         storedMove = 0;
@@ -71,26 +76,54 @@ public class CenteredElasticInertMotionListener extends MotionListener {
     }
 
     public void onMove(int y) {
-        relativeClickedPosition = -1;
-        move = y - value;
-        position += move * accelerator;
-        value = y;
-        storedMove += move;
-        if (Drawable.DEBUG) {
-            Debug.trace("MOVE: " + move);
-            Debug.trace("POSITION: " + position);
+        if (!released) {
+            relativeClickedPosition = -1;
+            move = y - value;
+            storedMove += move;
+            position += move * accelerator;
+            value = y;
+            if (Drawable.DEBUG) {
+                Debug.trace("MOVE: " + move);
+                Debug.trace("POSITION: " + position);
+            }
         }
     }
 
-    public void onTick() {
-        if (released) {
+    private void startMoving() {
+        if (Drawable.DEBUG) {
+            Debug.log(String.valueOfC("startMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
+        }
+        released = true;
+        if (timerId != TimerManager.NULL_TIMER) {
+            TimerManager.setTickTimer(timerId, this);
+        } else {
+            timerId = TimerManager.setTickTimer(this);
+        }
+    }
+
+    private void endMoving() {
+        if (Drawable.DEBUG) {
+            Debug.log(String.valueOfC("endMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
+        }
+        released = false;
+        if (timerId != TimerManager.NULL_TIMER) {
+            TimerManager.killTimer(timerId);
+            timerId = TimerManager.NULL_TIMER;
+        }
+    }
+
+    public void onTimer(int timerId) {
+        if (timerId != this.timerId) {
+            return;
+        }
+        if (released) { //todo: это условие обязательно?
             if (storedMove != 0) {
                 if (position + window <= center || position >= center) {
                     storedMove = 0;
                 } else {
                     storedMove *= divider;
                     storedMove /= inertness;
-                    if (draggingTicks != 0) {
+                    if (draggingTicks != 0) { //todo: это зачем?
                         storedMove /= draggingTicks;
                     }
                 }
@@ -116,6 +149,8 @@ public class CenteredElasticInertMotionListener extends MotionListener {
                                 margin = -margin;
                                 position += margin > backStep ? backStep : margin;
                             }
+                        } else {
+                            endMoving(); //todo: Только здесь останавливать таймер?
                         }
                     }
                 } else {
@@ -124,6 +159,8 @@ public class CenteredElasticInertMotionListener extends MotionListener {
                         position -= -center + clickedPosition > backStep ? backStep : -center + clickedPosition;
                     } else if (clickedPosition < center) {
                         position += -clickedPosition + center > backStep ? backStep : -clickedPosition + center;
+                    } else {
+                        endMoving(); //todo: Здесь надо останавливать таймер?
                     }
                 }
 
@@ -131,6 +168,7 @@ public class CenteredElasticInertMotionListener extends MotionListener {
             draggingTicks = 0;
         } else {
             draggingTicks++;
+            endMoving(); //todo: Здесь надо останавливать таймер?
         }
     }
 
@@ -159,14 +197,29 @@ public class CenteredElasticInertMotionListener extends MotionListener {
         if (Drawable.DEBUG) {
             Debug.trace("RELEASED");
         }
-        released = true;
+        startMoving();
     }
 
     public void onOutOfBounds() {
         if (Drawable.DEBUG) {
             Debug.trace("OUT OF BOUNDS");
         }
-        released = true;
+        startMoving();
+    }
+
+    public void onClick(int number) {
+        relativeClickedPosition = number * itemSize;
+        if (!instinctPosition) {
+            if (Drawable.DEBUG) {
+                Debug.trace("" + number);
+                Debug.trace("" + relativeClickedPosition + " " + position);
+                Debug.trace("" + position + " + " + window + " = ");
+                Debug.trace("" + (position + window - itemDiff));
+                Debug.trace("" + center);
+            }
+        } else {
+            position = center - relativeClickedPosition;
+        }
     }
 
     public boolean isCentered() {
@@ -183,21 +236,6 @@ public class CenteredElasticInertMotionListener extends MotionListener {
 
     public void setInstinctPosition(boolean instinctPosition) {
         this.instinctPosition = instinctPosition;
-    }
-
-    public void onClick(int number) {
-        relativeClickedPosition = number * itemSize;
-        if (!instinctPosition) {
-            if (Drawable.DEBUG) {
-                Debug.trace("" + number);
-                Debug.trace("" + relativeClickedPosition + " " + position);
-                Debug.trace("" + position + " + " + window + " = ");
-                Debug.trace("" + (position + window - itemDiff));
-                Debug.trace("" + center);
-            }
-        } else {
-            position = center - relativeClickedPosition;
-        }
     }
 
     public int getDivider() {
@@ -223,4 +261,5 @@ public class CenteredElasticInertMotionListener extends MotionListener {
     public void setInertness(int inertness) {
         this.inertness = inertness;
     }
+
 }

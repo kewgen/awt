@@ -1,7 +1,6 @@
 package com.geargames.awt.timers;
 
 import com.geargames.Debug;
-import com.geargames.awt.Eventable;
 import com.geargames.common.util.ArrayList;
 import com.geargames.common.util.HashMap;
 import com.geargames.common.String;
@@ -40,7 +39,9 @@ public class TimerManager {
     private static final boolean DEBUG       = false;
     private static final boolean STACK_TRACE = false;
 
-    public static final int DINAMIC_TIMER_ID_MIN = 20001;
+    public static final int NULL_TIMER = 0;
+
+    public static final int DINAMIC_TIMER_ID_MIN = 20000;
     public static final int DINAMIC_TIMER_ID_MAX = Integer.MAX_VALUE;
 
 //    private static final int TIMER_OPTIMIZE_SUBTRACTOR = 864000000; // 10 дней в миллисекундах = 10*24*60*60*1000
@@ -150,8 +151,8 @@ public class TimerManager {
      * Создать таймер.
      * @param timerId - выбирайте id из следующих соображений:
      *                 отрицательные id - для всех системных таймеров (таймеров общего кода).
-     *                 0..20000 - для клиентских таймеров с константным id;
-     *                 20001.. - для клиентских таймеров с динамическим id, который генерирует сам менеджер;
+     *                 0..19999 - для клиентских таймеров с константным id;
+     *                 20000.. - для клиентских таймеров с динамическим id, который генерирует сам менеджер;
      * @param interval
      * @param timerType - определяет типа таймера, будет ли таймер однократным, многократным или tick-таймером.
      *                  Должно принимать одно из значений: Timer.SINGLE_TIMER_TYPE, Timer.PERIODIC_TIMER_TYPE или
@@ -160,7 +161,7 @@ public class TimerManager {
      * @return
      */
     // createTimer
-    private static int setTimer(int timerId, int interval, byte timerType, Eventable callBackElement) {
+    private static int setTimer(int timerId, int interval, byte timerType, OnTimerListener callBackElement) {
         if (STACK_TRACE) {
             Debug.trace(java.lang.String.format(
                     "TimerManager.setTimer(timerId=%d; interval=%d; timerType=%d; class of element='%s')",
@@ -194,7 +195,7 @@ public class TimerManager {
      * @param callBackElement
      * @return
      */
-    public static int setSingleTimer(int timerId, int interval, Eventable callBackElement) {
+    public static int setSingleTimer(int timerId, int interval, OnTimerListener callBackElement) {
         return setTimer(timerId, interval, Timer.SINGLE_TIMER_TYPE, callBackElement);
     }
 
@@ -203,7 +204,7 @@ public class TimerManager {
      * @param interval
      * @return
      */
-    public static int setSingleTimer(int interval, Eventable callBackElement) {
+    public static int setSingleTimer(int interval, OnTimerListener callBackElement) {
         return setTimer(generateTimerId(), interval, Timer.SINGLE_TIMER_TYPE, callBackElement);
     }
 
@@ -215,7 +216,7 @@ public class TimerManager {
      * @return
      */
     // setMultipleTimer
-    public static int setPeriodicTimer(int timerId, int interval, Eventable callBackElement) {
+    public static int setPeriodicTimer(int timerId, int interval, OnTimerListener callBackElement) {
         return setTimer(timerId, interval, Timer.PERIODIC_TIMER_TYPE, callBackElement);
     }
 
@@ -224,7 +225,7 @@ public class TimerManager {
      * @param interval
      * @return
      */
-    public static int setPeriodicTimer(int interval, Eventable callBackElement) {
+    public static int setPeriodicTimer(int interval, OnTimerListener callBackElement) {
         return setTimer(generateTimerId(), interval, Timer.PERIODIC_TIMER_TYPE, callBackElement);
     }
 
@@ -235,7 +236,7 @@ public class TimerManager {
      * @return
      */
     // setMultipleTimer
-    public static int setTickTimer(int timerId, Eventable callBackElement) {
+    public static int setTickTimer(int timerId, OnTimerListener callBackElement) {
         return setTimer(timerId, 0, Timer.TICK_TIMER_TYPE, callBackElement);
     }
 
@@ -244,7 +245,7 @@ public class TimerManager {
      * будет автоматически присвоен самим менеджером.
      * @return
      */
-    public static int setTickTimer(Eventable callBackElement) {
+    public static int setTickTimer(OnTimerListener callBackElement) {
         return setTimer(generateTimerId(), 0, Timer.TICK_TIMER_TYPE, callBackElement);
     }
 
@@ -412,7 +413,7 @@ public class TimerManager {
          */
         while (i >= 0) {
             Timer tmpTimer = (Timer)timers.get(i);
-            if (timeActivation < tmpTimer.getTimeActivate()) {
+            if (timeActivation < tmpTimer.getTimeActivation()) {
                 break;
             }
             timers.set(i + 1, tmpTimer);
@@ -451,7 +452,7 @@ public class TimerManager {
                     tickTimers.add(timer);
                 } else {
                     timers.add(timer);
-                    movingLastTimer(timer.getTimeActivate());
+                    movingLastTimer(timer.getTimeActivation());
                 }
                 timer.initiate();
             }
@@ -469,7 +470,7 @@ public class TimerManager {
                                     "timeActivation=%d; nextTimeActivation=%d; lastTime=%d; newTime=%d; " +
                                     "class of element='%s')",
                             timer.getId(), timer.getInterval(), timer.getTimerType(),
-                            timer.getTimeActivate(), timer.getNextTimeActivation(), lastTime, newTime,
+                            timer.getTimeActivation(), timer.getNextTimeActivation(), lastTime, newTime,
                             timer.getCallBackElement().getClass().getName()
                     ));
                 }
@@ -488,7 +489,7 @@ public class TimerManager {
             updateStatus = TIMERS_UPDATE_STATUS;
             while (!timers.isEmpty()) {
                 Timer timer = (Timer)timers.get(timers.size() - 1);
-                int timeActivation = timer.getTimeActivate();
+                int timeActivation = timer.getTimeActivation();
                 if (timeActivation <= newTime) {
                     if (STACK_TRACE) {
                         Debug.trace(java.lang.String.format(
@@ -537,7 +538,7 @@ public class TimerManager {
                             }
                             // Таймер требует повторной активации, поэтому он должен быть обновлен и перемещен в списке.
                             movingLastTimer(nextTimeActivation);
-                            timer.setTimeActivate(nextTimeActivation);
+                            timer.setTimeActivation(nextTimeActivation);
                         } else {
                             releaseTimer(timer);
                         }

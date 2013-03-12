@@ -86,8 +86,6 @@ public abstract class PButton extends PObjectElement {
      * Обработчик события возникающего при клике тачем по кнопке.
      */
     // action
-    public void onClick() {
-        // Пустая реализация. Объект, желающий обрабатывать событие кнопки, должен перекрыть данный метод.
-    }
+    public abstract void onClick();
 
 }

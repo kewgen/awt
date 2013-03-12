@@ -1,5 +1,6 @@
 package com.geargames.awt.components;
 
+import com.geargames.awt.timers.OnTimerListener;
 import com.geargames.awt.timers.TimerManager;
 import com.geargames.common.Event;
 import com.geargames.common.packer.PObject;
@@ -8,7 +9,7 @@ import com.geargames.common.packer.PObject;
  * Users: mikhail v. kutuzov, abarakov
  * Date: 27.12.12
  */
-public class PGradualSpinButton extends PTouchButton {
+public class PGradualSpinButton extends PTouchButton implements OnTimerListener {
 
     private static final int REPEAT_DELAY    = 500;
     private static final int REPEAT_INTERVAL = 100;
@@ -22,6 +23,7 @@ public class PGradualSpinButton extends PTouchButton {
         super(prototype);
         this.step = 1;
         tickCounter = 0;
+        timerId = TimerManager.NULL_TIMER;
     }
 
     public void setBox(PGradualSpinBox box) {
@@ -40,13 +42,20 @@ public class PGradualSpinButton extends PTouchButton {
         if (code == Event.EVENT_TOUCH_PRESSED) {
 //            Debug.trace("PGradualSpinButton: Event = EVENT_TOUCH_PRESSED");
             tickCounter = 0;
-            timerId = TimerManager.setSingleTimer(REPEAT_DELAY, this);
+            if (timerId != TimerManager.NULL_TIMER) {
+                TimerManager.setSingleTimer(timerId, REPEAT_DELAY, this);
+            } else {
+                timerId = TimerManager.setSingleTimer(REPEAT_DELAY, this);
+            }
             parentBox.setValue(parentBox.getValue() + step);
 //            pulse(step);
         } else
         if (code == Event.EVENT_TOUCH_RELEASED) {
 //            Debug.trace("PGradualSpinButton: Event = EVENT_TOUCH_RELEASED");
-            TimerManager.killTimer(timerId);
+            if (timerId != TimerManager.NULL_TIMER) {
+                TimerManager.killTimer(timerId);
+                timerId = TimerManager.NULL_TIMER;
+            }
         }
         return super.onEvent(code, param, x, y);
     }

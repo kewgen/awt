@@ -1,7 +1,5 @@
 package com.geargames.awt.timers;
 
-import com.geargames.awt.Eventable;
-
 /**
  * User: abarakov
  * Date: 23.02.13 11:22
@@ -14,9 +12,10 @@ public /*abstract*/ class Timer {
                                        // Если interval == 0, это означает, что данный таймер будет однократно
                                        // срабатывать каждый tick приложения.
     // nextActivate, lastActivated
-    private int timeActivate;          // Время срабатывания таймера. Время в данном контексте - это время относительно
+    private int timeActivation;        // Время срабатывания таймера. Время в данном контексте - это время относительно
                                        // времени старта системы
-    private Eventable callBackElement; // Элемент, которому будет сообщено о срабатывании таймера
+    //todo: Переименовать callBackElement
+    private OnTimerListener callBackElement; // Элемент, которому будет сообщено о срабатывании таймера
     // isMultiple
 //  private boolean isPeriodic;        // true, если таймер должен выполняться многократно
     private byte data; // state
@@ -38,9 +37,9 @@ public /*abstract*/ class Timer {
     /**
      * Вызывается при инициализации таймера.
      */
-    public void init(int id, int interval, byte timerType, Eventable callBackElement) {
+    public void init(int id, int interval, byte timerType, OnTimerListener callBackElement) {
         this.id              = id;
-        this.timeActivate    = interval == 0 ? 0 : TimerManager.millisTime() + interval;
+        this.timeActivation  = interval == 0 ? 0 : TimerManager.millisTime() + interval;
         this.interval        = interval;
         this.callBackElement = callBackElement;
         this.data            = (byte) ((timerType /*& TIMER_TYPE_MASK*/) | NEED_INITIATE_STATE);
@@ -56,7 +55,7 @@ public /*abstract*/ class Timer {
     }
 
 //    public void reset() {
-//        this.timeActivate = TimerManager.getInstance().millisTime() + interval;
+//        this.timeActivation = TimerManager.getInstance().millisTime() + interval;
 //    }
 
 //    protected void needInitiate() {
@@ -95,20 +94,20 @@ public /*abstract*/ class Timer {
 //        }
     }
 
-    public int getTimeActivate() {
-        return timeActivate;
+    public int getTimeActivation() {
+        return timeActivation;
     }
 
-    public void setTimeActivate(int timeActivate) {
-        this.timeActivate = timeActivate;
+    public void setTimeActivation(int timeActivation) {
+        this.timeActivation = timeActivation;
     }
 
     // needNextActivation, needReActivation
     public int getNextTimeActivation() {
-        return timeActivate + interval;
+        return timeActivation + interval;
     }
 
-    public Eventable getCallBackElement() {
+    public OnTimerListener getCallBackElement() {
         return callBackElement;
     }
 
@@ -159,7 +158,7 @@ public /*abstract*/ class Timer {
     /**
      * Вызывается каждый раз при срабатывании таймера.
      */
-    protected void onTimer() {
+    public void onTimer() {
 //        Application.getInstance().eventAdd(Event.EVENT_TIMER, id, callBackElement);
         callBackElement.onTimer(id);
     }
@@ -197,7 +196,7 @@ public /*abstract*/ class Timer {
 //    }
 //
 //    public int getNextTimeActivate() {
-//        return getTimeActivate() + getInterval();
+//        return getTimeActivation() + getInterval();
 //    }
 //
 //}

@@ -22,28 +22,28 @@ public abstract class VerticalScrollView extends VerticalScrollableArea {
         setInitiated(false);
     }
 
+    /**
+     * Обработчик событий экранных касаний и клавиатуры.
+     */
     public boolean onEvent(int code, int param, int x, int y) {
-        int number;
         boolean result = super.onEvent(code, param, x, y);
         if (getTouchRegion().isWithIn(x, y)) {
-            if (code != Event.EVENT_TICK) {
-                number = getItemAtLinearPosition(y);
-                if (number >= 0 && number < getItemsAmount()) {
-                    switch (code) {
-                        case Event.EVENT_TOUCH_PRESSED:
-                            touchX = x;
-                            touchY = y;
-                            break;
-                        case Event.EVENT_TOUCH_RELEASED:
-                            if (Math.abs(touchX - x) <= Port.TOUCH_ROUND && Math.abs(touchY - y) <= Port.TOUCH_ROUND) {
-                                getMotionListener().onClick(number);
-                                ((PElement) getItems().elementAt(number)).onEvent(code, param, x, y);
-                                ((PElement) getItems().elementAt(number)).onEvent(Event.EVENT_SYNTHETIC_CLICK, number, x, y);
-                            }
-                            return result;
-                    }
-                    ((PElement) getItems().elementAt(number)).onEvent(code, param, x, y);
+            int number = getItemAtLinearPosition(y);
+            if (0 <= number && number < getItemsAmount()) {
+                switch (code) {
+                    case Event.EVENT_TOUCH_PRESSED:
+                        touchX = x;
+                        touchY = y;
+                        break;
+                    case Event.EVENT_TOUCH_RELEASED:
+                        if (Math.abs(touchX - x) <= Port.TOUCH_ROUND && Math.abs(touchY - y) <= Port.TOUCH_ROUND) {
+                            getMotionListener().onClick(number);
+                            ((PElement) getItems().elementAt(number)).onEvent(code, param, x, y);
+                            ((PElement) getItems().elementAt(number)).onEvent(Event.EVENT_SYNTHETIC_CLICK, number, x, y);
+                        }
+                        return result;
                 }
+                ((PElement) getItems().elementAt(number)).onEvent(code, param, x, y);
             }
         }
         return result;
@@ -57,7 +57,7 @@ public abstract class VerticalScrollView extends VerticalScrollableArea {
      */
     public int getItemAtLinearPosition(int pos) {
         int length = -getPosition() + pos;
-        if (length % getItemSize() > getItemSize() - margin){
+        if (length % getItemSize() > getItemSize() - margin) {
             return -1;
         }
         int i = length / getItemSize();
