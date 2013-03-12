@@ -22,11 +22,11 @@ public abstract class AcceleratedObject extends MovingObject {
 
     protected abstract void setInitiated(boolean initiated);
 
-
     public void onFlyEnd() {
         setInitiated(false);
         onFlyFinish();
     }
 
     protected abstract void onFlyFinish();
+
 }

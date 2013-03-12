@@ -1,6 +1,7 @@
 package com.geargames.awt.components;
 
-import com.geargames.common.*;
+import com.geargames.common.Graphics;
+import com.geargames.common.String;
 import com.geargames.common.env.SystemEnvironment;
 import com.geargames.common.packer.Index;
 import com.geargames.common.packer.PObject;
@@ -30,7 +31,7 @@ public abstract class PButton extends PObjectElement {
         disabledSkin = prototype.getIndexBySlot(2);
         if (disabledSkin == null) {
             disabledSkin = normalSkin;
-            SystemEnvironment.getInstance().getDebug().trace(com.geargames.common.String.valueOfC(
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC(
                    "PButton: There is no skin of disabled state button ").concatC("pid= ").concatI(prototype.getPID()));
         }
         checked = false;
@@ -84,8 +85,6 @@ public abstract class PButton extends PObjectElement {
      * Обработчик события возникающего при клике тачем по кнопке.
      */
     // action
-    public void onClick() {
-        // Пустая реализация. Объект, желающий обрабатывать событие кнопки, должен перекрыть данный метод.
-    }
+    public abstract void onClick();
 
 }

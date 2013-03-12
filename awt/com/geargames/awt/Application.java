@@ -2,6 +2,7 @@ package com.geargames.awt;
 
 import com.geargames.ConsoleDebug;
 import com.geargames.common.Event;
+import com.geargames.common.String;
 import com.geargames.common.env.SystemEnvironment;
 
 import java.util.Vector;
@@ -33,16 +34,16 @@ public abstract class Application {
 
     private Vector msgQueue = new Vector(64);
 
-    public void eventAdd(int eventid, int param, Object data) { //todo: Object -> Eventable
-        eventAdd(eventid, param, data, 0, 0);
+    public void eventAdd(int eventId, int param, Object data) {
+        eventAdd(eventId, param, data, 0, 0);
     }
 
-    public void eventAdd(int eventid, int param, Object data, int x, int y) {
+    public void eventAdd(int eventId, int param, Object data, int x, int y) {
         boolean normalSize = msgQueue.size() < 64;
         if (!normalSize) {
-            SystemEnvironment.getInstance().getDebug().warning(com.geargames.common.String.valueOfC("Queue length exceed 64 events (length=" + msgQueue.size() + ")"));
+            SystemEnvironment.getInstance().getDebug().warning(String.valueOfC("Queue length exceed 64 events (length=").concatI(msgQueue.size()).concatC(")"));
         }
-        Event event = new Event(eventid, param, data, x, y);
+        Event event = new Event(eventId, param, data, x, y);
         msgQueue.addElement(event);
     }
 

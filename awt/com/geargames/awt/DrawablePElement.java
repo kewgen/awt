@@ -47,19 +47,14 @@ public class DrawablePElement extends Drawable {
         Region region = element.getTouchRegion();
         int localX = x - getX() + region.getMinX();
         int localY = y - getY() + region.getMinY();
-        if (code == Event.EVENT_TICK) {
-            element.onEvent(code, param, 0, 0);
-            return false;
+        if (dedicated) {
+            dedicated = element.onEvent(code, param, localX, localY);
         } else {
-            if (dedicated) {
+            if (region.isWithIn(localX, localY)) {
                 dedicated = element.onEvent(code, param, localX, localY);
-            } else {
-                if (region.isWithIn(localX, localY)) {
-                    dedicated = element.onEvent(code, param, localX, localY);
-                }
             }
-            return dedicated;
         }
+        return dedicated;
     }
 
     /**

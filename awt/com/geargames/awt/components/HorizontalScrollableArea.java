@@ -56,40 +56,31 @@ public abstract class HorizontalScrollableArea extends ScrollableArea {
     public abstract void drawItem(Graphics graphics, int itemIndex, int x, int y);
 
     /**
-     * Выполнение всех манипуляций на один игровой тик
+     * Обработчик событий экранных касаний и клавиатуры.
      */
     public boolean onEvent(int code, int param, int x, int y) {
-        if (getMotionListener() == null) {
+        if (isStuck() || getMotionListener() == null) {
             return false;
         }
-        if (code == Event.EVENT_TICK) {
-            getMotionListener().onTick();
-            return false;
-        } else {
-            if (!isStuck()) {
-                if (getTouchRegion().isWithIn(x, y)) {
-                    switch (code) {
-                        case Event.EVENT_KEY_RELEASED:
-                        case Event.EVENT_TOUCH_RELEASED:
-                            getMotionListener().onRelease(x);
-                            break;
-                        case Event.EVENT_KEY_REPEATED:
-                        case Event.EVENT_TOUCH_MOVED:
-                            getMotionListener().onMove(x);
-                            break;
-                        case Event.EVENT_KEY_PRESSED:
-                        case Event.EVENT_TOUCH_PRESSED:
-                            getMotionListener().onTouch(x);
-                            break;
-                    }
-                    return true;
-                } else {
-                    getMotionListener().onOutOfBounds();
-                    return false;
-                }
-            } else {
-                return false;
+        if (getTouchRegion().isWithIn(x, y)) {
+            switch (code) {
+//                case Event.EVENT_KEY_PRESSED:
+                case Event.EVENT_TOUCH_PRESSED:
+                    getMotionListener().onTouch(x);
+                    break;
+//                case Event.EVENT_KEY_REPEATED:
+                case Event.EVENT_TOUCH_MOVED:
+                    getMotionListener().onMove(x);
+                    break;
+//                case Event.EVENT_KEY_RELEASED:
+                case Event.EVENT_TOUCH_RELEASED:
+                    getMotionListener().onRelease(x);
+                    break;
             }
+            return true;
+        } else {
+            getMotionListener().onOutOfBounds();
+            return false;
         }
     }
 

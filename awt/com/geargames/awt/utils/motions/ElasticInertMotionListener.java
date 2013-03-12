@@ -1,21 +1,20 @@
 package com.geargames.awt.utils.motions;
 
-import com.geargames.ConsoleDebug;
 import com.geargames.awt.Drawable;
+import com.geargames.awt.timers.OnTimerListener;
+import com.geargames.awt.timers.TimerManager;
 import com.geargames.awt.utils.MotionListener;
-import com.geargames.common.*;
 import com.geargames.common.String;
 import com.geargames.common.env.SystemEnvironment;
 
 /**
- * user: Mikhail V. Kutuzov
- * date: 11.12.11
- * time: 16:14
+ * user: mikhail v. kutuzov
+ * date: 11.12.11 16:14
  * Инертный MotionListener c доводчиком позиции.
  *
  * @see InertMotionListener
  */
-public class ElasticInertMotionListener extends MotionListener {
+public class ElasticInertMotionListener extends MotionListener implements OnTimerListener {
     private int divider;
     private int accelerator;
     private int window;
@@ -32,15 +31,19 @@ public class ElasticInertMotionListener extends MotionListener {
     private int backSpeed;
     private boolean released;
 
+    private int timerId;
+
     public ElasticInertMotionListener() {
         divider = 100;
         accelerator = 2;
         inertness = 110;
+        timerId = TimerManager.NULL_TIMER;
     }
 
     public void create(int top, int down, int window, int itemSize) {
         if (inertness < divider) {
-            throw new IllegalArgumentException();
+            inertness = divider;
+            SystemEnvironment.getInstance().getDebug().warning(String.valueOfC("Inertness is too tiny"));
         }
         this.top = top;
         this.down = down;
@@ -52,21 +55,21 @@ public class ElasticInertMotionListener extends MotionListener {
     }
 
     public void onTouch(int y) {
-        released = false;
+        endMoving();
         value = y;
         move = 0;
         storedMove = 0;
         draggingTicks = 0;
         if (Drawable.DEBUG) {
-            SystemEnvironment.getInstance().getDebug().trace(com.geargames.common.String.valueOfC("TOUCH:").concat(y));
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("TOUCH: ").concat(y));
         }
     }
 
     public void onMove(int y) {
         if (!released) {
             move = y - value;
-            position += move * accelerator;
             storedMove += move;
+            position += move * accelerator;
             value = y;
             if (Drawable.DEBUG) {
                 SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("MOVE: ").concat(move));
@@ -75,21 +78,47 @@ public class ElasticInertMotionListener extends MotionListener {
         }
     }
 
-    public void onTick() {
-        if (released) {
+    private void startMoving() {
+        if (Drawable.DEBUG) {
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("startMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
+        }
+        released = true;
+        if (timerId != TimerManager.NULL_TIMER) {
+            TimerManager.setTickTimer(timerId, this);
+        } else {
+            timerId = TimerManager.setTickTimer(this);
+        }
+    }
+
+    private void endMoving() {
+        if (Drawable.DEBUG) {
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("endMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
+        }
+        released = false;
+        if (timerId != TimerManager.NULL_TIMER) {
+            TimerManager.killTimer(timerId);
+            timerId = TimerManager.NULL_TIMER;
+        }
+    }
+
+    public void onTimer(int timerId) {
+        if (timerId != this.timerId) {
+            return;
+        }
+        if (released) { //todo: это условие обязательно?
             if (storedMove != 0) {
                 if (position + window <= down || position >= top) {
                     storedMove = 0;
                 } else {
                     storedMove *= divider;
                     storedMove /= inertness;
-                    if (draggingTicks != 0) {
+                    if (draggingTicks != 0) { //todo: это зачем?
                         storedMove /= draggingTicks;
                     }
                 }
                 position += storedMove * accelerator;
                 if (Drawable.DEBUG) {
-                    SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("INERCIA = ").concat(storedMove));
+                    SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("INERTIA = ").concat(storedMove));
                     SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("POSITION = ").concat(position));
                 }
             } else {
@@ -106,12 +135,15 @@ public class ElasticInertMotionListener extends MotionListener {
                         } else {
                             position += margin > backSpeed ? backSpeed : margin;
                         }
+                    } else {
+                        endMoving(); //todo: Только здесь останавливать таймер?
                     }
                 }
             }
             draggingTicks = 0;
         } else {
             draggingTicks++;
+            endMoving(); //todo: Здесь надо останавливать таймер?
         }
     }
 
@@ -131,14 +163,14 @@ public class ElasticInertMotionListener extends MotionListener {
         if (Drawable.DEBUG) {
             SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("RELEASED"));
         }
-        released = true;
+        startMoving();
     }
 
     public void onOutOfBounds() {
         if (Drawable.DEBUG) {
             SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("OUT OF BOUNDS"));
         }
-        released = true;
+        startMoving();
     }
 
     public void onClick(int number) {
@@ -171,4 +203,5 @@ public class ElasticInertMotionListener extends MotionListener {
     public void setInertness(int inertness) {
         this.inertness = inertness;
     }
+
 }

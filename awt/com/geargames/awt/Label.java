@@ -31,7 +31,7 @@ public class Label extends Drawable {
         this.color = color;
     }
 
-    public com.geargames.common.String getData() {
+    public String getData() {
         return data;
     }
 
@@ -62,4 +62,5 @@ public class Label extends Drawable {
     public int getWidth() {
         return 0;
     }
+
 }

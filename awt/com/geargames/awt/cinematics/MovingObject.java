@@ -2,8 +2,10 @@ package com.geargames.awt.cinematics;
 
 import com.geargames.ConsoleDebug;
 import com.geargames.awt.Drawable;
-import com.geargames.common.*;
-import com.geargames.common.env.SystemEnvironment;
+import com.geargames.awt.timers.OnTimerListener;
+import com.geargames.awt.timers.TimerManager;
+import com.geargames.common.Graphics;
+import com.geargames.common.String;import com.geargames.common.env.SystemEnvironment;
 
 import java.util.Vector;
 
@@ -11,19 +13,24 @@ import java.util.Vector;
  * user: Mikhail V. Kutuzov
  * date: 04.12.11
  * time: 9:34
- * Класс движущийся объект, является расширением класса Drawable, что позволяет ему быть нарисованным на Graphics
- * (на самом деле он отдаёт право быть прорисованным некоторому внутреннему объекту,который возвращается вызовом
- * getDrawable(), ему же делегируются все вызовы характерные для Drawable).
- * Движущийся объект представяет собой совокупность движущейся точки и  рисунка который в этой точке рисуется.
+ * Класс движущийся объект, является расширением класса Drawable, что позволяет ему быть нарисованным на Graphics.
+ * На самом деле он отдаёт право быть прорисованным некоторому внутреннему объекту, который возвращается вызовом
+ * getDrawable(), ему же делегируются все вызовы характерные для Drawable.
+ * Движущийся объект представяет собой совокупность движущейся точки и рисунка, который в этой точке рисуется.
  * Внутри содержится вектор точек, через которые объект пролетел, для прорисовки линии полёта в случае отладки.
  * Вектор этот будет создан только в режиме отладки.
  */
-public abstract class MovingObject extends Drawable {
+public abstract class MovingObject extends Drawable implements OnTimerListener {
     private Vector points;
+
+    private int timerId;
 
     public MovingObject() {
         points = new Vector();
+        timerId = TimerManager.NULL_TIMER;
     }
+
+    //todo: Добавить функционал стартующий и останавливающий таймер!
 
     private void addDots() {
         points.addElement(getPoint().copy());
@@ -61,33 +68,27 @@ public abstract class MovingObject extends Drawable {
     public abstract void onFlyEnd();
 
     /**
-     * Здесь, раз за тик, пересчитывается значение текущей координаты и
-     * в случае отладки, добавляется новое значение в список пройденных точек.
-     *
-     * @param code
-     * @param param
-     * @param x
-     * @param y
+     * Здесь, раз за тик, пересчитывается значение текущей координаты и в случае отладки, добавляется новое значение в
+     * список пройденных точек.
      */
-    public boolean onEvent(int code, int param, int x, int y) {
-        switch (code) {
-            case Event.EVENT_TICK:
-                if (isInitiated()) {
-                    if (!getFinishAdviser().isFinished()) {
-                        if (Drawable.DEBUG) {
-                            addDots();
-                        }
-                        getFinishAdviser().onTick();
-                        if (Drawable.DEBUG) {
-                            SystemEnvironment.getInstance().getDebug().trace(com.geargames.common.String.valueOfI((int) getPoint().getX()).concat(" ").concatI((int) getPoint().getY()));
-                        }
-                        getPoint().move();
-                    } else {
-                        onFlyEnd();
-                    }
-                }
+    public void onTimer(int timerId) {
+        if (timerId != this.timerId) {
+            return;
         }
-        return false;
+        if (isInitiated()) {
+            if (!getFinishAdviser().isFinished()) {
+                if (Drawable.DEBUG) {
+                    addDots();
+                }
+                getFinishAdviser().onTick();
+                if (Drawable.DEBUG) {
+                    SystemEnvironment.getInstance().getDebug().trace(String.valueOfI((int) getPoint().getX()).concat(" ").concatI((int) getPoint().getY()));
+                }
+                getPoint().move();
+            } else {
+                onFlyEnd();
+            }
+        }
     }
 
     /**
@@ -122,4 +123,5 @@ public abstract class MovingObject extends Drawable {
      * @return
      */
     public abstract CMovingPoint getPoint();
+
 }

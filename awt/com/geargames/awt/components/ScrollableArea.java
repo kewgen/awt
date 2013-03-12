@@ -75,7 +75,7 @@ public abstract class ScrollableArea extends PElement {
     }
 
     /**
-     * Вернет true, если прокрутка списка с помощью касаний запрещена
+     * Вернет true, если прокрутка списка с помощью касаний запрещена.
      *
      * @return
      */

@@ -3,16 +3,16 @@ package com.geargames.awt;
 import com.geargames.common.Graphics;
 
 /**
- * users: Mikhail V. Kutuzov, abarakov
- * date: 20.11.11
- * Базовый класс для сущностей, которые могут быть нарисованы на экране.
+ * Базовый класс для объектов, которые могут быть нарисованы.
+ * Users: Mikhail V. Kutuzov, abarakov
+ * Date: 20.11.11
  */
 public abstract class Drawable extends Eventable {
 
-    public static boolean DEBUG = true; // Здесь флаг менять нельзя, меняем из своего проекта!
+    public static boolean DEBUG = true; // Здесь флаг менять нельзя, меняем аналогичный флаг в своем проекте!
 
     /**
-     * Нарисовать элемент на экране в точке (x, y).
+     * Нарисовать объект на графическом контексте в его собственной локальной системе координат.
      *
      * @param graphics графический контекст, на котором должен быть нарисован объект.
      */
