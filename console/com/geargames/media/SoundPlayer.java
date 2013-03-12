@@ -1,6 +1,7 @@
 package com.geargames.media;
 
-import com.geargames.Debug;
+import com.geargames.ConsoleDebug;
+import com.geargames.common.env.SystemEnvironment;
 import com.geargames.common.media.Player;
 import com.geargames.common.util.ArrayByte;
 import javazoom.jl.player.JavaSoundAudioDevice;
@@ -43,7 +44,7 @@ public class SoundPlayer implements Runnable, Player {
         taskToStop = false;
         isPlayed = false;
         setLoopCount(1);
-        Debug.trace("Sound created." + toString());
+        SystemEnvironment.getInstance().getDebug().trace(com.geargames.common.String.valueOfC("Sound created." + toString()));
     }
 
     public void play() {
@@ -107,11 +108,11 @@ public class SoundPlayer implements Runnable, Player {
                 is.close();
             }
         } catch (UnsupportedAudioFileException e) {
-            Debug.trace(toString());
-            Debug.logEx(e);
+            SystemEnvironment.getInstance().getDebug().trace(com.geargames.common.String.valueOfC(toString()));
+            ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).logEx(e);
             return;
         } catch (IOException e) {
-            Debug.logEx(e);
+            ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).logEx(e);
             return;
         }
 
@@ -123,14 +124,13 @@ public class SoundPlayer implements Runnable, Player {
             auline = (SourceDataLine) AudioSystem.getLine(info);
             auline.open(format);
         } catch (LineUnavailableException e) {
-            Debug.logEx(e);
+            ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).logEx(e);
             return;
         } catch (IllegalArgumentException e) {
-            Debug.logEx(e);
-            Debug.trace(e.toString() + "\n" + toString());
+            ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).logEx(e);
             return;
         } catch (Exception e) {
-            Debug.logEx(e);
+            ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).logEx(e);
             return;
         }
 
@@ -155,7 +155,7 @@ public class SoundPlayer implements Runnable, Player {
             }
             audioInputStream.close();
         } catch (IOException e) {
-            Debug.logEx(e);
+            ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).logEx(e);
         } finally {
             auline.drain();
             auline.close();
@@ -182,7 +182,7 @@ public class SoundPlayer implements Runnable, Player {
             is.close();
 
         } catch (Exception e) {
-            Debug.logEx(e);
+            ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).logEx(e);
         }
             isPlayed = false;
     }

@@ -1,11 +1,11 @@
 package com.geargames.awt.utils.motions;
 
-import com.geargames.Debug;
 import com.geargames.awt.Drawable;
 import com.geargames.awt.timers.OnTimerListener;
 import com.geargames.awt.timers.TimerManager;
 import com.geargames.awt.utils.MotionListener;
 import com.geargames.common.String;
+import com.geargames.common.env.SystemEnvironment;
 
 /**
  * user: mikhail v. kutuzov
@@ -43,7 +43,7 @@ public class ElasticInertMotionListener extends MotionListener implements OnTime
     public void create(int top, int down, int window, int itemSize) {
         if (inertness < divider) {
             inertness = divider;
-            Debug.logEx(new IllegalArgumentException());
+            SystemEnvironment.getInstance().getDebug().warning(String.valueOfC("Inertness is too tiny"));
         }
         this.top = top;
         this.down = down;
@@ -61,7 +61,7 @@ public class ElasticInertMotionListener extends MotionListener implements OnTime
         storedMove = 0;
         draggingTicks = 0;
         if (Drawable.DEBUG) {
-            Debug.trace("TOUCH:" + y);
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("TOUCH: ").concat(y));
         }
     }
 
@@ -72,15 +72,15 @@ public class ElasticInertMotionListener extends MotionListener implements OnTime
             position += move * accelerator;
             value = y;
             if (Drawable.DEBUG) {
-                Debug.trace("MOVE: " + move);
-                Debug.trace("POSITION: " + position);
+                SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("MOVE: ").concat(move));
+                SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("POSITION: ").concat(position));
             }
         }
     }
 
     private void startMoving() {
         if (Drawable.DEBUG) {
-            Debug.log(String.valueOfC("startMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("startMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
         }
         released = true;
         if (timerId != TimerManager.NULL_TIMER) {
@@ -92,7 +92,7 @@ public class ElasticInertMotionListener extends MotionListener implements OnTime
 
     private void endMoving() {
         if (Drawable.DEBUG) {
-            Debug.log(String.valueOfC("endMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("endMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
         }
         released = false;
         if (timerId != TimerManager.NULL_TIMER) {
@@ -118,8 +118,8 @@ public class ElasticInertMotionListener extends MotionListener implements OnTime
                 }
                 position += storedMove * accelerator;
                 if (Drawable.DEBUG) {
-                    Debug.trace("INERTIA = " + storedMove);
-                    Debug.trace("POSITION = " + position);
+                    SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("INERTIA = ").concat(storedMove));
+                    SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("POSITION = ").concat(position));
                 }
             } else {
                 if (position > top) {
@@ -161,14 +161,14 @@ public class ElasticInertMotionListener extends MotionListener implements OnTime
 
     public void onRelease(int y) {
         if (Drawable.DEBUG) {
-            Debug.trace("RELEASED");
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("RELEASED"));
         }
         startMoving();
     }
 
     public void onOutOfBounds() {
         if (Drawable.DEBUG) {
-            Debug.trace("OUT OF BOUNDS");
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("OUT OF BOUNDS"));
         }
         startMoving();
     }

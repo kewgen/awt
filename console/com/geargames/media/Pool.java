@@ -1,8 +1,9 @@
 package com.geargames.media;
 
-import com.geargames.Debug;
+import com.geargames.ConsoleDebug;
 import com.geargames.Recorder;
 import com.geargames.common.String;
+import com.geargames.common.env.SystemEnvironment;
 import com.geargames.common.util.ArrayByte;
 
 import java.util.Hashtable;
@@ -27,7 +28,7 @@ public class Pool implements com.geargames.common.media.Pool {
 
     public void play(int id, int volume, int loopCount) {
         if (list.get(id) == null) {
-            Debug.trace("Sound not found, id:" + id);
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("Sound not found, id:").concat(id));
             return;
         }
         list.get(id).setVolume(volume);

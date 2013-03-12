@@ -54,8 +54,9 @@ public abstract class Logger {
     public static void log(String str) {
         log_except.log(Level.INFO, str);
         try {
-            //encode для запуска из батника
-            if (ENCODE_CP866) str = new String(str.getBytes("cp866"));
+            if (ENCODE_CP866) {
+                str = new String(str.getBytes("cp866"));
+            }
             System.out.println(str);
         } catch (Exception e) {
             e.printStackTrace();

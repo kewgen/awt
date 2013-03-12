@@ -1,10 +1,11 @@
 package com.geargames.awt.cinematics;
 
-import com.geargames.Debug;
+import com.geargames.ConsoleDebug;
 import com.geargames.awt.Drawable;
 import com.geargames.awt.timers.OnTimerListener;
 import com.geargames.awt.timers.TimerManager;
 import com.geargames.common.Graphics;
+import com.geargames.common.String;import com.geargames.common.env.SystemEnvironment;
 
 import java.util.Vector;
 
@@ -81,7 +82,7 @@ public abstract class MovingObject extends Drawable implements OnTimerListener {
                 }
                 getFinishAdviser().onTick();
                 if (Drawable.DEBUG) {
-                    Debug.trace((int) getPoint().getX() + " " + (int) getPoint().getY());
+                    SystemEnvironment.getInstance().getDebug().trace(String.valueOfI((int) getPoint().getX()).concat(" ").concatI((int) getPoint().getY()));
                 }
                 getPoint().move();
             } else {

@@ -2,6 +2,7 @@ package com.geargames.common.packer;
 
 import com.geargames.common.Graphics;
 import com.geargames.common.Image;
+import com.geargames.common.Render;
 
 /**
  * Created with IntelliJ IDEA.
@@ -54,14 +55,6 @@ public class PFrame extends Prototype {
         return affine;
     }
 
-    public int getBid() {
-        return bid;
-    }
-
-    public void setBid(int bid) {
-        this.bid = bid;
-    }
-
     public Image getImage() {
         return image;
     }
@@ -101,7 +94,6 @@ public class PFrame extends Prototype {
     private Image image;
     protected PAffine affine;//возможность навешивать аффиные преобразования, по умолчанию null
 
-    private int bid;//идентификатор для буферизации, позволяет вводить дополнительные фреймы
     private int srcDX;//дополнительные смещения на источнике фрейма - имейдже, позволяет рендить тот же фрейм из других координат
     private int srcDY;
 }

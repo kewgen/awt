@@ -40,7 +40,6 @@ public class PGradualSpinButton extends PTouchButton implements OnTimerListener 
 
     public boolean onEvent(int code, int param, int x, int y) {
         if (code == Event.EVENT_TOUCH_PRESSED) {
-//            Debug.trace("PGradualSpinButton: Event = EVENT_TOUCH_PRESSED");
             tickCounter = 0;
             if (timerId != TimerManager.NULL_TIMER) {
                 TimerManager.setSingleTimer(timerId, REPEAT_DELAY, this);
@@ -48,10 +47,8 @@ public class PGradualSpinButton extends PTouchButton implements OnTimerListener 
                 timerId = TimerManager.setSingleTimer(REPEAT_DELAY, this);
             }
             parentBox.setValue(parentBox.getValue() + step);
-//            pulse(step);
         } else
         if (code == Event.EVENT_TOUCH_RELEASED) {
-//            Debug.trace("PGradualSpinButton: Event = EVENT_TOUCH_RELEASED");
             if (timerId != TimerManager.NULL_TIMER) {
                 TimerManager.killTimer(timerId);
                 timerId = TimerManager.NULL_TIMER;
@@ -77,18 +74,7 @@ public class PGradualSpinButton extends PTouchButton implements OnTimerListener 
                 }
                 parentBox.setValue(parentBox.getValue() + step);
             }
-//            Debug.trace("value: " + parentBox.getValue());
-//            pulse(scalableStep);
         }
-    }
-
-//    protected void pulse(int scalableStep) {
-//        parentBox.setValue(parentBox.getValue() + scalableStep);
-//    }
-
-    public void onClick() {
-//        pulse(step);
-//        tickCounter = 0;
     }
 
 }

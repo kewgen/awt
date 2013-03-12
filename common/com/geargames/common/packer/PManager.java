@@ -1,8 +1,6 @@
 package com.geargames.common.packer;
 
-import com.geargames.common.Graphics;
-import com.geargames.common.Image;
-import com.geargames.common.Port;
+import com.geargames.common.*;
 import com.geargames.common.String;
 import com.geargames.common.util.ArrayByte;
 import com.geargames.common.util.ArrayIntegerDual;
@@ -68,7 +66,7 @@ public abstract class PManager implements com.geargames.common.Render {
 
 
     protected void createPrototypes() {
-       //создаем перечень всех прототипов
+        //создаем перечень всех прототипов
         int count = arrayDual.length(FR_X);
         frames = new ArrayList(count);
         for (int i = 0; i < count; i++) {
@@ -316,7 +314,7 @@ public abstract class PManager implements com.geargames.common.Render {
                     dis.read(arrayByte.getArray(), 0, len);
                     for (int a = 0; a < len; a++) {
                         arrayDual.set(i, a, arrayByte.get(a));
-                        if (DEBUG && a < 100){
+                        if (DEBUG && a < 100) {
                             str = str.concatI(arrayDual.get(i, a)).concatC(",");
                         }
                     }
@@ -326,7 +324,7 @@ public abstract class PManager implements com.geargames.common.Render {
                     dis.read(arrayByte.getArray(), 0, len * 2);
                     for (int a = 0; a < len; a++) {
                         arrayDual.set(i, a, ((arrayByte.get(a * 2) << 8) | (arrayByte.get(a * 2 + 1) & 0xff)));
-                        if (DEBUG && a < 100){
+                        if (DEBUG && a < 100) {
                             str = str.concatI(arrayDual.get(i, a)).concatC(",");
                         }
                     }
@@ -357,13 +355,12 @@ public abstract class PManager implements com.geargames.common.Render {
     }
 
 
-
     public void loadImagesFromStream(Graphics graphics, InputStream is, int count) {//инициализация имиджей из пакетов
         try {
             DataInputStream dis = new DataInputStream(is);
             readImages(dis, graphics, count, 0);
             dis.close();
-            dis = null;//for ObjC - autoreleased
+            dis = null;//for ObjC - auto released
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -405,20 +402,24 @@ public abstract class PManager implements com.geargames.common.Render {
             images.set(img_cur, image);
             System.out.println(String.valueOfC("Image created(").concatI(img_cur).concatC(")"));
         }
-        if (Port.OPEN_GL) graphics.addTexture((Image) images.get(img_cur));
+        if (Port.OPEN_GL) {
+            graphics.addTexture((Image) images.get(img_cur));
+        }
     }
 
     private void updateFrames() {
         //цепляем картинки к фреймам
         int count = frames.size();
-        for (int p = 0; p < count; p++) {
-            PFrame frame = (PFrame) frames.get(p);
-            int imageID = arrayDual.get(FR_IMAGE_ID, p);
-            if (imageID >= IMG_COUNT) continue;
-            frame.setImage((Image)images.get(imageID));
-            frame.setBid(p);
-            frame.setPid(p);
+        for (int i = 0; i < count; i++) {
+            PFrame frame = (PFrame) frames.get(i);
+            int imageID = arrayDual.get(FR_IMAGE_ID, i);
+            if (imageID >= IMG_COUNT) {
+                continue;
+            }
+            frame.setImage((Image) images.get(imageID));
+            frame.setPid(i);
             frame.setTransform(FR_TRANSFORM);
+            frame.type = Render.T_FRAME;
         }
 
     }
@@ -449,33 +450,33 @@ public abstract class PManager implements com.geargames.common.Render {
     public abstract void create();
 
     public PObject getObject(int pid) {
-        return (PObject)objects.get(pid);
+        return (PObject) objects.get(pid);
     }
 
     public PUnitScript getUnitScript(int pid) {
-        return (PUnitScript)unitScripts.get(pid);
+        return (PUnitScript) unitScripts.get(pid);
     }
 
     public PUnit getUnit(int pid) {
-        return (PUnit)units.get(pid);
+        return (PUnit) units.get(pid);
     }
 
     public PAnimation getAnimation(int pid) {
-        return (PAnimation)animations.get(pid);
+        return (PAnimation) animations.get(pid);
     }
 
     public PAffine getAffine(int pid) {
-        return (PAffine)affines.get(pid);
+        return (PAffine) affines.get(pid);
     }
 
     public PSprite getSprite(int pid) {
-        return (PSprite)sprites.get(pid);
+        return (PSprite) sprites.get(pid);
     }
 
     public PFrame getFrame(int pid) {
-        if(pid < frames.size()){
-            return (PFrame)frames.get(pid);
-        }else{
+        if (pid < frames.size()) {
+            return (PFrame) frames.get(pid);
+        } else {
             return unresolvedFrameManger.getFrame(pid);
         }
     }

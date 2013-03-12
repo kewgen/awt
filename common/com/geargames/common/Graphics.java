@@ -1,6 +1,5 @@
 package com.geargames.common;
 
-import com.geargames.common.packer.PAffine;
 import com.geargames.common.packer.PFont;
 import com.geargames.common.packer.PFrame;
 import com.geargames.common.util.ArrayChar;
@@ -24,13 +23,11 @@ public interface Graphics {
     int SOLID    = 7;
     int DOTTED   = 8;
 
-    void drawImage(Image image, int x, int y, int anchor);
+    void drawImage(Image image, int x, int y);
 
     void drawString(String string, int x, int y, int anchor);
 
     void drawSubstring(String string, int position, int length, int x, int y, int anchor);
-
-    void drawRegion(Image image, int src_x, int src_y, int w, int h, int dst_x, int dst_y, PAffine affine);
 
     public void drawFrame(PFrame frame, int dst_x, int dst_y);
 

@@ -1,11 +1,11 @@
 package com.geargames.awt.utils.motions;
 
-import com.geargames.Debug;
 import com.geargames.awt.Drawable;
 import com.geargames.awt.timers.OnTimerListener;
 import com.geargames.awt.timers.TimerManager;
 import com.geargames.awt.utils.MotionListener;
 import com.geargames.common.String;
+import com.geargames.common.env.SystemEnvironment;
 
 /**
  * Users: mikhail v. kutuzov, abarakov
@@ -47,7 +47,8 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
 
     public void create(int center, int itemOffset, int window, int itemSize) {
         if (inertness < divider) {
-            throw new IllegalArgumentException();
+            inertness = divider;
+            SystemEnvironment.getInstance().getDebug().warning(String.valueOfC("Inertness is too tiny"));
         }
 
         this.window = window;
@@ -71,7 +72,7 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
         storedMove = 0;
         draggingTicks = 0;
         if (Drawable.DEBUG) {
-            Debug.trace("TOUCH:" + y);
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("TOUCH: ").concatI(y));
         }
     }
 
@@ -83,15 +84,15 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
             position += move * accelerator;
             value = y;
             if (Drawable.DEBUG) {
-                Debug.trace("MOVE: " + move);
-                Debug.trace("POSITION: " + position);
+                SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("MOVE: ").concatI(move));
+                SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("POSITION: ").concatI(position));
             }
         }
     }
 
     private void startMoving() {
         if (Drawable.DEBUG) {
-            Debug.log(String.valueOfC("startMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("startMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
         }
         released = true;
         if (timerId != TimerManager.NULL_TIMER) {
@@ -103,7 +104,7 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
 
     private void endMoving() {
         if (Drawable.DEBUG) {
-            Debug.log(String.valueOfC("endMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("endMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
         }
         released = false;
         if (timerId != TimerManager.NULL_TIMER) {
@@ -129,8 +130,8 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
                 }
                 position += storedMove * accelerator;
                 if (Drawable.DEBUG) {
-                    Debug.trace("INERTIA = " + storedMove);
-                    Debug.trace("POSITION = " + position);
+                    SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("INERTIA = ").concatI(storedMove));
+                    SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("POSITION = ").concatI(position));
                 }
             } else {
                 if (relativeClickedPosition == -1) {
@@ -195,14 +196,14 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
 
     public void onRelease(int y) {
         if (Drawable.DEBUG) {
-            Debug.trace("RELEASED");
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("RELEASED"));
         }
         startMoving();
     }
 
     public void onOutOfBounds() {
         if (Drawable.DEBUG) {
-            Debug.trace("OUT OF BOUNDS");
+            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("OUT OF BOUNDS"));
         }
         startMoving();
     }
@@ -211,11 +212,11 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
         relativeClickedPosition = number * itemSize;
         if (!instinctPosition) {
             if (Drawable.DEBUG) {
-                Debug.trace("" + number);
-                Debug.trace("" + relativeClickedPosition + " " + position);
-                Debug.trace("" + position + " + " + window + " = ");
-                Debug.trace("" + (position + window - itemDiff));
-                Debug.trace("" + center);
+                SystemEnvironment.getInstance().getDebug().trace(String.valueOfI(number));
+                SystemEnvironment.getInstance().getDebug().trace(String.valueOfI(relativeClickedPosition).concatC(" ").concatI(position));
+                SystemEnvironment.getInstance().getDebug().trace(String.valueOfI(position).concatC(" ").concatI(window));
+                SystemEnvironment.getInstance().getDebug().trace(String.valueOfI(position + window - itemDiff));
+                SystemEnvironment.getInstance().getDebug().trace(String.valueOfI(center));
             }
         } else {
             position = center - relativeClickedPosition;
