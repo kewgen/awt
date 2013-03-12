@@ -1,7 +1,7 @@
 package com.geargames.awt.timers;
 
 import com.geargames.ConsoleDebug;
-import com.geargames.awt.AWTObject;
+import com.geargames.awt.Eventable;
 import com.geargames.common.env.SystemEnvironment;
 import com.geargames.common.util.ArrayList;
 import com.geargames.common.util.HashMap;
@@ -37,17 +37,17 @@ import java.util.Random;
  */
 public class TimerManager {
 
-    private final static boolean DEBUG       = false;
-    private final static boolean STACK_TRACE = false;
+    private static final boolean DEBUG       = false;
+    private static final boolean STACK_TRACE = false;
 
-    public final static int DINAMIC_TIMER_ID_MIN = 20001;
-    public final static int DINAMIC_TIMER_ID_MAX = Integer.MAX_VALUE;
+    public static final int DINAMIC_TIMER_ID_MIN = 20001;
+    public static final int DINAMIC_TIMER_ID_MAX = Integer.MAX_VALUE;
 
-//    private final static int TIMER_OPTIMIZE_SUBTRACTOR = 864000000; // 10 дней в миллисекундах = 10*24*60*60*1000
+//    private static final int TIMER_OPTIMIZE_SUBTRACTOR = 864000000; // 10 дней в миллисекундах = 10*24*60*60*1000
 
-    private final static byte UPDATE_STATUS_NONE        = 0; // метод update не выполняется
-    private final static byte TICK_TIMERS_UPDATE_STATUS = 1; // в методе update апдейтятся tick-таймеры
-    private final static byte TIMERS_UPDATE_STATUS      = 2; // в методе update апдейтятся таймеры
+    private static final byte UPDATE_STATUS_NONE        = 0; // метод update не выполняется
+    private static final byte TICK_TIMERS_UPDATE_STATUS = 1; // в методе update апдейтятся tick-таймеры
+    private static final byte TIMERS_UPDATE_STATUS      = 2; // в методе update апдейтятся таймеры
 
 //    private static TimerManager instance;
     private static Random random = null; //todo: Думается, что рандом-генератор должен быть один на всю программу
@@ -131,15 +131,17 @@ public class TimerManager {
 //        } while (timerIds.containsKey(id));
 //        return id;
 
+        if (nextDinamicId < 0 || nextDinamicId > DINAMIC_TIMER_ID_MAX) {
+            nextDinamicId = DINAMIC_TIMER_ID_MIN;
+        }
         while (timerIds.containsKey(nextDinamicId)) {
-            nextDinamicId++;
+            if (nextDinamicId == DINAMIC_TIMER_ID_MAX) {
+                nextDinamicId = DINAMIC_TIMER_ID_MIN;
+            } else {
+                nextDinamicId++;
+            }
         }
-        int id = nextDinamicId;
-        nextDinamicId++;
-        if (id < 0 || id > DINAMIC_TIMER_ID_MAX) {
-            SystemEnvironment.getInstance().getDebug().warning(String.valueOfC("Id out of range (id=" + nextDinamicId + ")"));
-        }
-        return id;
+        return nextDinamicId++;
     }
 
     // ----- Создание и удаление таймеров ------------------------------------------------------------------------------
@@ -158,7 +160,7 @@ public class TimerManager {
      * @return
      */
     // createTimer
-    private static int setTimer(int timerId, int interval, byte timerType, AWTObject callBackElement) {
+    private static int setTimer(int timerId, int interval, byte timerType, Eventable callBackElement) {
         if (STACK_TRACE) {
             SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("TimerManager.setTimer").concat(
             String.valueOfC("timer id = ").concatI(timerId)).concat(
@@ -192,7 +194,7 @@ public class TimerManager {
      * @param callBackElement
      * @return
      */
-    public static int setSingleTimer(int timerId, int interval, AWTObject callBackElement) {
+    public static int setSingleTimer(int timerId, int interval, Eventable callBackElement) {
         return setTimer(timerId, interval, Timer.SINGLE_TIMER_TYPE, callBackElement);
     }
 
@@ -201,7 +203,7 @@ public class TimerManager {
      * @param interval
      * @return
      */
-    public static int setSingleTimer(int interval, AWTObject callBackElement) {
+    public static int setSingleTimer(int interval, Eventable callBackElement) {
         return setTimer(generateTimerId(), interval, Timer.SINGLE_TIMER_TYPE, callBackElement);
     }
 
@@ -213,7 +215,7 @@ public class TimerManager {
      * @return
      */
     // setMultipleTimer
-    public static int setPeriodicTimer(int timerId, int interval, AWTObject callBackElement) {
+    public static int setPeriodicTimer(int timerId, int interval, Eventable callBackElement) {
         return setTimer(timerId, interval, Timer.PERIODIC_TIMER_TYPE, callBackElement);
     }
 
@@ -222,7 +224,7 @@ public class TimerManager {
      * @param interval
      * @return
      */
-    public static int setPeriodicTimer(int interval, AWTObject callBackElement) {
+    public static int setPeriodicTimer(int interval, Eventable callBackElement) {
         return setTimer(generateTimerId(), interval, Timer.PERIODIC_TIMER_TYPE, callBackElement);
     }
 
@@ -233,7 +235,7 @@ public class TimerManager {
      * @return
      */
     // setMultipleTimer
-    public static int setTickTimer(int timerId, AWTObject callBackElement) {
+    public static int setTickTimer(int timerId, Eventable callBackElement) {
         return setTimer(timerId, 0, Timer.TICK_TIMER_TYPE, callBackElement);
     }
 
@@ -242,7 +244,7 @@ public class TimerManager {
      * будет автоматически присвоен самим менеджером.
      * @return
      */
-    public static int setTickTimer(AWTObject callBackElement) {
+    public static int setTickTimer(Eventable callBackElement) {
         return setTimer(generateTimerId(), 0, Timer.TICK_TIMER_TYPE, callBackElement);
     }
 

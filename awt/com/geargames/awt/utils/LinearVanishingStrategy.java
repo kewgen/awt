@@ -45,10 +45,6 @@ public class LinearVanishingStrategy extends GraphicsStrategy {
         }
     }
 
-    public boolean event(int code, int param, int x, int y) {
-        return false;
-    }
-
     /**
      * Метод вызывается каждый раз при срабатывании таймера.
      * @param timerId - идентификатор сработавшего таймера, который вызвал данный метод.

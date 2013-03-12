@@ -42,7 +42,7 @@ public abstract class PPanelManager {
      * @param x
      * @param y
      */
-    public void event(int code, int param, int x, int y) {
+    public void onEvent(int code, int param, int x, int y) {
         eventX = x;
         eventY = y;
         if (modal == null) {
@@ -52,8 +52,9 @@ public abstract class PPanelManager {
             }
             int size = callableElements.size();
             for (int i = size - 1; i >= 0; i--) {
+                //todo: если элемент панельки невидим или выключен, то событий он не должен получать
                 Drawable element = (Drawable) callableElements.get(i);
-                if (element.event(code, param, x, y)) {
+                if (element.onEvent(code, param, x, y)) {
                     break;
                 }
             }
@@ -100,6 +101,7 @@ public abstract class PPanelManager {
         }
         int size = drawableElements.size();
         for (int i = 0; i < size; i++) {
+            //todo: если элемент панельки невидим, то и рисовать его не следует
             ((Drawable) drawableElements.get(i)).draw(graphics);
         }
     }

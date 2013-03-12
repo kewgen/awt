@@ -69,7 +69,7 @@ public abstract class MovingObject extends Drawable {
      * @param x
      * @param y
      */
-    public boolean event(int code, int param, int x, int y) {
+    public boolean onEvent(int code, int param, int x, int y) {
         switch (code) {
             case Event.EVENT_TICK:
                 if (isInitiated()) {

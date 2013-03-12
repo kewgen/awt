@@ -34,10 +34,7 @@ public class DrawablePElement extends Drawable {
     }
 
     /**
-     * tick событие:
-     * Транслируется компоненту в любом случае.
-     * touch событие:
-     * Транслируется компоненту прорисовки, если событие попадает на touch область компонента.
+     * Touch события транслируются компоненту, если событие попадает на touch область компонента.
      * Координаты передаются в локальной системе координат этого компонента.
      *
      * @param code
@@ -46,19 +43,19 @@ public class DrawablePElement extends Drawable {
      * @param y
      * @return
      */
-    public boolean event(int code, int param, int x, int y) {
+    public boolean onEvent(int code, int param, int x, int y) {
         Region region = element.getTouchRegion();
         int localX = x - getX() + region.getMinX();
         int localY = y - getY() + region.getMinY();
         if (code == Event.EVENT_TICK) {
-            element.event(code, param, 0, 0);
+            element.onEvent(code, param, 0, 0);
             return false;
         } else {
             if (dedicated) {
-                dedicated = element.event(code, param, localX, localY);
+                dedicated = element.onEvent(code, param, localX, localY);
             } else {
                 if (region.isWithIn(localX, localY)) {
-                    dedicated = element.event(code, param, localX, localY);
+                    dedicated = element.onEvent(code, param, localX, localY);
                 }
             }
             return dedicated;
@@ -77,7 +74,7 @@ public class DrawablePElement extends Drawable {
         Region region = element.getTouchRegion();
         int localX = x - getX() + region.getMinX();
         int localY = y - getY() + region.getMinY();
-        return element.event(code, param, localX, localY);
+        return element.onEvent(code, param, localX, localY);
     }
 
     public int getX() {

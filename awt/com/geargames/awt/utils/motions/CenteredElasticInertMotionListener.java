@@ -11,7 +11,7 @@ import com.geargames.common.env.SystemEnvironment;
  * user: Mikhail V. Kutuzov
  * date: 15.01.12
  * time: 12:54
- * Центрующийся(дискретно позиционируется по пунктам меню), инертный MotionListener с функцией доводчика в позицию.
+ * Центрующийся (дискретно позиционируется по пунктам меню), инертный MotionListener с функцией доводчика в позицию.
  *
  * @see InertMotionListener
  * @see ElasticInertMotionListener

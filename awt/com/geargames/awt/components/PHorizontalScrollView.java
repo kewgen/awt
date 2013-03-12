@@ -91,10 +91,6 @@ public class PHorizontalScrollView extends HorizontalScrollView {
         return touchRegion;
     }
 
-    public boolean isVisible() {
-        return true;
-    }
-
     public void initiate(Graphics graphics) {
         setInitiated(true);
     }

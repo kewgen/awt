@@ -82,9 +82,9 @@ public class Flying extends AcceleratedObject {
         return finishAdviser;
     }
 
-    public boolean event(int code, int param, int x, int y) {
-        super.event(code, param, x, y);
-        return drawable.event(code, param, x, y);
+    public boolean onEvent(int code, int param, int x, int y) {
+        super.onEvent(code, param, x, y);
+        return drawable.onEvent(code, param, x, y);
     }
 
     public void onFlyFinish() {

@@ -43,8 +43,4 @@ public abstract class PObjectElement extends PElement {
         }
     }
 
-    public boolean isVisible() {
-        return true;
-    }
-
 }

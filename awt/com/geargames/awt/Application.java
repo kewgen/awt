@@ -12,16 +12,18 @@ import java.util.Vector;
  */
 public abstract class Application {
 
-    private static Application instance; // appInstance
+    // ----- Instance management ---------------------------------------------------------------------------------------
 
-    // Конструктор
-    protected Application() {
-        instance = this;
-    }
-
-    public static Application getInstance() {
-        return instance;
-    }
+//    private static Application instance; // appInstance
+//
+//    // Конструктор
+//    protected Application() {
+//        instance = this;
+//    }
+//
+//    public static Application getInstance() {
+//        return instance;
+//    }
 
     // ----- Main loop -------------------------------------------------------------------------------------------------
 
@@ -31,7 +33,7 @@ public abstract class Application {
 
     private Vector msgQueue = new Vector(64);
 
-    public void eventAdd(int eventid, int param, Object data) { //todo: Object -> AWTObject
+    public void eventAdd(int eventid, int param, Object data) { //todo: Object -> Eventable
         eventAdd(eventid, param, data, 0, 0);
     }
 
@@ -58,7 +60,7 @@ public abstract class Application {
 //            eventAdd(Event.EVENT_KEY_REPEATED, Manager.getInstance().getPressedKey(), null);
     }
 
-    // ----- Message handlers ------------------------------------------------------------------------------------------
+    // ----- Event handlers --------------------------------------------------------------------------------------------
 
     /**
      * Выполнение всех манипуляций на один игровой тик

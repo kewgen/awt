@@ -9,6 +9,10 @@ import com.geargames.common.packer.PObject;
  * Date: 27.12.12
  */
 public class PGradualSpinButton extends PTouchButton {
+
+    private static final int REPEAT_DELAY    = 500;
+    private static final int REPEAT_INTERVAL = 100;
+
     private PGradualSpinBox parentBox;
     private int step;
     private int tickCounter;
@@ -32,16 +36,16 @@ public class PGradualSpinButton extends PTouchButton {
         this.step = step;
     }
 
-    public boolean event(int code, int param, int x, int y) {
+    public boolean onEvent(int code, int param, int x, int y) {
         if (code == Event.EVENT_TOUCH_PRESSED) {
             tickCounter = 0;
-            timerId = TimerManager.setSingleTimer(500, this);
+            timerId = TimerManager.setSingleTimer(REPEAT_DELAY, this);
             parentBox.setValue(parentBox.getValue() + step);
         } else
         if (code == Event.EVENT_TOUCH_RELEASED) {
             TimerManager.killTimer(timerId);
         }
-        return super.event(code, param, x, y);
+        return super.onEvent(code, param, x, y);
     }
 
     /**
@@ -57,14 +61,14 @@ public class PGradualSpinButton extends PTouchButton {
                 parentBox.setValue(value);
             } else {
                 if (tickCounter == 1) {
-                    TimerManager.setPeriodicTimer(this.timerId, 100, this);
+                    TimerManager.setPeriodicTimer(this.timerId, REPEAT_INTERVAL, this);
                 }
                 parentBox.setValue(parentBox.getValue() + step);
             }
         }
     }
 
-    public void action() {
+    public void onClick() {
     }
 
 }

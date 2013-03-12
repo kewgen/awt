@@ -5,9 +5,10 @@ import com.geargames.common.util.NullRegion;
 import com.geargames.common.util.Region;
 
 /**
- * Простой label: не реагирует ни на что =) и с размерами полная неопределённость.
+ * Простой label. Компонент служит исключительно для отображения текста, для touch-событий является "прозрачным".
  */
 public class PSimpleLabel extends PLabel {
+
     public PSimpleLabel(IndexObject index) {
         super(index);
     }
@@ -23,7 +24,4 @@ public class PSimpleLabel extends PLabel {
         return NullRegion.instance;
     }
 
-    public boolean event(int code, int param, int x, int y) {
-        return false;
-    }
 }

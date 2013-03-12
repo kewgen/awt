@@ -3,6 +3,7 @@ package com.geargames.awt;
 import com.geargames.common.String;
 import com.geargames.common.Graphics;
 
+@Deprecated
 public class Label extends Drawable {
     private String data;
     private int x;
@@ -28,10 +29,6 @@ public class Label extends Drawable {
 
     public void setColor(byte color) {
         this.color = color;
-    }
-
-    public boolean event(int code, int param, int x, int y) {
-        return false;
     }
 
     public com.geargames.common.String getData() {

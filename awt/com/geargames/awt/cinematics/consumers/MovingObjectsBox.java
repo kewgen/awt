@@ -25,12 +25,12 @@ public class MovingObjectsBox {
         }
     }
 
-    public boolean event(int code, int param, int x, int y) {
+    public boolean onEvent(int code, int param, int x, int y) {
         for (int i = 0; i < movingObjects.size(); i++) {
             if (!((MovingObject) movingObjects.elementAt(i)).getFinishAdviser().isFinished()) {
-                ((MovingObject) movingObjects.elementAt(i)).event(code, param, x, y);
+                ((MovingObject) movingObjects.elementAt(i)).onEvent(code, param, x, y);
             } else {
-                ((MovingObject) movingObjects.elementAt(i)).event(code, param, x, y);
+                ((MovingObject) movingObjects.elementAt(i)).onEvent(code, param, x, y);
                 movingObjects.removeElementAt(i--);
             }
         }
@@ -38,7 +38,7 @@ public class MovingObjectsBox {
     }
 
     /**
-     * В данную коробку можно добавлять только объеты летящие во времени.
+     * В данную коробку можно добавлять только объекты перемещающиеся во времени.
      *
      * @param movingObject
      */
