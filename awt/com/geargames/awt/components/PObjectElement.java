@@ -22,22 +22,22 @@ public abstract class PObjectElement extends PElement {
     }
 
     public PObjectElement(PObject prototype) {
-        Index index = prototype.getIndexBySlot(110);
+        Index drawBoundsIndex = prototype.getIndexBySlot(110);
         drawRegion = new Region();
-        drawRegion.setMinX(index.getX());
-        drawRegion.setMinY(index.getY());
-        PFrame frame = (PFrame) index.getPrototype();
-        drawRegion.setWidth(frame.getWidth());
-        drawRegion.setHeight(frame.getHeight());
+        drawRegion.setMinX(drawBoundsIndex.getX());
+        drawRegion.setMinY(drawBoundsIndex.getY());
+        PFrame drawBoundsFrame = (PFrame) drawBoundsIndex.getPrototype();
+        drawRegion.setWidth(drawBoundsFrame.getWidth());
+        drawRegion.setHeight(drawBoundsFrame.getHeight());
 
-        index = prototype.getIndexBySlot(112);
-        if (index != null) {
+        Index touchBoundsIndex = prototype.getIndexBySlot(112);
+        if (touchBoundsIndex != null) {
             touchRegion = new Region();
-            touchRegion.setMinX(index.getX());
-            touchRegion.setMinY(index.getY());
-            frame = (PFrame) index.getPrototype();
-            touchRegion.setWidth(frame.getWidth());
-            touchRegion.setHeight(frame.getHeight());
+            touchRegion.setMinX(touchBoundsIndex.getX());
+            touchRegion.setMinY(touchBoundsIndex.getY());
+            PFrame touchBoundsFrame = (PFrame) touchBoundsIndex.getPrototype();
+            touchRegion.setWidth(touchBoundsFrame.getWidth());
+            touchRegion.setHeight(touchBoundsFrame.getHeight());
         } else {
             touchRegion = drawRegion;
         }

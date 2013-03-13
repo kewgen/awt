@@ -100,11 +100,11 @@ public abstract class HorizontalScrollableArea extends ScrollableArea {
      */
     public int getScrollPercent() {
         int window = getItemsAmount() * getItemSize();
-//      window -= getDrawRegion().getHeight(); //todo: Вероятно это тоже нужно?
+//      window -= getDrawRegion().getWidth(); //todo: Вероятно это тоже нужно?
         if (getTouchRegion().getWidth() >= window) {
             return 0;
         } else {
-            return (100 * ((getTouchRegion().getMinX() - getPosition()))) / window;
+            return (100 * (getTouchRegion().getMinX() - getPosition())) / window;
         }
     }
 

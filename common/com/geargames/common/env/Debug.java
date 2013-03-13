@@ -11,6 +11,8 @@ public abstract class Debug {
 
     public abstract void trace(boolean key, com.geargames.common.String message);
 
+    public abstract void error(String message);
+
     public abstract void warning(String message);
 
     public abstract void trace(String message);

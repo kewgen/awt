@@ -4,6 +4,7 @@ import com.geargames.awt.Drawable;
 import com.geargames.awt.timers.OnTimerListener;
 import com.geargames.awt.timers.TimerManager;
 import com.geargames.awt.utils.MotionListener;
+import com.geargames.awt.utils.ScrollListener;
 import com.geargames.common.String;
 import com.geargames.common.env.SystemEnvironment;
 
@@ -30,6 +31,8 @@ public class ElasticInertMotionListener extends MotionListener implements OnTime
     private int position;
     private int backSpeed;
     private boolean released;
+
+    private ScrollListener scrollListener;
 
     private int timerId;
 
@@ -69,8 +72,8 @@ public class ElasticInertMotionListener extends MotionListener implements OnTime
         if (!released) {
             move = y - value;
             storedMove += move;
-            position += move * accelerator;
             value = y;
+            setPosition(position + move * accelerator);
             if (Drawable.DEBUG) {
                 SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("MOVE: ").concat(move));
                 SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("POSITION: ").concat(position));
@@ -116,24 +119,24 @@ public class ElasticInertMotionListener extends MotionListener implements OnTime
                         storedMove /= draggingTicks;
                     }
                 }
-                position += storedMove * accelerator;
+                setPosition(position + storedMove * accelerator);
                 if (Drawable.DEBUG) {
                     SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("INERTIA = ").concat(storedMove));
                     SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("POSITION = ").concat(position));
                 }
             } else {
                 if (position > top) {
-                    position -= position - top > backSpeed ? backSpeed : position - top;
+                    setPosition(position - (position - top > backSpeed ? backSpeed : position - top));
                 } else if (position != top && position + window < down) {
-                    position += down - window - position > backSpeed ? backSpeed : down - window - position;
+                    setPosition(position + (down - window - position > backSpeed ? backSpeed : down - window - position));
                 } else {
                     int margin = (-position + top) % itemSize;
                     if (margin != 0) {
                         if (move > 0) {
                             margin = itemSize - margin;
-                            position -= margin > backSpeed ? backSpeed : margin;
+                            setPosition(position - (margin > backSpeed ? backSpeed : margin));
                         } else {
-                            position += margin > backSpeed ? backSpeed : margin;
+                            setPosition(position + (margin > backSpeed ? backSpeed : margin));
                         }
                     } else {
                         endMoving(); //todo: Только здесь останавливать таймер?
@@ -151,12 +154,17 @@ public class ElasticInertMotionListener extends MotionListener implements OnTime
         return top;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
-    }
-
     public int getPosition() {
         return position;
+    }
+
+    public void setPosition(int position) {
+        if (this.position != position) {
+            this.position = position;
+            if (scrollListener != null) {
+                scrollListener.onPositionChanged();
+            }
+        }
     }
 
     public void onRelease(int y) {
@@ -202,6 +210,17 @@ public class ElasticInertMotionListener extends MotionListener implements OnTime
 
     public void setInertness(int inertness) {
         this.inertness = inertness;
+    }
+
+    /**
+     * Вернет объект-слушатель следящего за изменениями позиции прокрутки списка. Чаще всего это компонент "Полоса прокрутки".
+     */
+    public ScrollListener getScrollListener() {
+        return scrollListener;
+    }
+
+    public void setScrollListener(ScrollListener scrollListener) {
+        this.scrollListener = scrollListener;
     }
 
 }

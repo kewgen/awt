@@ -13,6 +13,10 @@ public class ConsoleDebug extends com.geargames.common.env.Debug {
         }
     }
 
+    public void error(String message) {
+        trace(String.valueOfC("Error: " + message.toString()));
+    }
+
     public void warning(String message) {
         trace(String.valueOfC("Warning: " + message.toString()));
     }

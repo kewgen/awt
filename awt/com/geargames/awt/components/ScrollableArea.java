@@ -9,9 +9,15 @@ import com.geargames.common.Graphics;
  * Time: 20:04
  */
 public abstract class ScrollableArea extends PElement {
-    private boolean stuck;
+    private boolean stuck;           //todo: isScrollable, scrollingAllowed?
     private boolean strictlyClipped;
-    private boolean initiated = false;
+    private boolean initiated;
+
+    public ScrollableArea() {
+        stuck           = false;
+        strictlyClipped = false;
+        initiated       = false;
+    }
 
     /**
      * Вернуть количество элементов списка.
@@ -100,13 +106,18 @@ public abstract class ScrollableArea extends PElement {
     public abstract int getScrollPercent();
 
     /**
-     * Вернуть верхнюю (в случае вертикальной прокрутки)|левую(в случае горизонтальной) координату полотна относительно
+     * Вернуть верхнюю (в случае вертикальной прокрутки) / левую (в случае горизонтальной) координату полотна относительно
      * левой верхней кромки области прокрутки.
      *
      * @return
      */
     protected int getPosition() {
-        return getMotionListener().getPosition();
+        MotionListener motionListener = getMotionListener();
+        if (motionListener != null) {
+            return motionListener.getPosition();
+        } else {
+            return 0;
+        }
     }
 
     /**

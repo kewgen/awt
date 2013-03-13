@@ -10,6 +10,8 @@ import com.geargames.common.util.Region;
 
 public class TextArea extends VerticalScrollableArea {
 
+    private final static String STR_ELLIPSIS = String.valueOfC("...");
+
     private String text;
     private PFont font;
     private int format;
@@ -22,7 +24,6 @@ public class TextArea extends VerticalScrollableArea {
     private Region region;
 
     private int[] indexes;
-    private final static String STR_ELLIPSIS = String.valueOfC("...");
     private int itemEllipsisIndex = -1;
     private int ellipsisOffsetX = 0;
 

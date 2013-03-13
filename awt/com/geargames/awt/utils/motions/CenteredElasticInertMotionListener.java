@@ -4,6 +4,7 @@ import com.geargames.awt.Drawable;
 import com.geargames.awt.timers.OnTimerListener;
 import com.geargames.awt.timers.TimerManager;
 import com.geargames.awt.utils.MotionListener;
+import com.geargames.awt.utils.ScrollListener;
 import com.geargames.common.String;
 import com.geargames.common.env.SystemEnvironment;
 
@@ -35,6 +36,8 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
     private int backStep;
     private boolean released;
     public boolean instinctPosition;
+
+    private ScrollListener scrollListener;
 
     private int timerId;
 
@@ -81,8 +84,8 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
             relativeClickedPosition = -1;
             move = y - value;
             storedMove += move;
-            position += move * accelerator;
             value = y;
+            setPosition(position + move * accelerator);
             if (Drawable.DEBUG) {
                 SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("MOVE: ").concatI(move));
                 SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("POSITION: ").concatI(position));
@@ -128,7 +131,7 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
                         storedMove /= draggingTicks;
                     }
                 }
-                position += storedMove * accelerator;
+                setPosition(position + storedMove * accelerator);
                 if (Drawable.DEBUG) {
                     SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("INERTIA = ").concatI(storedMove));
                     SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("POSITION = ").concatI(position));
@@ -136,19 +139,19 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
             } else {
                 if (relativeClickedPosition == -1) {
                     if (position > center) {
-                        position -= position - center > backStep ? backStep : position - center;
+                        setPosition(position - (position - center > backStep ? backStep : position - center));
                     } else if (position + window - itemDiff < center) {
                         int tmp = center - window - position + itemDiff;
-                        position += tmp > backStep ? backStep : tmp;
+                        setPosition(position + (tmp > backStep ? backStep : tmp));
                     } else {
                         int margin = (-position + center) % itemSize;
                         if (margin != 0) {
                             margin = getCentralPositionNumber() * itemSize + position - center;
                             if (margin > 0) {
-                                position -= margin > backStep ? backStep : margin;
+                                setPosition(position - (margin > backStep ? backStep : margin));
                             } else {
                                 margin = -margin;
-                                position += margin > backStep ? backStep : margin;
+                                setPosition(position + (margin > backStep ? backStep : margin));
                             }
                         } else {
                             endMoving(); //todo: Только здесь останавливать таймер?
@@ -157,14 +160,13 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
                 } else {
                     int clickedPosition = position + relativeClickedPosition;
                     if (clickedPosition > center) {
-                        position -= -center + clickedPosition > backStep ? backStep : -center + clickedPosition;
+                        setPosition(position - (-center + clickedPosition > backStep ? backStep : -center + clickedPosition));
                     } else if (clickedPosition < center) {
-                        position += -clickedPosition + center > backStep ? backStep : -clickedPosition + center;
+                        setPosition(position + (-clickedPosition + center > backStep ? backStep : -clickedPosition + center));
                     } else {
                         endMoving(); //todo: Здесь надо останавливать таймер?
                     }
                 }
-
             }
             draggingTicks = 0;
         } else {
@@ -186,12 +188,17 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
         return center;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
-    }
-
     public int getPosition() {
         return position;
+    }
+
+    public void setPosition(int position) {
+        if (this.position != position) {
+            this.position = position;
+            if (scrollListener != null) {
+                scrollListener.onPositionChanged();
+            }
+        }
     }
 
     public void onRelease(int y) {
@@ -219,7 +226,7 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
                 SystemEnvironment.getInstance().getDebug().trace(String.valueOfI(center));
             }
         } else {
-            position = center - relativeClickedPosition;
+            setPosition(center - relativeClickedPosition);
         }
     }
 
@@ -261,6 +268,17 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
 
     public void setInertness(int inertness) {
         this.inertness = inertness;
+    }
+
+    /**
+     * Вернет объект-слушатель следящего за изменениями позиции прокрутки списка. Чаще всего это компонент "Полоса прокрутки".
+     */
+    public ScrollListener getScrollListener() {
+        return scrollListener;
+    }
+
+    public void setScrollListener(ScrollListener scrollListener) {
+        this.scrollListener = scrollListener;
     }
 
 }

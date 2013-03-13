@@ -1,6 +1,7 @@
 package com.geargames.awt.utils.motions;
 
 import com.geargames.awt.utils.MotionListener;
+import com.geargames.awt.utils.ScrollListener;
 
 /**
  * user: Mikhail V. Kutuzov
@@ -9,6 +10,7 @@ import com.geargames.awt.utils.MotionListener;
  */
 public class StubMotionListener extends MotionListener {
     private int position;
+    private ScrollListener scrollListener;
 
     public void create(int top) {
         this.position = top;
@@ -24,12 +26,12 @@ public class StubMotionListener extends MotionListener {
         return position;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
-    }
-
     public int getPosition() {
         return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     public void onRelease(int y) {
@@ -43,6 +45,17 @@ public class StubMotionListener extends MotionListener {
 
     public boolean isCentered() {
         return false;
+    }
+
+    /**
+     * Вернет объект-слушатель следящего за изменениями позиции прокрутки списка. Чаще всего это компонент "Полоса прокрутки".
+     */
+    public ScrollListener getScrollListener() {
+        return scrollListener;
+    }
+
+    public void setScrollListener(ScrollListener scrollListener) {
+        this.scrollListener = scrollListener;
     }
 
 }

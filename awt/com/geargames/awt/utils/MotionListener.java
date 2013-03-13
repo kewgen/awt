@@ -27,4 +27,11 @@ public abstract class MotionListener {
 
     public abstract boolean isCentered();
 
+    /**
+     * Вернет объект-слушатель следящего за изменениями позиции прокрутки списка. Чаще всего это компонент "Полоса прокрутки".
+     */
+    public abstract ScrollListener getScrollListener();
+
+    public abstract void setScrollListener(ScrollListener scrollListener);
+
 }

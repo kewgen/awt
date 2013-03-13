@@ -108,7 +108,7 @@ public abstract class VerticalScrollableArea extends ScrollableArea {
         if (getTouchRegion().getHeight() >= window) {
             return 0;
         } else {
-            return (100 * ((getTouchRegion().getMinY() - getPosition()))) / window;
+            return (100 * (getTouchRegion().getMinY() - getPosition())) / window;
         }
     }
 
