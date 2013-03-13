@@ -34,7 +34,7 @@ public abstract class MIDlet extends JFrame implements HTTPCounter {
         setSize(Port.getW() + Port.SCREEN_DX * 2, Port.getH() + Port.SCREEN_DY + Port.SCREEN_DX);
     }
 
-    public boolean platformRequest(String url, boolean inNewView) {//ConnectionNotFoundException {
+    public boolean platformRequest(String url, boolean inNewView) {
         java.awt.Desktop desktop;
         if (java.awt.Desktop.isDesktopSupported()) {
             desktop = java.awt.Desktop.getDesktop();
@@ -44,10 +44,8 @@ public abstract class MIDlet extends JFrame implements HTTPCounter {
                 try {
                     uri = new java.net.URI(url.toString());
                     desktop.browse(uri);
-                } catch (IOException e) {
-                    ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).logEx(e);
-                } catch (java.net.URISyntaxException e) {
-                    ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).logEx(e);
+                } catch (Exception e) {
+                    SystemEnvironment.getInstance().getDebug().exception(String.valueOfC("A platform browser has not found an uri"),e);
                 }
             }
         }
@@ -255,7 +253,7 @@ public abstract class MIDlet extends JFrame implements HTTPCounter {
         try {
             platformRequest(str, true);
         } catch (Exception e) {
-            ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).logEx(e);
+            SystemEnvironment.getInstance().getDebug().logException(e);
         }
     }
 

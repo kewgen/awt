@@ -1,6 +1,5 @@
 package com.geargames.awt.timers;
 
-import com.geargames.ConsoleDebug;
 import com.geargames.common.env.SystemEnvironment;
 import com.geargames.common.util.ArrayList;
 import com.geargames.common.util.HashMap;
@@ -345,8 +344,7 @@ public class TimerManager {
                     }
                     break;
                 default:
-                    //todo: это error
-                    SystemEnvironment.getInstance().getDebug().warning(String.valueOfC("TimerManager.releaseTimer(): illegal timerType (").concat(
+                    SystemEnvironment.getInstance().getDebug().error(String.valueOfC("TimerManager.releaseTimer(): illegal timerType (").concat(
                             String.valueOfC("timer id = ").concatI(timer.getId())).concat(
                             String.valueOfC("; interval = ").concatI(timer.getInterval())).concat(
                             String.valueOfC("; timer type = ").concatI(timer.getTimerType())).concat(")"));
@@ -434,7 +432,7 @@ public class TimerManager {
                 try {
                     timer.onTimer();
                 } catch (Exception e) {
-                    ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).logEx(e);
+                    SystemEnvironment.getInstance().getDebug().error(String.valueOfC(e.getMessage()));
                 }
             }
             if (!unusedTimersAssist.isEmpty()) {
@@ -462,7 +460,7 @@ public class TimerManager {
                     try {
                         timer.onTimer();
                     } catch (Exception e) {
-                        ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).logEx(e);
+                        SystemEnvironment.getInstance().getDebug().trace(String.valueOfC(e.getMessage()));
                     }
 
                     if (!timer.isKilled()) {

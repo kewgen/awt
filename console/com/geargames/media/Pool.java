@@ -1,6 +1,5 @@
 package com.geargames.media;
 
-import com.geargames.ConsoleDebug;
 import com.geargames.Recorder;
 import com.geargames.common.String;
 import com.geargames.common.env.SystemEnvironment;

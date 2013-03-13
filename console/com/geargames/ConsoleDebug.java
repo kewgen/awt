@@ -5,16 +5,15 @@ import com.geargames.common.String;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-public class ConsoleDebug extends com.geargames.common.env.Debug {
+public class ConsoleDebug implements com.geargames.common.env.Debug {
 
-    public void trace(boolean key, String message) {
-        if (key) {
-            log(message);
-        }
+    public void error(String message) {
+        trace(String.valueOfC("Error: ").concat(message));
     }
 
+
     public void warning(String message) {
-        trace(String.valueOfC("Warning: " + message.toString()));
+        trace(String.valueOfC("Warning: ").concat(message));
     }
 
     public void log(String message) {
@@ -31,15 +30,19 @@ public class ConsoleDebug extends com.geargames.common.env.Debug {
 
     }
 
-    public void trace(String message, Throwable e) {
+    public void trace(String message, Exception e) {
         if (e != null) {
             trace(String.valueOfC("Exception: " + message));
             e.printStackTrace();
-            trace(true, message.concatC("\n").concatC(e.toString()));
+            log(message.concatC("\n").concatC(e.toString()));
         }
     }
 
-    public void logEx(Exception ex) {
+    public void exception(String message, Exception e) {
+        Logger.logException(e);
+    }
+
+    public void logException(Exception ex) {
         Logger.logException(ex);
     }
 
@@ -51,8 +54,5 @@ public class ConsoleDebug extends com.geargames.common.env.Debug {
         return String.valueOfC(sb.toString());
     }
 
-    public void sendReport(Exception e, int uid) {
-        logEx(e);
-    }
 }
 

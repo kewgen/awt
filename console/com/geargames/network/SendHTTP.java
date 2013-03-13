@@ -1,6 +1,5 @@
 package com.geargames.network;
 
-import com.geargames.ConsoleDebug;
 import com.geargames.common.env.SystemEnvironment;
 
 /**
@@ -16,7 +15,7 @@ public class SendHTTP extends com.geargames.common.network.SendHTTP {
     }
 
     public void logEx(Exception exception) {
-        ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).logEx(exception);
+        SystemEnvironment.getInstance().getDebug().exception(com.geargames.common.String.valueOfC(""), exception);
     }
 
 }

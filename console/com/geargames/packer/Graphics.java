@@ -1,6 +1,5 @@
 package com.geargames.packer;
 
-import com.geargames.ConsoleDebug;
 import com.geargames.common.Port;
 import com.geargames.common.Render;
 import com.geargames.common.String;
@@ -46,14 +45,13 @@ public class Graphics implements com.geargames.common.Graphics {
                         Graphics tmp = new Graphics(img_.getImage());
                         tmp.drawImage(frame.getImage(), 0 - frame.getSrcX(), 0 - frame.getSrcY());
                         image_cash[frame_id] = img_.getImage();
-                    } catch (IOException e) {
-                        ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).logEx(e);
+                    } catch (Exception e) {
+                        SystemEnvironment.getInstance().getDebug().exception(String.valueOfC("Could not draw image properly "), e);
                     }
                 }
 
 
                 PAffine affine = frame.getAffine();
-                //отрисовка без отражения
                 if (affine == null) {
                     if (scale == 100 && (dst_x + frame.getWidth() < 0 || dst_y + frame.getHeight() < 0 || dst_x > Port.getScaledW() || dst_y > Port.getScaledH())) {
                         return;

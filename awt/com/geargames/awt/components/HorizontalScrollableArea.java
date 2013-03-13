@@ -64,15 +64,12 @@ public abstract class HorizontalScrollableArea extends ScrollableArea {
         }
         if (getTouchRegion().isWithIn(x, y)) {
             switch (code) {
-//                case Event.EVENT_KEY_PRESSED:
                 case Event.EVENT_TOUCH_PRESSED:
                     getMotionListener().onTouch(x);
                     break;
-//                case Event.EVENT_KEY_REPEATED:
                 case Event.EVENT_TOUCH_MOVED:
                     getMotionListener().onMove(x);
                     break;
-//                case Event.EVENT_KEY_RELEASED:
                 case Event.EVENT_TOUCH_RELEASED:
                     getMotionListener().onRelease(x);
                     break;
@@ -100,7 +97,7 @@ public abstract class HorizontalScrollableArea extends ScrollableArea {
      */
     public int getScrollPercent() {
         int window = getItemsAmount() * getItemSize();
-//      window -= getDrawRegion().getHeight(); //todo: Вероятно это тоже нужно?
+//      window -= getDrawRegion().getWidth(); //todo: Вероятно это тоже нужно?
         if (getTouchRegion().getWidth() >= window) {
             return 0;
         } else {
