@@ -2,10 +2,8 @@ package com.geargames.common.packer;
 
 import com.geargames.common.Graphics;
 import com.geargames.common.Image;
-import com.geargames.common.Render;
 
 /**
- * Created with IntelliJ IDEA.
  * User: kewgen
  * Date: 18.09.12
  * Time: 17:52
@@ -19,6 +17,7 @@ public class PFrame extends Prototype {
         this.height = height;
     }
 
+    @Override
     public void draw(Graphics g, int x, int y) {
         draw(g, x, y, null);
     }
@@ -75,6 +74,7 @@ public class PFrame extends Prototype {
         this.srcDX = srcDX;
     }
 
+    @Override
     public String toString() {
         return "PFrame{" +
                 "pid=" + pid +
@@ -96,4 +96,5 @@ public class PFrame extends Prototype {
 
     private int srcDX;//дополнительные смещения на источнике фрейма - имейдже, позволяет рендить тот же фрейм из других координат
     private int srcDY;
+
 }

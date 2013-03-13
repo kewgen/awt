@@ -55,6 +55,7 @@ public class InertMotionListener extends MotionListener implements OnTimerListen
         this.move = 0;
     }
 
+    @Override
     public void onTouch(int y) {
         endMoving();
         value = y;
@@ -66,6 +67,7 @@ public class InertMotionListener extends MotionListener implements OnTimerListen
         }
     }
 
+    @Override
     public void onMove(int y) {
         if (!released) {
             move = y - value;
@@ -102,6 +104,7 @@ public class InertMotionListener extends MotionListener implements OnTimerListen
         }
     }
 
+    @Override
     public void onTimer(int timerId) {
         if (timerId != this.timerId) {
             return;
@@ -147,14 +150,17 @@ public class InertMotionListener extends MotionListener implements OnTimerListen
         }
     }
 
+    @Override
     public int getTop() {
         return top;
     }
 
+    @Override
     public int getPosition() {
         return position;
     }
 
+    @Override
     public void setPosition(int position) {
         if (this.position != position) {
             this.position = position;
@@ -164,6 +170,7 @@ public class InertMotionListener extends MotionListener implements OnTimerListen
         }
     }
 
+    @Override
     public void onRelease(int y) {
         if (Drawable.DEBUG) {
             SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("RELEASED"));
@@ -171,6 +178,7 @@ public class InertMotionListener extends MotionListener implements OnTimerListen
         startMoving();
     }
 
+    @Override
     public void onOutOfBounds() {
         if (Drawable.DEBUG) {
             SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("OUT OF BOUNDS"));
@@ -178,9 +186,11 @@ public class InertMotionListener extends MotionListener implements OnTimerListen
         startMoving();
     }
 
+    @Override
     public void onClick(int number) {
     }
 
+    @Override
     public boolean isCentered() {
         return false;
     }
@@ -212,10 +222,12 @@ public class InertMotionListener extends MotionListener implements OnTimerListen
     /**
      * Вернет объект-слушатель следящего за изменениями позиции прокрутки списка. Чаще всего это компонент "Полоса прокрутки".
      */
+    @Override
     public ScrollListener getScrollListener() {
         return scrollListener;
     }
 
+    @Override
     public void setScrollListener(ScrollListener scrollListener) {
         this.scrollListener = scrollListener;
     }

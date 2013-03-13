@@ -34,10 +34,12 @@ public class VanishingLabel extends Label {
         return graphicsStrategy.isFullTransparent();
     }
 
+    @Override
     public void draw(Graphics graphics) {
         graphicsStrategy.draw(graphics);
     }
 
+    @Override
     public void superDraw(Graphics graphics) {
         super.draw(graphics);
     }

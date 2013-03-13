@@ -7,6 +7,7 @@ import com.geargames.awt.components.HorizontalScrollView;
  * Date: 18.03.12
  */
 public class MotionHelper {
+
     public static int INDEX_OUT_OF_RANGE = -1;
 
     public static int getCentralPositionFromHorizontalScroll(HorizontalScrollView scrollView) {
@@ -20,4 +21,5 @@ public class MotionHelper {
             return n;
         }
     }
+
 }

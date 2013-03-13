@@ -21,37 +21,39 @@ public class ConsoleEnvironment extends Environment {
         return instance;
     }
 
-    public long currentTimeMillis()
-    {
+    @Override
+    public long currentTimeMillis() {
         return System.currentTimeMillis();
     }
 
-    public long nanoTime()
-    {
+    @Override
+    public long nanoTime() {
         return System.nanoTime();
     }
 
+    @Override
     public void exit(int status) {
-        System.exit(status);
+        Runtime.getRuntime().exit(status);
     }
 
-    public int availableProcessors()
-    {
+    @Override
+    public int availableProcessors() {
         return Runtime.getRuntime().availableProcessors();
     }
 
-    public long freeMemory()
-    {
+    @Override
+    public long freeMemory() {
         return Runtime.getRuntime().freeMemory();
     }
 
-    public long totalMemory()
-    {
+    @Override
+    public long totalMemory() {
         return Runtime.getRuntime().totalMemory();
     }
 
-    public long maxMemory()
-    {
+    @Override
+    public long maxMemory() {
         return Runtime.getRuntime().maxMemory();
     }
+
 }

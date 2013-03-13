@@ -4,6 +4,7 @@ package com.geargames.awt;
  * Якоря для панелек вернего уровня верхнего уровня.
  */
 public class Anchors {
+
     public static final byte NONE_ANCHOR          = 0;
 
     public static final byte TOP_LEFT_ANCHOR      = 1;
@@ -19,5 +20,6 @@ public class Anchors {
     public static final byte BOTTOM_RIGHT_ANCHOR  = 9;
 
     public static final byte CENTER_ANCHOR        = CENTER_CENTER_ANCHOR; // Alias
+
 }
 

@@ -7,9 +7,8 @@ import com.geargames.common.Graphics;
 import com.geargames.common.util.Region;
 
 /**
- * Created by IntelliJ IDEA.
  * User: mikhail.kutuzov
- * Date: 10/28/11
+ * Date: 10.28.11
  * Time: 10:01 AM
  */
 public class ScrollHelper {

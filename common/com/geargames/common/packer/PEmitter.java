@@ -3,7 +3,6 @@ package com.geargames.common.packer;
 import com.geargames.common.Graphics;
 
 /**
- * Created with IntelliJ IDEA.
  * User: kewgen
  * Date: 19.09.12
  * Time: 10:52

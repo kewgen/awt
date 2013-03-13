@@ -21,12 +21,14 @@ public class TickFinishAdviser extends FinishAdviser {
         this.tick = tick;
     }
 
+    @Override
     public void onTick() {
         if (tick != -1) {
             tick--;
         }
     }
 
+    @Override
     public boolean isFinished() {
         return tick == -1;
     }

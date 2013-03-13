@@ -3,7 +3,6 @@ package com.geargames.common.packer;
 import com.geargames.common.util.ArrayList;
 
 /**
- * Created with IntelliJ IDEA.
  * User: kewgen
  * Date: 07.09.12
  * Time: 14:17

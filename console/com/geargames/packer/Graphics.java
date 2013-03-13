@@ -25,13 +25,16 @@ public class Graphics implements com.geargames.common.Graphics {
         this.graphics = graphics;
     }
 
+    @Override
     public void onCache(int len) {//включить кеширование картинок
         if (image_cash == null) image_cash = new java.awt.Image[len];
     }
 
+    @Override
     public void addTexture(com.geargames.common.Image image) {
     }
 
+    @Override
     public void drawFrame(PFrame frame, int dst_x, int dst_y) {
         switch (frame.getType()) {
             case Render.T_FRAME:
@@ -108,44 +111,52 @@ public class Graphics implements com.geargames.common.Graphics {
 
     }
 
-
+    @Override
     public void drawImage(com.geargames.common.Image image, int x, int y) {
         graphics.drawImage(((Image) image).getImage(), x, y, null);
     }
 
+    @Override
     public void drawLine(int x1, int y1, int x2, int y2) {
         graphics.drawLine(x1, y1, x2, y2);
     }
 
+    @Override
     public void drawRect(int x, int y, int w, int h) {
         graphics.drawRect(x, y, w, h);
     }
 
+    @Override
     public void fillRect(int x, int y, int w, int h) {
         graphics.fillRect(x, y, w, h);
     }
 
+    @Override
     public void setClip(int x, int y, int w, int h) {
         graphics.setClip(x, y, w, h);
     }
 
+    @Override
     public void resetClip() {
         graphics.setClip(0, 0, Port.getW(), Port.getH());
     }
 
+    @Override
     public void setColor(int color) {
         graphics.setColor(new Color(color));
     }
 
-
+    @Override
     public PFont getFont() {
         return font;
     }
 
+    @Override
     public void setFont(PFont font) {
         this.font = font;
     }
 
+    @Override
     public int getAscent() {
         if (font != null) {
             return font.getAscent();
@@ -154,6 +165,7 @@ public class Graphics implements com.geargames.common.Graphics {
         }
     }
 
+    @Override
     public int getBaseLine() {
         if (font != null) {
             return font.getBaseLine();
@@ -162,6 +174,7 @@ public class Graphics implements com.geargames.common.Graphics {
         }
     }
 
+    @Override
     public int getFontSize() {
         if (font != null) {
             return font.getSize();
@@ -170,6 +183,7 @@ public class Graphics implements com.geargames.common.Graphics {
         }
     }
 
+    @Override
     public int getWidth(char character) {
         if (font != null) {
             return font.getWidth(character);
@@ -178,6 +192,7 @@ public class Graphics implements com.geargames.common.Graphics {
         }
     }
 
+    @Override
     public int getWidth(ArrayChar characters, int position, int length) {
         if (font != null) {
             return font.getWidth(characters, position, length);
@@ -186,6 +201,7 @@ public class Graphics implements com.geargames.common.Graphics {
         }
     }
 
+    @Override
     public int getWidth(String string) {
         if (font != null) {
             return font.getWidth(string);
@@ -194,6 +210,7 @@ public class Graphics implements com.geargames.common.Graphics {
         }
     }
 
+    @Override
     public int getWidth(String string, int position, int length) {
         if (font != null) {
             return font.getWidth(string, position, length);
@@ -202,24 +219,29 @@ public class Graphics implements com.geargames.common.Graphics {
         }
     }
 
+    @Override
     public Render getRender() {
         return render;
     }
 
+    @Override
     public int getTransparency() {
         return transparency;
     }
 
+    @Override
     public void setTransparency(int transparency) {//0..100, 100 - полная прозрачность
         this.transparency = transparency;
         float alpha = 1 - ((float) transparency / 100);
         ((Graphics2D) graphics).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
     }
 
+    @Override
     public int getScale() {
         return scale;
     }
 
+    @Override
     public void setScale(int scale) {//масштабирования 0..200, 100 - оригинал
         this.scale = scale;
         double alpha = (double) scale / 100;
@@ -229,15 +251,18 @@ public class Graphics implements com.geargames.common.Graphics {
         ((Graphics2D) graphics).scale(alpha, alpha);
     }
 
+    @Override
     public void dropScale() {
         scale = 100;
         ((Graphics2D) graphics).setTransform(affineTransformOriginal);
     }
 
+    @Override
     public com.geargames.common.Image createImage(byte[] array, int i, int data_len) throws IOException {
         return Image.createImage(array, i, data_len);
     }
 
+    @Override
     public com.geargames.common.Image createImage() {
         return new Image(null);
     }
@@ -280,6 +305,7 @@ public class Graphics implements com.geargames.common.Graphics {
      * @param y
      * @param anchor
      */
+    @Override
     public void drawString(String string, int x, int y, int anchor) {
         if (string == null) {
             return;
@@ -301,6 +327,7 @@ public class Graphics implements com.geargames.common.Graphics {
      * @param y
      * @param anchor
      */
+    @Override
     public void drawSubstring(String string, int position, int length, int x, int y, int anchor) {
         if (string == null) {
             return;
@@ -384,8 +411,8 @@ public class Graphics implements com.geargames.common.Graphics {
         return render.getFrameW(o_i_id);
     }
 
-
     public void setGLRenderer(Object glRenderer) {
 
     }
+
 }

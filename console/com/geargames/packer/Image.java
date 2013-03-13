@@ -44,6 +44,7 @@ public class Image implements com.geargames.common.Image {
         return new Image(bufferedImage_);
     }
 
+    @Override
     public Image getRescaledImage(int w, int h) {
         BufferedImage bufferedImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         bufferedImage.getGraphics().drawImage(image.getScaledInstance(w, h, java.awt.Image.SCALE_SMOOTH), 0, 0, null);
@@ -51,6 +52,7 @@ public class Image implements com.geargames.common.Image {
         return new Image(bufferedImage);
     }
 
+    @Override
     public void recycle() {
         image = null;
     }
@@ -59,6 +61,7 @@ public class Image implements com.geargames.common.Image {
         return new Graphics(image);
     }
 
+    @Override
     public int getWidth() {
         return image.getWidth(null);
     }
@@ -67,6 +70,7 @@ public class Image implements com.geargames.common.Image {
         return image.getWidth(observer);
     }
 
+    @Override
     public int getHeight() {
         return image.getHeight(null);
     }
@@ -92,10 +96,12 @@ public class Image implements com.geargames.common.Image {
         return image;
     }
 
+    @Override
     public boolean isCreated() {
         return image != null;
     }
 
+    @Override
     public void resizeCanvas(int w, int h) {
 
     }

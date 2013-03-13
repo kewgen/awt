@@ -1,7 +1,6 @@
 package com.geargames.awt;
 
 import com.geargames.awt.components.PElement;
-import com.geargames.common.Event;
 import com.geargames.common.Port;
 import com.geargames.common.util.Region;
 import com.geargames.common.Graphics;
@@ -29,6 +28,7 @@ public class DrawablePElement extends Drawable {
      *
      * @param graphics
      */
+    @Override
     public void draw(Graphics graphics) {
         element.draw(graphics, getX() - element.getDrawRegion().getMinX(), getY() - element.getDrawRegion().getMinY());
     }
@@ -43,6 +43,7 @@ public class DrawablePElement extends Drawable {
      * @param y
      * @return
      */
+    @Override
     public boolean onEvent(int code, int param, int x, int y) {
         Region region = element.getTouchRegion();
         int localX = x - getX() + region.getMinX();
@@ -72,26 +73,32 @@ public class DrawablePElement extends Drawable {
         return element.onEvent(code, param, localX, localY);
     }
 
+    @Override
     public int getX() {
         return x;
     }
 
+    @Override
     public void setX(int x) {
         this.x = x;
     }
 
+    @Override
     public int getY() {
         return y;
     }
 
+    @Override
     public void setY(int y) {
         this.y = y;
     }
 
+    @Override
     public int getHeight() {
         return element.getDrawRegion().getHeight();
     }
 
+    @Override
     public int getWidth() {
         return element.getDrawRegion().getWidth();
     }
@@ -166,4 +173,5 @@ public class DrawablePElement extends Drawable {
                 break;
         }
     }
+
 }

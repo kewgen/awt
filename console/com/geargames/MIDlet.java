@@ -218,6 +218,7 @@ public abstract class MIDlet extends JFrame implements HTTPCounter {
         }
     }
 
+    @Override
     public void paint(Graphics g) {
         Manager manager = getManager();
         if (manager == null) return;
@@ -303,6 +304,7 @@ public abstract class MIDlet extends JFrame implements HTTPCounter {
     public void setDisplay(Canvas canvas) {
     }
 
+    @Override
     public void nextKBytes() {
     }
 

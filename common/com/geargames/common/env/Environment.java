@@ -5,6 +5,7 @@ package com.geargames.common.env; // env -> environment, app
  * Date: 09.02.13 19:28
  */
 public abstract class Environment {
+
     public abstract long currentTimeMillis();
 
     public abstract long nanoTime();
@@ -18,4 +19,5 @@ public abstract class Environment {
     public abstract long totalMemory();
 
     public abstract long maxMemory();
+
 }

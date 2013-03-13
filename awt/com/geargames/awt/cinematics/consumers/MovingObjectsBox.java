@@ -1,5 +1,6 @@
 package com.geargames.awt.cinematics.consumers;
 
+import com.geargames.awt.Eventable;
 import com.geargames.awt.cinematics.MovingObject;
 import com.geargames.common.Graphics;
 
@@ -12,7 +13,7 @@ import java.util.Vector;
  * Коробка движущихся объектов, все помещённые в коробку объекты, в случае если их круг движения не закончен, они
  * получают события системы, иначе - объект удаляется из коробки.
  */
-public class MovingObjectsBox {
+public class MovingObjectsBox extends Eventable {
     private Vector movingObjects;
 
     public MovingObjectsBox() {
@@ -25,6 +26,7 @@ public class MovingObjectsBox {
         }
     }
 
+    @Override
     public boolean onEvent(int code, int param, int x, int y) {
         for (int i = 0; i < movingObjects.size(); i++) {
             if (!((MovingObject) movingObjects.elementAt(i)).getFinishAdviser().isFinished()) {

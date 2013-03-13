@@ -54,6 +54,7 @@ public abstract class MovingObject extends Drawable implements OnTimerListener {
      *
      * @param graphics
      */
+    @Override
     public void draw(Graphics graphics) {
         if (isInitiated()) {
             getDrawable().setX((int) getPoint().getX());
@@ -71,6 +72,7 @@ public abstract class MovingObject extends Drawable implements OnTimerListener {
      * Здесь, раз за тик, пересчитывается значение текущей координаты и в случае отладки, добавляется новое значение в
      * список пройденных точек.
      */
+    @Override
     public void onTimer(int timerId) {
         if (timerId != this.timerId) {
             return;

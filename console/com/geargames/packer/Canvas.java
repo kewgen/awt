@@ -15,6 +15,7 @@ public class Canvas extends java.awt.Canvas {
         SystemEnvironment.getInstance().getDebug().trace(com.geargames.common.String.valueOfC("Canvas.Touch " + (isTouchSupport ? "is supported." : "is not supported.")));
     }
 
+    @Override
     public void paint(java.awt.Graphics g) {
         super.paint(g);
         SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("paint"));
@@ -49,10 +50,12 @@ public class Canvas extends java.awt.Canvas {
     }//затычка андроид OpenGL
 
 
+    @Override
     public int getWidth() {
         return Port.getW();
     }
 
+    @Override
     public int getHeight() {
         return Port.getH();
     }

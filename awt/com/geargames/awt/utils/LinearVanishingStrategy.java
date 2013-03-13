@@ -32,6 +32,7 @@ public class LinearVanishingStrategy extends GraphicsStrategy implements OnTimer
         this.owner = owner;
     }
 
+    @Override
     public void draw(Graphics graphics) {
         if (transparency > 0) {
             if (transparency < 100) {
@@ -49,6 +50,7 @@ public class LinearVanishingStrategy extends GraphicsStrategy implements OnTimer
      * Метод вызывается каждый раз при срабатывании таймера.
      * @param timerId - идентификатор сработавшего таймера, который вызвал данный метод.
      */
+    @Override
     public void onTimer(int timerId) {
         if (timerId == TimerIdMap.AWT_TEXTHINT_GRAPHICS_STRATEGY_TICK) {
             switch (state) {
@@ -178,6 +180,7 @@ public class LinearVanishingStrategy extends GraphicsStrategy implements OnTimer
      * Вернуть компонент, видимостью которого, управляет данная стратегия.
      * @return
      */
+    @Override
     public Drawable getOwner() {
         return owner;
     }

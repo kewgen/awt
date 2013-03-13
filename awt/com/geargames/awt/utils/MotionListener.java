@@ -1,7 +1,7 @@
 package com.geargames.awt.utils;
 
 /**
- * user: Mikhail V. Kutuzov
+ * user: mikhail v. kutuzov, abarakov
  * date: 24.10.11
  * time: 1:22
  * Интерфейс отвечает за "двигательные" способности всех прокручиваемых сушностей (меню, текстов...) и дергается из

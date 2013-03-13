@@ -4,7 +4,7 @@ import com.geargames.common.Graphics;
 import com.geargames.common.util.ArrayList;
 
 /**
- * User: mikhail v. kutuzov
+ * User: mikhail v. kutuzov, abarakov
  * Date: 12.02.13
  * Time: 17:10
  * Базовый класс для действий с игровыми окнами.
@@ -160,7 +160,7 @@ public abstract class PPanelManager {
     }
 
     /**
-     * Работаем в модальном режиме?
+     * Вернет true, если в текущий момент открыта модальная панелька?
      *
      * @return
      */
@@ -174,6 +174,5 @@ public abstract class PPanelManager {
             ((DrawablePPanel) drawableElements.get(i)).init();
         }
     }
-
 
 }

@@ -7,24 +7,29 @@ import java.util.TimeZone;
 
 public class ConsoleDebug extends com.geargames.common.env.Debug {
 
+    @Override
     public void trace(boolean key, String message) {
         if (key) {
             log(message);
         }
     }
 
+    @Override
     public void error(String message) {
         trace(String.valueOfC("Error: " + message.toString()));
     }
 
+    @Override
     public void warning(String message) {
         trace(String.valueOfC("Warning: " + message.toString()));
     }
 
+    @Override
     public void log(String message) {
         trace(message);
     }
 
+    @Override
     public void trace(String message) {
         Calendar c = Calendar.getInstance(TimeZone.getDefault());
         Logger.log(intToStr(c.get(Calendar.HOUR_OF_DAY), 2)
@@ -58,5 +63,6 @@ public class ConsoleDebug extends com.geargames.common.env.Debug {
     public void sendReport(Exception e, int uid) {
         logEx(e);
     }
+
 }
 

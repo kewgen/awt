@@ -68,6 +68,7 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
         this.value = 0;
     }
 
+    @Override
     public void onTouch(int y) {
         endMoving();
         value = y;
@@ -79,6 +80,7 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
         }
     }
 
+    @Override
     public void onMove(int y) {
         if (!released) {
             relativeClickedPosition = -1;
@@ -116,6 +118,7 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
         }
     }
 
+    @Override
     public void onTimer(int timerId) {
         if (timerId != this.timerId) {
             return;
@@ -184,14 +187,17 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
         }
     }
 
+    @Override
     public int getTop() {
         return center;
     }
 
+    @Override
     public int getPosition() {
         return position;
     }
 
+    @Override
     public void setPosition(int position) {
         if (this.position != position) {
             this.position = position;
@@ -201,6 +207,7 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
         }
     }
 
+    @Override
     public void onRelease(int y) {
         if (Drawable.DEBUG) {
             SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("RELEASED"));
@@ -208,6 +215,7 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
         startMoving();
     }
 
+    @Override
     public void onOutOfBounds() {
         if (Drawable.DEBUG) {
             SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("OUT OF BOUNDS"));
@@ -215,6 +223,7 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
         startMoving();
     }
 
+    @Override
     public void onClick(int number) {
         relativeClickedPosition = number * itemSize;
         if (!instinctPosition) {
@@ -230,6 +239,7 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
         }
     }
 
+    @Override
     public boolean isCentered() {
         return relativeClickedPosition != -1 && position + relativeClickedPosition == center;
     }
@@ -273,10 +283,12 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
     /**
      * Вернет объект-слушатель следящего за изменениями позиции прокрутки списка. Чаще всего это компонент "Полоса прокрутки".
      */
+    @Override
     public ScrollListener getScrollListener() {
         return scrollListener;
     }
 
+    @Override
     public void setScrollListener(ScrollListener scrollListener) {
         this.scrollListener = scrollListener;
     }

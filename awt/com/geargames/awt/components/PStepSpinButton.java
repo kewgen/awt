@@ -27,6 +27,7 @@ public class PStepSpinButton extends PTouchButton {
         this.parentBox = box;
     }
 
+    @Override
     public void onClick() {
         parentBox.setValue(parentBox.getValue() + step);
     }

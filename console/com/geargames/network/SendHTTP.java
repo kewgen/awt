@@ -11,10 +11,12 @@ import com.geargames.common.env.SystemEnvironment;
  */
 public class SendHTTP extends com.geargames.common.network.SendHTTP {
 
+    @Override
     public void log(java.lang.String msg) {
         SystemEnvironment.getInstance().getDebug().trace(com.geargames.common.String.valueOfC(msg));
     }
 
+    @Override
     public void logEx(Exception exception) {
         ((ConsoleDebug)SystemEnvironment.getInstance().getDebug()).logEx(exception);
     }

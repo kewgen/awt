@@ -16,33 +16,42 @@ public class StubMotionListener extends MotionListener {
         this.position = top;
     }
 
+    @Override
     public void onTouch(int y) {
     }
 
+    @Override
     public void onMove(int y) {
     }
 
+    @Override
     public int getTop() {
         return position;
     }
 
+    @Override
     public int getPosition() {
         return position;
     }
 
+    @Override
     public void setPosition(int position) {
         this.position = position;
     }
 
+    @Override
     public void onRelease(int y) {
     }
 
+    @Override
     public void onClick(int number) {
     }
 
+    @Override
     public void onOutOfBounds() {
     }
 
+    @Override
     public boolean isCentered() {
         return false;
     }
@@ -50,10 +59,12 @@ public class StubMotionListener extends MotionListener {
     /**
      * Вернет объект-слушатель следящего за изменениями позиции прокрутки списка. Чаще всего это компонент "Полоса прокрутки".
      */
+    @Override
     public ScrollListener getScrollListener() {
         return scrollListener;
     }
 
+    @Override
     public void setScrollListener(ScrollListener scrollListener) {
         this.scrollListener = scrollListener;
     }

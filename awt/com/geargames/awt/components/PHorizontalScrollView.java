@@ -66,6 +66,7 @@ public class PHorizontalScrollView extends HorizontalScrollView {
         }
     }
 
+    @Override
     public Vector getItems() {
         return items;
     }
@@ -79,18 +80,22 @@ public class PHorizontalScrollView extends HorizontalScrollView {
         setInitiated(false);
     }
 
+    @Override
     public PPrototypeElement getPrototype() {
         return prototypeElement;
     }
 
+    @Override
     public Region getDrawRegion() {
         return drawRegion;
     }
 
+    @Override
     public Region getTouchRegion() {
         return touchRegion;
     }
 
+    @Override
     public void initiate(Graphics graphics) {
         setInitiated(true);
     }

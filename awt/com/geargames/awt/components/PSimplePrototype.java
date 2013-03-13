@@ -25,10 +25,12 @@ public class PSimplePrototype extends PElement {
         this.prototype = prototype;
     }
 
+    @Override
     public Region getTouchRegion() {
         return region;
     }
 
+    @Override
     public Region getDrawRegion() {
         return region;
     }
@@ -37,6 +39,7 @@ public class PSimplePrototype extends PElement {
         this.region = region;
     }
 
+    @Override
     public void draw(Graphics graphics, int x, int y) {
         prototype.draw(graphics, x, y);
     }

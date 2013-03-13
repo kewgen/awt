@@ -4,7 +4,6 @@ import com.geargames.awt.components.ScrollableArea;
 import com.geargames.awt.utils.ItemSkin;
 import com.geargames.common.util.Region;
 import com.geargames.common.Graphics;
-import com.geargames.common.packer.PFrame;
 
 /**
  * User: mikhail.kutuzov
@@ -13,6 +12,7 @@ import com.geargames.common.packer.PFrame;
  */
 public abstract class PopUp extends Drawable {
 
+    @Override
     public void draw(Graphics graphics) {
         Region tmp = getRegionToDraw(graphics);
         if (DEBUG) {

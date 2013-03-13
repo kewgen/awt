@@ -28,14 +28,17 @@ public class Flying extends AcceleratedObject {
         this.speed = speed;
     }
 
+    @Override
     protected void setInitiated(boolean initiated) {
         this.initiated = initiated;
     }
 
+    @Override
     public boolean isInitiated() {
         return initiated;
     }
 
+    @Override
     public void initiate() {
         speed.setChanger(getAcceleration());
         point.setChanger(speed);
@@ -44,6 +47,7 @@ public class Flying extends AcceleratedObject {
         initiated = true;
     }
 
+    @Override
     public CMovingPoint getPoint() {
         return point;
     }
@@ -52,24 +56,29 @@ public class Flying extends AcceleratedObject {
         this.drawable = drawable;
     }
 
+    @Override
     public Drawable getDrawable() {
         return drawable;
     }
 
+    @Override
     public void setY(int top) {
         initiated = false;
         y = top;
     }
 
+    @Override
     public void setX(int left) {
         initiated = false;
         x = left;
     }
 
+    @Override
     public int getX() {
         return x;
     }
 
+    @Override
     public int getY() {
         return y;
     }
@@ -78,23 +87,28 @@ public class Flying extends AcceleratedObject {
         this.finishAdviser = finishAdviser;
     }
 
+    @Override
     public FinishAdviser getFinishAdviser() {
         return finishAdviser;
     }
 
+    @Override
     public boolean onEvent(int code, int param, int x, int y) {
         super.onEvent(code, param, x, y);
         return drawable.onEvent(code, param, x, y);
     }
 
+    @Override
     public void onFlyFinish() {
         //Debug.log("Пупсик прилетел");
     }
 
+    @Override
     public int getHeight() {
         return drawable.getHeight();
     }
 
+    @Override
     public int getWidth() {
         return drawable.getWidth();
     }

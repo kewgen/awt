@@ -7,16 +7,18 @@ import com.geargames.common.packer.PObject;
 
 /**
  * User: mikhail v. kutuzov
- * Базовый элемент GUI для всех элементов собирающихся по объектам из пакера.
+ * Базовый элемент GUI для всех элементов загружающихся из пакерных объектов.
  */
 public abstract class PObjectElement extends PElement {
     private Region drawRegion;
     private Region touchRegion;
 
+    @Override
     public Region getDrawRegion() {
         return drawRegion;
     }
 
+    @Override
     public Region getTouchRegion() {
         return touchRegion;
     }

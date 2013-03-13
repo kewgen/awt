@@ -37,6 +37,7 @@ public abstract class PButton extends PObjectElement {
         checked = false;
     }
 
+    @Override
     public void draw(Graphics graphics, int x, int y) {
         if (!getEnabled()) {
             disabledSkin.draw(graphics, x, y);

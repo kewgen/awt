@@ -101,6 +101,7 @@ public class Emitter extends com.geargames.common.packer.EmitProcess {
         return super.process(render, System.currentTimeMillis(), System.currentTimeMillis() - EMIT_INTERVAL, 0, 0, 0, 0);
     }
 
+    @Override
     public Emitter emitterAdd(Render render, int pos) {
         return (Emitter) render.createEmitter(pos, 0, 0);
     }
@@ -113,6 +114,7 @@ public class Emitter extends com.geargames.common.packer.EmitProcess {
     private short emitter_render_dx, emitter_render_dy;
 
 
+    @Override
     public String toString() {
         return "Emitter{" +
                 "render_type=" + render_type +
@@ -136,4 +138,5 @@ public class Emitter extends com.geargames.common.packer.EmitProcess {
     public int getDY() {
         return dy;
     }
+
 }

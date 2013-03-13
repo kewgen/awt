@@ -21,6 +21,7 @@ public class PSpriteProgressIndicator extends PObjectElement {
         cardinality = prototype.getIndexBySlot(1).getX();
     }
 
+    @Override
     public void draw(Graphics graphics, int x, int y) {
         graphics.getRender().getSprite(spriteIndex + value).draw(graphics, x, y);
     }

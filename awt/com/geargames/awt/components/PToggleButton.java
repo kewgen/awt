@@ -21,6 +21,7 @@ public abstract class PToggleButton extends PButton {
         super(prototype);
     }
 
+    @Override
     public void setChecked(boolean checked) {
         if (this.getChecked() != checked) {
             super.setChecked(checked);
@@ -28,6 +29,7 @@ public abstract class PToggleButton extends PButton {
         }
     }
 
+    @Override
     public boolean onEvent(int code, int param, int x, int y) {
         if (code == Event.EVENT_TOUCH_PRESSED && getTouchRegion().isWithIn(x, y)) {
             setChecked(!getChecked());
@@ -41,6 +43,7 @@ public abstract class PToggleButton extends PButton {
     /**
      * Обработчик события возникающего при клике по поверхности кнопки.
      */
+    @Override
     public void onClick() {
         // Пустая реализация. Объект, желающий обрабатывать событие кнопки, должен перекрыть данный метод.
     }

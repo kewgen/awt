@@ -18,7 +18,7 @@ public class PFontComposite extends PFont {
     public final static char DEFAULT_CHAR = '?';
     private PSprite defaultSprite = null;
 
-    PFontComposite(ArrayList fonts) {
+    public PFontComposite(ArrayList fonts) {
         this.fonts = fonts;
         PFont font = (PFont) fonts.get(0);
         baseLine = font.getBaseLine();
@@ -51,6 +51,7 @@ public class PFontComposite extends PFont {
      * @param character
      * @return Возвращает ссылку на спрайт символа или null, если символ в шрифте не определен.
      */
+    @Override
     public PSprite getSprite(char character) {
         PSprite sprite;
         for (int k = 0; k < fonts.size(); k++) {
@@ -67,6 +68,7 @@ public class PFontComposite extends PFont {
      * Вернуть базовую линию.
      * @return
      */
+    @Override
     public int getBaseLine() {
         return baseLine;
     }
@@ -75,6 +77,7 @@ public class PFontComposite extends PFont {
      * Вернуть размер шрифта.
      * @return
      */
+    @Override
     public int getSize() {
         return height;
     }
@@ -84,10 +87,12 @@ public class PFontComposite extends PFont {
      * @param character
      * @return
      */
+    @Override
     public int getWidth(char character) {
         return getSprite(character).getIndex(0).getX();
     }
 
+    @Override
     public int getWidth(ArrayChar characters, int position, int length) {
         int width = 0;
         length += position;
@@ -97,10 +102,12 @@ public class PFontComposite extends PFont {
         return width;
     }
 
+    @Override
     public int getWidth(String string) {
         return getWidth(string, 0, string.length());
     }
 
+    @Override
     public int getWidth(String string, int position, int length) {
         int width = 0;
         length += position;

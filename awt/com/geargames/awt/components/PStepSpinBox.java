@@ -27,6 +27,7 @@ public class PStepSpinBox extends PValueComponent {
         initiated = false;
     }
 
+    @Override
     protected void createSlotElementByIndex(IndexObject index, PObject parentPrototype) {
         switch (index.getSlot()) {
             case 0:
@@ -46,6 +47,7 @@ public class PStepSpinBox extends PValueComponent {
         }
     }
 
+    @Override
     public void draw(Graphics graphics, int x, int y) {
         if (!initiated) {
             initiate();
@@ -58,6 +60,7 @@ public class PStepSpinBox extends PValueComponent {
         initiated = true;
     }
 
+    @Override
     public int getValue() {
         return value;
     }
@@ -76,6 +79,7 @@ public class PStepSpinBox extends PValueComponent {
         label.setFont(font);
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         buttonUp.setEnabled(enabled);

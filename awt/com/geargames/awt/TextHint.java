@@ -134,14 +134,21 @@ public class TextHint extends PopUp {
                 instance.defaultFont, instance.defaultScrollable);
     }
 
+    public void hide() {
+        graphicsStrategy.startHiding();
+    }
+
+    @Override
     public void draw(Graphics graphics) {
         graphicsStrategy.draw(graphics);
     }
 
+    @Override
     public void superDraw(Graphics graphics) {
         super.draw(graphics);
     }
 
+    @Override
     public boolean onEvent(int code, int param, int x, int y) {
         if (listener != null /*&& edgeRegion != null && edgeRegion.isWithIn(x, y)*/) {
             listener.onEvent(this, code, param, x, y);
@@ -169,64 +176,74 @@ public class TextHint extends PopUp {
         initiated = false;
     }
 
+    @Override
     protected ItemSkin getTopLeftSkin() {
         return topLeftSkin;
     }
 
+    @Override
     protected ItemSkin getTopMiddleSkin() {
         return topMiddleSkin;
     }
 
+    @Override
     protected ItemSkin getTopRightSkin() {
         return topRightSkin;
     }
 
+    @Override
     protected ItemSkin getMiddleLeftSkin() {
         return middleLeftSkin;
     }
 
+    @Override
     protected ItemSkin getMiddleMiddleSkin() {
         return middleMiddleSkin;
     }
 
+    @Override
     protected ItemSkin getMiddleRightSkin() {
         return middleRightSkin;
     }
 
+    @Override
     protected ItemSkin getBottomLeftSkin() {
         return bottomLeftSkin;
     }
 
+    @Override
     protected ItemSkin getBottomMiddleSkin() {
         return bottomMiddleSkin;
     }
 
+    @Override
     protected ItemSkin getBottomRightSkin() {
         return bottomRightSkin;
     }
 
+    @Override
     public int getY() {
         return top;
     }
 
+    @Override
     public void setY(int top) {
         this.top = top;
         initiated = false;
     }
 
+    @Override
     public int getX() {
         return left;
     }
 
+    @Override
     public void setX(int left) {
         this.left = left;
         initiated = false;
     }
 
-    public void hide() {
-        graphicsStrategy.startHiding();
-    }
-
+    @Override
     protected Region getRegionToDraw(Graphics graphics) {
         if (!initiated) {
             // Нужно для TextHelper
@@ -281,6 +298,7 @@ public class TextHint extends PopUp {
         return edgeRegion;
     }
 
+    @Override
     public ScrollableArea getScrollableArea() {
         return textArea;
     }
@@ -373,6 +391,7 @@ public class TextHint extends PopUp {
         return initiated;
     }
 
+    @Override
     public int getHeight() {
         if (edgeRegion != null) {
             return edgeRegion.getHeight();
@@ -381,6 +400,7 @@ public class TextHint extends PopUp {
         }
     }
 
+    @Override
     public int getWidth() {
         if (edgeRegion != null) {
             return edgeRegion.getWidth();

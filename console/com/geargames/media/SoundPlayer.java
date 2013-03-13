@@ -47,6 +47,7 @@ public class SoundPlayer implements Runnable, Player {
         SystemEnvironment.getInstance().getDebug().trace(com.geargames.common.String.valueOfC("Sound created." + toString()));
     }
 
+    @Override
     public void play() {
         //музыка уже играет
         if (isMP3 && device != null && device.isOpen()) return;
@@ -56,6 +57,7 @@ public class SoundPlayer implements Runnable, Player {
         thread.start();
     }
 
+    @Override
     public void stop() {
         if (isMP3 && advancedPlayer != null) {
             if (isPlayed) taskToStop = true;
@@ -66,18 +68,22 @@ public class SoundPlayer implements Runnable, Player {
         }
     }
 
+    @Override
     public boolean isReady() {
         return !isPlayed;
     }
 
+    @Override
     public void setVolume(int volume) {
         this.volume = volume;
     }
 
+    @Override
     public void setLoopCount(int loopCount) {
         this.loopCount = loopCount;
     }
 
+    @Override
     public void run() {
         if (isMP3) {
             int loopCount_ = loopCount;
