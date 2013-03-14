@@ -1,11 +1,12 @@
 package com.geargames;
 
 import com.geargames.common.String;
+import com.geargames.common.env.Debug;
 
 import java.util.Calendar;
 import java.util.TimeZone;
 
-public class ConsoleDebug implements com.geargames.common.env.Debug {
+public class ConsoleDebug implements Debug {
 
     public void error(String message) {
         trace(String.valueOfC("Error: ").concat(message));

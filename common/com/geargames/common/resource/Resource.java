@@ -4,7 +4,6 @@ package com.geargames.common.resource;
  * User: abarakov
  * Date: 07.03.13
  */
-// ResourceDescription, Locable
 public abstract class Resource {
 
     private byte priority;

@@ -12,8 +12,8 @@ public class SystemEnvironment {
     private SystemEnvironment() {
     }
 
-    public static SystemEnvironment getInstance(){
-        if(instance == null){
+    public static SystemEnvironment getInstance() {
+        if (instance == null) {
             instance = new SystemEnvironment();
         }
         return instance;

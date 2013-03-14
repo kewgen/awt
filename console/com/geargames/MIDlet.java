@@ -128,19 +128,15 @@ public abstract class MIDlet extends JFrame implements HTTPCounter {
             public void mouseMoved(java.awt.event.MouseEvent evt) {
             }
         });
-
-
-        initComponents2();
-
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         getManager().onStop();//завершаем процессы
-    }//GEN-LAST:event_formWindowClosing
+    }
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-    }//GEN-LAST:event_formWindowClosed
+    }
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//размер канваза был изменен
         Manager manager = getManager();
@@ -150,16 +146,16 @@ public abstract class MIDlet extends JFrame implements HTTPCounter {
         int w = getWidth();
         int h = getHeight();
         manager.resizeScreenBuffer(w - Port.SCREEN_DX * 2, h - Port.SCREEN_DY - Port.SCREEN_DX);
-    }//GEN-LAST:event_formComponentResized
+    }
 
-    private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
+    private void formKeyPressed(java.awt.event.KeyEvent evt) {
         int code = evt.getKeyCode();
         switch (code) {
             default:
                 getManager().keyPressed(200 + code);
                 break;
         }
-    }//GEN-LAST:event_formKeyPressed
+    }
 
     private void formKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
     }//GEN-LAST:event_formKeyPressed
@@ -179,7 +175,7 @@ public abstract class MIDlet extends JFrame implements HTTPCounter {
 
     private void formMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseReleased
         Manager manager = getManager();
-        if (!evt.isControlDown()/*!isPressControl*/) {
+        if (!evt.isControlDown()) {
             manager.onTouchEvent(Canvas.ACTION_MOVE, evt.getX(), evt.getY());
         } else {
             if (lastMovePoint != null) {
@@ -189,32 +185,8 @@ public abstract class MIDlet extends JFrame implements HTTPCounter {
             }
             lastMovePoint = evt.getPoint();
         }
-    }//GEN-LAST:event_formMouseReleased
-
-    void initComponents2() {
-        //jDesktopPane1.set(jDesktopF, javax.swing.JLayeredPane.DEFAULT_LAYER);
-/*
-        for (int i = 0; i < Manage.FORM_COUNT; i++) {
-            if (manage.jFrameA[i] != null) {
-                jDesktopPane1.set(manage.jFrameA[i], javax.swing.JLayeredPane.DEFAULT_LAYER);
-            }
-        }
-*/
-
     }
 
-
-    void setFormIcon() {
-        try {
-            InputStream stm_in;
-            stm_in = getClass().getResourceAsStream("logo.gif");
-            BufferedImage im = ImageIO.read(stm_in);
-            setIconImage(im);
-            stm_in.close();
-        } catch (Exception e) {
-//            manage.logException(e);
-        }
-    }
 
     public void paint(Graphics g) {
         Manager manager = getManager();
