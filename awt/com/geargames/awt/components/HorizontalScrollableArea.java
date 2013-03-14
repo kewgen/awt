@@ -66,15 +66,12 @@ public abstract class HorizontalScrollableArea extends ScrollableArea {
         }
         if (getTouchRegion().isWithIn(x, y)) {
             switch (code) {
-//                case Event.EVENT_KEY_PRESSED:
                 case Event.EVENT_TOUCH_PRESSED:
                     getMotionListener().onTouch(x);
                     break;
-//                case Event.EVENT_KEY_REPEATED:
                 case Event.EVENT_TOUCH_MOVED:
                     getMotionListener().onMove(x);
                     break;
-//                case Event.EVENT_KEY_RELEASED:
                 case Event.EVENT_TOUCH_RELEASED:
                     getMotionListener().onRelease(x);
                     break;

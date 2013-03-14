@@ -1,6 +1,5 @@
 package com.geargames.awt.cinematics;
 
-import com.geargames.ConsoleDebug;
 import com.geargames.awt.Drawable;
 import com.geargames.awt.timers.OnTimerListener;
 import com.geargames.awt.timers.TimerManager;

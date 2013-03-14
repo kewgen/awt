@@ -15,8 +15,6 @@ public abstract class Manager {
 
     abstract public void resizeScreenBuffer(int w, int h);
 
-    abstract public void loadTextures();//OpenGL загрузка текстур
-
     abstract public void mainLoop();//Вызов основного игрового цикла. Он должен вызывать рендер нужных фреймов
 
     abstract public void loading();
