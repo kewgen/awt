@@ -70,12 +70,4 @@ public interface Recorder {
      */
     String loadProperty(String name) throws Exception;
 
-    /**
-     * Удалить свойство по имени name.
-     *
-     * @param name
-     * @throws Exception в случае проблем с удалением.
-     */
-    void deleteProperty(String name) throws Exception;
-
 }

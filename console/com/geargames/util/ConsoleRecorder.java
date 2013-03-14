@@ -1,6 +1,5 @@
 package com.geargames.util;
 
-import com.geargames.common.env.SystemEnvironment;
 import com.geargames.common.util.ArrayByte;
 import com.geargames.common.util.Cypher;
 import com.geargames.common.util.Recorder;
@@ -61,22 +60,14 @@ public class ConsoleRecorder implements Recorder {
     }
 
     public void storeProperty(String name, String data) throws Exception {
+        System.setProperty(name, data);
         File file = new File(properties.getPath() + File.separator + name);
-        DataOutputStream output = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
-        try {
-            output.writeBytes(data);
-        } finally {
-            output.close();
-        }
-
+        Writer writer = new FileWriter(file);
+        System.getProperties().store(writer, "");
     }
 
     public String loadProperty(String name) throws Exception {
-        return null;
-    }
-
-    public void deleteProperty(String name) throws Exception {
-
+        return System.getProperties().getProperty(name);
     }
 
 }
