@@ -1,6 +1,5 @@
 package com.geargames;
 
-
 import com.geargames.common.env.SystemEnvironment;
 import com.geargames.env.ConsoleEnvironment;
 
@@ -22,7 +21,7 @@ public abstract class Main extends Logger {
         if (args != null) {
             for (String string : args) {
                 log("Read arg:" + string);
-                if (string.equals("is_jar")) {//запуск из жара
+                if (string.equals("is_jar")) {//запуск из jar-файла
                     IS_JAR = true;
                 } else if (string.equals("cp866")) {//кодировка лога в консоль
                     ENCODE_CP866 = true;

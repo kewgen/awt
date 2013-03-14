@@ -15,7 +15,7 @@ import com.geargames.common.util.Region;
  * Users: mikhail.kutuzov, abarakov
  * Date: 14.11.11
  */
-public class TextHint extends PopUp {
+public class TextHint extends PopUp implements PostDrawable {
     private TextArea textArea;
 
     private ItemSkin topLeftSkin;
@@ -144,7 +144,7 @@ public class TextHint extends PopUp {
     }
 
     @Override
-    public void superDraw(Graphics graphics) {
+    public void postDraw(Graphics graphics) {
         super.draw(graphics);
     }
 

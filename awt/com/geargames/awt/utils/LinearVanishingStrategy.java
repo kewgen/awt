@@ -1,6 +1,6 @@
 package com.geargames.awt.utils;
 
-import com.geargames.awt.Drawable;
+import com.geargames.awt.PostDrawable;
 import com.geargames.awt.timers.OnTimerListener;
 import com.geargames.awt.timers.TimerIdMap;
 import com.geargames.awt.timers.TimerManager;
@@ -20,7 +20,7 @@ public class LinearVanishingStrategy extends GraphicsStrategy implements OnTimer
     public final static byte SHOWN_STATE   = 2; // Компонент появился
     public final static byte HIDING_STATE  = 3; // Компонент становится невидимым
 
-    private Drawable owner;
+    private PostDrawable owner;
     private byte state        = HIDDEN_STATE;
     private int showingTime   = 100;
     private int lifeTime      = 2000; // hideTimeout
@@ -28,7 +28,7 @@ public class LinearVanishingStrategy extends GraphicsStrategy implements OnTimer
     private byte transparency = 100;  // уровень прозрачности - число в интервале 0 .. 100, где 100 - полная прозрачность.
     private int startTime     = 0;    // время начала процесса (появления/сокрытия).
 
-    public LinearVanishingStrategy(Drawable owner) {
+    public LinearVanishingStrategy(PostDrawable owner) {
         this.owner = owner;
     }
 
@@ -38,11 +38,11 @@ public class LinearVanishingStrategy extends GraphicsStrategy implements OnTimer
             if (transparency < 100) {
                 int oldTransparency = graphics.getTransparency();
                 graphics.setTransparency(transparency);
-                owner.superDraw(graphics);
+                owner.postDraw(graphics);
                 graphics.setTransparency(oldTransparency);
             }
         } else {
-            owner.superDraw(graphics);
+            owner.postDraw(graphics);
         }
     }
 
@@ -60,7 +60,7 @@ public class LinearVanishingStrategy extends GraphicsStrategy implements OnTimer
                     }
                     break;
                 case HIDING_STATE: {
-                    //todo: Возможна вероятность перехода через 10-дневный скрок запуска приложения
+                    //todo: Возможна вероятность перехода через 10-дневный срок запуска приложения
                     // Это может привести к тому, что одно время было сохранено до перехода, а второе после,
                     // следовательно два этих времени недопустимо сравнивать
                     int elapsedTime = TimerManager.millisTime() - startTime;
@@ -143,11 +143,6 @@ public class LinearVanishingStrategy extends GraphicsStrategy implements OnTimer
         }
     }
 
-    private void starDelayedHiding() {
-        // Запустим таймер на автоматическое скрытие компонента спустя hideTimeout миллисекунд.
-        TimerManager.setSingleTimer(TimerIdMap.AWT_TEXTHINT_GRAPHICS_STRATEGY_TICK, lifeTime, this);
-    }
-
     /**
      * Начать процесс сокрытия компонента.
      */
@@ -176,12 +171,17 @@ public class LinearVanishingStrategy extends GraphicsStrategy implements OnTimer
         }
     }
 
+    private void starDelayedHiding() {
+        // Запустим таймер на автоматическое скрытие компонента спустя hideTimeout миллисекунд.
+        TimerManager.setSingleTimer(TimerIdMap.AWT_TEXTHINT_GRAPHICS_STRATEGY_TICK, lifeTime, this);
+    }
+
     /**
      * Вернуть компонент, видимостью которого, управляет данная стратегия.
      * @return
      */
     @Override
-    public Drawable getOwner() {
+    public PostDrawable getOwner() {
         return owner;
     }
 

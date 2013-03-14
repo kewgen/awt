@@ -1,7 +1,8 @@
 package com.geargames.awt.utils;
 
 import com.geargames.awt.Eventable;
-import com.geargames.awt.Drawable;
+import com.geargames.awt.PostDrawable;
+import com.geargames.awt.PostDrawable;
 import com.geargames.common.Graphics;
 
 /**
@@ -12,6 +13,6 @@ public abstract class GraphicsStrategy extends Eventable {
 
     public abstract void draw(Graphics graphics);
 
-    public abstract Drawable getOwner();
+    public abstract PostDrawable getOwner();
 
 }

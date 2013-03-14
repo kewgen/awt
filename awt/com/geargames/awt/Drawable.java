@@ -19,14 +19,6 @@ public abstract class Drawable extends Eventable {
     public abstract void draw(Graphics graphics);
 
     /**
-     * A method to be used to call an ancestor's drawing method.
-     *
-     * @param graphics графический контекст, на котором должен быть нарисован объект.
-     */
-    public void superDraw(Graphics graphics) {
-    }
-
-    /**
      * Вернуть смещение объекта относительно его родителя по оси X.
      * @return
      */
