@@ -13,10 +13,9 @@ public class Debug {
     // формат лог-записи:
     // [ 0:00:00.065] Notice    Log session started: 29.07.2010, 01:24:25
 
-    @Deprecated
-    public static void trace(String message) {
-        AbstractDebug.getInstance().trace(message);
-    }
+//    public static void trace(String message) {
+//        AbstractDebug.getInstance().trace(message);
+//    }
 
     public static void log(byte level, String message) {
         AbstractDebug.getInstance().log(level, message);
