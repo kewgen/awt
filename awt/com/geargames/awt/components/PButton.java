@@ -2,7 +2,7 @@ package com.geargames.awt.components;
 
 import com.geargames.common.Graphics;
 import com.geargames.common.String;
-import com.geargames.common.env.SystemEnvironment;
+import com.geargames.common.logging.Debug;
 import com.geargames.common.packer.Index;
 import com.geargames.common.packer.PObject;
 
@@ -31,8 +31,8 @@ public abstract class PButton extends PObjectElement {
         disabledSkin = prototype.getIndexBySlot(2);
         if (disabledSkin == null) {
             disabledSkin = normalSkin;
-            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC(
-                   "PButton: There is no skin of disabled state button ").concatC("pid= ").concatI(prototype.getPID()));
+            Debug.debug(String.valueOfC(
+                    "PButton: There is no skin of disabled state button ").concatC("pid= ").concatI(prototype.getPID()));
         }
         checked = false;
     }

@@ -4,7 +4,8 @@ import com.geargames.awt.Drawable;
 import com.geargames.awt.timers.OnTimerListener;
 import com.geargames.awt.timers.TimerManager;
 import com.geargames.common.Graphics;
-import com.geargames.common.String;import com.geargames.common.env.SystemEnvironment;
+import com.geargames.common.String;
+import com.geargames.common.logging.Debug;
 
 import java.util.Vector;
 
@@ -83,7 +84,7 @@ public abstract class MovingObject extends Drawable implements OnTimerListener {
                 }
                 getFinishAdviser().onTick();
                 if (Drawable.DEBUG) {
-                    SystemEnvironment.getInstance().getDebug().trace(String.valueOfI((int) getPoint().getX()).concat(" ").concatI((int) getPoint().getY()));
+                    Debug.debug(String.valueOfI((int) getPoint().getX()).concat(" ").concatI((int) getPoint().getY()));
                 }
                 getPoint().move();
             } else {
