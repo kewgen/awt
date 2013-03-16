@@ -1,5 +1,6 @@
 package com.geargames.platform;
 
+import com.geargames.common.Graphics;
 import com.geargames.platform.packer.Canvas;
 
 /**
@@ -15,7 +16,7 @@ public abstract class Manager {
 
     abstract public void resizeScreenBuffer(int w, int h);
 
-    abstract public void mainLoop();//Вызов основного игрового цикла. Он должен вызывать рендер нужных фреймов
+    abstract public void mainLoop();
 
     abstract public void loading();
 
@@ -40,7 +41,7 @@ public abstract class Manager {
     abstract public void menuPressed();
 
 
-    abstract public int getFrameTotalCount(); //OpenGL общее число фреймов для кеширования
+    abstract public int getFrameTotalCount();
 
     public abstract int getSizeExpectedResources();
 

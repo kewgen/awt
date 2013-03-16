@@ -1,5 +1,6 @@
 package com.geargames.platform.media;
 
+import com.geargames.common.logging.Debug;
 import com.geargames.common.util.Recorder;
 import com.geargames.common.String;
 import com.geargames.common.util.ArrayByte;
@@ -17,7 +18,6 @@ public class Pool {
         list = new Hashtable<Integer, SoundPlayer>(streamCount);
     }
 
-    @Override
     public void load(Object midlet, String path, int id) {
         ArrayByte arrayByte = null;
         try {
@@ -25,7 +25,7 @@ public class Pool {
         } catch (Exception e) {
 
         }
-        SoundPlayer player = new SoundPlayer(path.toString(), null, arrayByte, false);
+        SoundPlayer player = new SoundPlayer(path, null, arrayByte, false);
         list.put(id, player);
     }
 
@@ -38,7 +38,7 @@ public class Pool {
         list.get(id).play();
     }
 
-    @Override
+
     public void stop(int id, int a) {
         if (list.get(id) == null) return;
         list.get(id).stop();

@@ -3,10 +3,13 @@ package com.geargames.platform;
 import com.geargames.common.logging.Debug;
 import com.geargames.common.logging.Logger;
 import com.geargames.common.String;
+import com.geargames.common.util.Recorder;
 import com.geargames.platform.env.ConsoleEnvironment;
 import com.geargames.platform.logging.ConsoleDebug;
 import com.geargames.platform.logging.ConsoleLogger;
+import com.geargames.platform.util.ConsoleRecorder;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -21,6 +24,7 @@ public abstract class Main {
         ConsoleEnvironment.setInstance(new ConsoleEnvironment());
         Logger.setInstance(new ConsoleLogger());
         ConsoleDebug.setInstance(new ConsoleDebug());
+        Recorder.setRecorder(new ConsoleRecorder(new File("regolith.data.storage"), new File("regolith.property.storage")));
     }
 
     public void commonMain(java.lang.String[] args) throws IOException {
@@ -29,21 +33,8 @@ public abstract class Main {
                 Debug.config(String.valueOfC("Read arg:" + string));
                 if (string.equals("is_jar")) {//запуск из jar-файла
                     IS_JAR = true;
-//                } else if (string.equals("cp866")) {//кодировка лога в консоль
-//                    ENCODE_CP866 = true;
-//                } else if (string.equals("double")) {//двойная графика
-//                    PortPlatform.setPort(3);//DoubleGraphic(true);
-//                    PortPlatform.setWH(1280, 720);//480 * 2 320 * 2);
-//                } else if (string.equals("fourthirds")) {//четыре-трети графика
-//                    PortPlatform.setPort(2);//setFourThirdsGraphic(true);
-//                    PortPlatform.setWH(480 * 4 / 3, 320 * 4 / 3);
-//                    PortPlatform.setWH(800, 480);
-//                } else if (string.equals("half")) {//две-трети графика
-//                    PortPlatform.setPort(0);//setHalfGraphic(true);
-//                    PortPlatform.setWH(480 * 2 / 3, 320 * 2 / 3);
-                } else if (string.equals("debug")) {//включаем дебаг
-
-                }
+               } else if (string.equals("debug")) {//включаем дебаг
+               }
             }
         }
     }

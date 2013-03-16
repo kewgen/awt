@@ -4,7 +4,6 @@ import com.geargames.common.Port;
 import com.geargames.common.String;
 import com.geargames.common.logging.Debug;
 import com.geargames.common.network.HTTPCounter;
-import com.geargames.packer.Canvas;
 
 import javax.swing.*;
 import java.awt.Graphics;

@@ -71,25 +71,11 @@ public abstract class Port {
         return Port.SSZ_H;
     }
 
-/*
-    public static void setDoubleGraphic(boolean flag) {
-        Port.IS_DOUBLE_GRAPHIC = flag;
-    }
-
-    public static void setFourThirdsGraphic(boolean flag) {
-        Port.IS_FOURTHIRDS_GRAPHIC = flag;
-    }
-
-    public static void setHalfGraphic(boolean flag) {
-        Port.IS_HALF_GRAPHIC = flag;
-    }
-*/
-
     public static byte getPort() {
         return port;
     }
 
-    public static void setPort(int port) {//0-half,1-normal,2-4/3,3-double
+    public static void setPort(int port) {
         Port.IS_HALF_GRAPHIC = false;
         Port.IS_FOURTHIRDS_GRAPHIC = false;
         Port.IS_DOUBLE_GRAPHIC = false;
