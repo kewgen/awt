@@ -430,6 +430,7 @@ public abstract class PManager implements com.geargames.common.Render {
     }
 
 
+    @Override
     public java.lang.String toString() {
         return "PManager{" +
                 "objects=" + objects.size() +
@@ -447,32 +448,40 @@ public abstract class PManager implements com.geargames.common.Render {
     private boolean isDataLoaded;
     private boolean isImagesLoaded;
 
+    @Override
     public abstract void create();
 
+    @Override
     public PObject getObject(int pid) {
         return (PObject) objects.get(pid);
     }
 
+    @Override
     public PUnitScript getUnitScript(int pid) {
         return (PUnitScript) unitScripts.get(pid);
     }
 
+    @Override
     public PUnit getUnit(int pid) {
         return (PUnit) units.get(pid);
     }
 
+    @Override
     public PAnimation getAnimation(int pid) {
         return (PAnimation) animations.get(pid);
     }
 
+    @Override
     public PAffine getAffine(int pid) {
         return (PAffine) affines.get(pid);
     }
 
+    @Override
     public PSprite getSprite(int pid) {
         return (PSprite) sprites.get(pid);
     }
 
+    @Override
     public PFrame getFrame(int pid) {
         if (pid < frames.size()) {
             return (PFrame) frames.get(pid);
@@ -484,22 +493,27 @@ public abstract class PManager implements com.geargames.common.Render {
     protected int o_dx;
     protected int o_dy;
 
+    @Override
     public void setODX(int dx) {
         o_dx = dx;
     }
 
+    @Override
     public void setODY(int dy) {
         o_dy = dy;
     }
 
+    @Override
     public void setStringColor(byte color) {
         string_color = color;
     }
 
+    @Override
     public byte getStringColor() {
         return string_color;
     }
 
+    @Override
     public EmitProcess createEmitter(int pos, int i, int i1) {
         return null;
     }
@@ -507,6 +521,7 @@ public abstract class PManager implements com.geargames.common.Render {
     public byte font;
     protected byte string_color;
 
+    @Override
     public int getSpriteDx(int id) {
         return getPSprite(id).getIndex(0).getX();
     }
@@ -523,10 +538,12 @@ public abstract class PManager implements com.geargames.common.Render {
         return (PFrame) frames.get(id);
     }
 
+    @Override
     public int getFrameW(int id) {
         return getPFrame(id).getWidth();
     }
 
+    @Override
     public int getFrameH(int id) {
         return getPFrame(id).getHeight();
     }

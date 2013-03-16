@@ -12,6 +12,7 @@ import com.geargames.common.Graphics;
  */
 public abstract class HorizontalScrollableArea extends ScrollableArea {
 
+    @Override
     public void draw(Graphics graphics, int x, int y) {
         if (!isInitiated()) {
             initiate(graphics);
@@ -58,6 +59,7 @@ public abstract class HorizontalScrollableArea extends ScrollableArea {
     /**
      * Обработчик событий экранных касаний и клавиатуры.
      */
+    @Override
     public boolean onEvent(int code, int param, int x, int y) {
         if (isStuck() || getMotionListener() == null) {
             return false;
@@ -86,6 +88,7 @@ public abstract class HorizontalScrollableArea extends ScrollableArea {
      *
      * @return
      */
+    @Override
     public int getDrawableAreaSize() {
         return getDrawRegion().getWidth();
     }
@@ -95,13 +98,14 @@ public abstract class HorizontalScrollableArea extends ScrollableArea {
      *
      * @return
      */
+    @Override
     public int getScrollPercent() {
         int window = getItemsAmount() * getItemSize();
 //      window -= getDrawRegion().getWidth(); //todo: Вероятно это тоже нужно?
         if (getTouchRegion().getWidth() >= window) {
             return 0;
         } else {
-            return (100 * ((getTouchRegion().getMinX() - getPosition()))) / window;
+            return (100 * (getTouchRegion().getMinX() - getPosition())) / window;
         }
     }
 

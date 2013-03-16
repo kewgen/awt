@@ -43,6 +43,7 @@ public abstract class PRadioButton extends PButton {
         }
     }
 
+    @Override
     public void setChecked(boolean checked) {
         if (this.getChecked() != checked) {
             super.setChecked(checked);
@@ -56,6 +57,7 @@ public abstract class PRadioButton extends PButton {
         }
     }
 
+    @Override
     public boolean onEvent(int code, int param, int x, int y) {
         if (code == Event.EVENT_TOUCH_PRESSED) {
             if (getTouchRegion().isWithIn(x, y)) {
@@ -71,6 +73,7 @@ public abstract class PRadioButton extends PButton {
     /**
      * Обработчик события возникающего при клике по поверхности кнопки.
      */
+    @Override
     public void onClick() {
         // Пустая реализация. Объект, желающий обрабатывать событие кнопки, должен перекрыть данный метод.
     }

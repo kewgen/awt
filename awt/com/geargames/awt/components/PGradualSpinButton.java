@@ -38,6 +38,7 @@ public class PGradualSpinButton extends PTouchButton implements OnTimerListener 
         this.step = step;
     }
 
+    @Override
     public boolean onEvent(int code, int param, int x, int y) {
         if (code == Event.EVENT_TOUCH_PRESSED) {
             tickCounter = 0;
@@ -61,6 +62,7 @@ public class PGradualSpinButton extends PTouchButton implements OnTimerListener 
      * Метод вызывается каждый раз при срабатывании таймера.
      * @param timerId - идентификатор сработавшего таймера, который вызвал данный метод.
      */
+    @Override
     public void onTimer(int timerId) {
         if (timerId == this.timerId) {
             tickCounter++;

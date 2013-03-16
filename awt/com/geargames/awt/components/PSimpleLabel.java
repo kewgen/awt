@@ -16,10 +16,12 @@ public class PSimpleLabel extends PLabel {
     public PSimpleLabel() {
     }
 
+    @Override
     public Region getDrawRegion() {
         return NullRegion.instance;
     }
 
+    @Override
     public Region getTouchRegion() {
         return NullRegion.instance;
     }

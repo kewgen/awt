@@ -4,8 +4,9 @@ import com.geargames.awt.Drawable;
 import com.geargames.awt.timers.OnTimerListener;
 import com.geargames.awt.timers.TimerManager;
 import com.geargames.awt.utils.MotionListener;
+import com.geargames.awt.utils.ScrollListener;
 import com.geargames.common.String;
-import com.geargames.common.env.SystemEnvironment;
+import com.geargames.common.logging.Debug;
 
 /**
  * user: mikhail v. kutuzov
@@ -31,6 +32,8 @@ public class ElasticInertMotionListener extends MotionListener implements OnTime
     private int backSpeed;
     private boolean released;
 
+    private ScrollListener scrollListener;
+
     private int timerId;
 
     public ElasticInertMotionListener() {
@@ -43,7 +46,7 @@ public class ElasticInertMotionListener extends MotionListener implements OnTime
     public void create(int top, int down, int window, int itemSize) {
         if (inertness < divider) {
             inertness = divider;
-            SystemEnvironment.getInstance().getDebug().warning(String.valueOfC("Inertness is too tiny"));
+            Debug.warning(String.valueOfC("Inertness is too tiny"));
         }
         this.top = top;
         this.down = down;
@@ -54,6 +57,7 @@ public class ElasticInertMotionListener extends MotionListener implements OnTime
         this.move = 0;
     }
 
+    @Override
     public void onTouch(int y) {
         endMoving();
         value = y;
@@ -61,26 +65,27 @@ public class ElasticInertMotionListener extends MotionListener implements OnTime
         storedMove = 0;
         draggingTicks = 0;
         if (Drawable.DEBUG) {
-            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("TOUCH: ").concat(y));
+            Debug.debug(String.valueOfC("TOUCH: ").concat(y));
         }
     }
 
+    @Override
     public void onMove(int y) {
         if (!released) {
             move = y - value;
             storedMove += move;
-            position += move * accelerator;
             value = y;
+            setPosition(position + move * accelerator);
             if (Drawable.DEBUG) {
-                SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("MOVE: ").concat(move));
-                SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("POSITION: ").concat(position));
+                Debug.debug(String.valueOfC("MOVE: ").concat(move));
+                Debug.debug(String.valueOfC("POSITION: ").concat(position));
             }
         }
     }
 
     private void startMoving() {
         if (Drawable.DEBUG) {
-            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("startMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
+            Debug.debug(String.valueOfC("startMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
         }
         released = true;
         if (timerId != TimerManager.NULL_TIMER) {
@@ -92,7 +97,7 @@ public class ElasticInertMotionListener extends MotionListener implements OnTime
 
     private void endMoving() {
         if (Drawable.DEBUG) {
-            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("endMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
+            Debug.debug(String.valueOfC("endMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
         }
         released = false;
         if (timerId != TimerManager.NULL_TIMER) {
@@ -101,6 +106,7 @@ public class ElasticInertMotionListener extends MotionListener implements OnTime
         }
     }
 
+    @Override
     public void onTimer(int timerId) {
         if (timerId != this.timerId) {
             return;
@@ -116,24 +122,24 @@ public class ElasticInertMotionListener extends MotionListener implements OnTime
                         storedMove /= draggingTicks;
                     }
                 }
-                position += storedMove * accelerator;
+                setPosition(position + storedMove * accelerator);
                 if (Drawable.DEBUG) {
-                    SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("INERTIA = ").concat(storedMove));
-                    SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("POSITION = ").concat(position));
+                    Debug.debug(String.valueOfC("INERTIA = ").concat(storedMove));
+                    Debug.debug(String.valueOfC("POSITION = ").concat(position));
                 }
             } else {
                 if (position > top) {
-                    position -= position - top > backSpeed ? backSpeed : position - top;
+                    setPosition(position - (position - top > backSpeed ? backSpeed : position - top));
                 } else if (position != top && position + window < down) {
-                    position += down - window - position > backSpeed ? backSpeed : down - window - position;
+                    setPosition(position + (down - window - position > backSpeed ? backSpeed : down - window - position));
                 } else {
                     int margin = (-position + top) % itemSize;
                     if (margin != 0) {
                         if (move > 0) {
                             margin = itemSize - margin;
-                            position -= margin > backSpeed ? backSpeed : margin;
+                            setPosition(position - (margin > backSpeed ? backSpeed : margin));
                         } else {
-                            position += margin > backSpeed ? backSpeed : margin;
+                            setPosition(position + (margin > backSpeed ? backSpeed : margin));
                         }
                     } else {
                         endMoving(); //todo: Только здесь останавливать таймер?
@@ -147,35 +153,47 @@ public class ElasticInertMotionListener extends MotionListener implements OnTime
         }
     }
 
+    @Override
     public int getTop() {
         return top;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
-    }
-
+    @Override
     public int getPosition() {
         return position;
     }
 
+    @Override
+    public void setPosition(int position) {
+        if (this.position != position) {
+            this.position = position;
+            if (scrollListener != null) {
+                scrollListener.onPositionChanged();
+            }
+        }
+    }
+
+    @Override
     public void onRelease(int y) {
         if (Drawable.DEBUG) {
-            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("RELEASED"));
+            Debug.debug(String.valueOfC("RELEASED"));
         }
         startMoving();
     }
 
+    @Override
     public void onOutOfBounds() {
         if (Drawable.DEBUG) {
-            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("OUT OF BOUNDS"));
+            Debug.debug(String.valueOfC("OUT OF BOUNDS"));
         }
         startMoving();
     }
 
+    @Override
     public void onClick(int number) {
     }
 
+    @Override
     public boolean isCentered() {
         return false;
     }
@@ -202,6 +220,19 @@ public class ElasticInertMotionListener extends MotionListener implements OnTime
 
     public void setInertness(int inertness) {
         this.inertness = inertness;
+    }
+
+    /**
+     * Вернет объект-слушатель следящего за изменениями позиции прокрутки списка. Чаще всего это компонент "Полоса прокрутки".
+     */
+    @Override
+    public ScrollListener getScrollListener() {
+        return scrollListener;
+    }
+
+    @Override
+    public void setScrollListener(ScrollListener scrollListener) {
+        this.scrollListener = scrollListener;
     }
 
 }

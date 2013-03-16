@@ -1,13 +1,22 @@
 package com.geargames.awt;
 
-import com.geargames.awt.DrawablePElement;
-
 /**
- * User: mikhail v. kutuzov
+ * User: mikhail v. kutuzov, abarakov
  * Date: 25.12.12
  * Time: 23:38
  */
 public abstract class DrawablePPanel extends DrawablePElement {
-    public abstract void onHide();
-    public abstract void onShow();
+
+    /**
+     * Обработчик события появления панельки верхнего уровня.
+     */
+    public void onShow() {
+    }
+
+    /**
+     * Обработчик события сокрытия панельки верхнего уровня.
+     */
+    public void onHide() {
+    }
+
 }

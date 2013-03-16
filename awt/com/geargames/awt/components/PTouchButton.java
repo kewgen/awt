@@ -19,10 +19,12 @@ public abstract class PTouchButton extends PButton {
         super(prototype);
     }
 
+    @Override
     public void setChecked(boolean checked) {
         // Кнопка не должна менять своего состояния никаким способом, кроме как по нажатию тачем.
     }
 
+    @Override
     public boolean onEvent(int code, int param, int x, int y) {
         switch (code) {
             case Event.EVENT_TOUCH_PRESSED:
@@ -42,6 +44,7 @@ public abstract class PTouchButton extends PButton {
     /**
      * Обработчик события возникающего при клике по поверхности кнопки.
      */
+    @Override
     public void onClick() {
         // Пустая реализация. Объект, желающий обрабатывать событие кнопки, должен перекрыть данный метод.
     }

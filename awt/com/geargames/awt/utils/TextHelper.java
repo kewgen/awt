@@ -3,7 +3,7 @@ package com.geargames.awt.utils;
 import com.geargames.awt.Drawable;
 import com.geargames.common.String;
 import com.geargames.common.Graphics;
-import com.geargames.common.env.SystemEnvironment;
+import com.geargames.common.logging.Debug;
 import com.geargames.common.util.ArrayChar;
 import com.geargames.common.util.ArrayHelper;
 import com.geargames.common.util.ArrayInt;
@@ -15,9 +15,6 @@ import com.geargames.common.util.Region;
  * time: 19:26
  */
 public class TextHelper {
-
-    private static char SPACE = ' ';
-    private static char CARRIAGE_DOWN = '\n';
 
     /**
      * Метод предназначен для индексирования строки. Разбиения строки на отрезки всегда происходит по
@@ -47,7 +44,7 @@ public class TextHelper {
         for (int i = 0; i < separators.length(); i++) {
             complete = false;
             int index = separators.get(i);
-            if (characters.get(index) == CARRIAGE_DOWN) {
+            if (characters.get(index) == String.LINE_SEPARATOR) {
                 indexes.set(counter, activeIndex);
                 if (graphics.getWidth(characters, activeIndex, index - activeIndex) < region.getWidth()) {
                     indexes.set(counter + 1, index - activeIndex);
@@ -111,7 +108,7 @@ public class TextHelper {
         if (length > 0) {
             for (int i = 0; i < length; i++) {
                 char tmp = data.charAt(i);
-                if (tmp == SPACE || tmp == CARRIAGE_DOWN) {
+                if (tmp == String.SPACE || tmp == String.LINE_SEPARATOR) {
                     amount++;
                 }
             }
@@ -139,7 +136,7 @@ public class TextHelper {
     }
 
     private static boolean isSeparator(char character) {
-        return character == SPACE || character == CARRIAGE_DOWN;
+        return character == String.SPACE || character == String.LINE_SEPARATOR;
     }
 
     public static int getMaxWordLength(String tmp, Graphics graphics) {
@@ -161,7 +158,7 @@ public class TextHelper {
         len = graphics.getWidth(tmp.substring(previousEnd + 1));
         len = (len > length ? len : length);
         if (Drawable.DEBUG) {
-            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("The longest word length = ").concatI(len));
+            Debug.debug(String.valueOfC("The longest word length = ").concatI(len));
         }
         string.free();
         return len;
@@ -172,8 +169,8 @@ public class TextHelper {
     }
 
     public static int getNextTagIndex(ArrayChar string, int from) {
-        int spaceIndex = ArrayHelper.findNext(string, from, SPACE);
-        int carriageIndex = ArrayHelper.findNext(string, from, CARRIAGE_DOWN);
+        int spaceIndex = ArrayHelper.findNext(string, from, String.SPACE);
+        int carriageIndex = ArrayHelper.findNext(string, from, String.LINE_SEPARATOR);
         return spaceIndex > carriageIndex ? (carriageIndex != -1 ? carriageIndex : spaceIndex) : (spaceIndex != -1 ? spaceIndex : carriageIndex);
     }
 
@@ -181,7 +178,7 @@ public class TextHelper {
         int length = string.length();
         int counter = 0;
         for (int i = 0; i < length; i++) {
-            if (string.charAt(i) == CARRIAGE_DOWN) {
+            if (string.charAt(i) == String.LINE_SEPARATOR) {
                 counter++;
             }
         }

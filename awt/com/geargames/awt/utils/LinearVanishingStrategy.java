@@ -1,12 +1,12 @@
 package com.geargames.awt.utils;
 
-import com.geargames.awt.Drawable;
+import com.geargames.awt.PostDrawable;
 import com.geargames.awt.timers.OnTimerListener;
 import com.geargames.awt.timers.TimerIdMap;
 import com.geargames.awt.timers.TimerManager;
 import com.geargames.common.Graphics;
 import com.geargames.common.String;
-import com.geargames.common.env.SystemEnvironment;
+import com.geargames.common.logging.Debug;
 
 /**
  * User: mikhail.kutuzov, abarakov
@@ -20,7 +20,7 @@ public class LinearVanishingStrategy extends GraphicsStrategy implements OnTimer
     public final static byte SHOWN_STATE   = 2; // Компонент появился
     public final static byte HIDING_STATE  = 3; // Компонент становится невидимым
 
-    private Drawable owner;
+    private PostDrawable owner;
     private byte state        = HIDDEN_STATE;
     private int showingTime   = 100;
     private int lifeTime      = 2000; // hideTimeout
@@ -28,20 +28,21 @@ public class LinearVanishingStrategy extends GraphicsStrategy implements OnTimer
     private byte transparency = 100;  // уровень прозрачности - число в интервале 0 .. 100, где 100 - полная прозрачность.
     private int startTime     = 0;    // время начала процесса (появления/сокрытия).
 
-    public LinearVanishingStrategy(Drawable owner) {
+    public LinearVanishingStrategy(PostDrawable owner) {
         this.owner = owner;
     }
 
+    @Override
     public void draw(Graphics graphics) {
         if (transparency > 0) {
             if (transparency < 100) {
                 int oldTransparency = graphics.getTransparency();
                 graphics.setTransparency(transparency);
-                owner.superDraw(graphics);
+                owner.postDraw(graphics);
                 graphics.setTransparency(oldTransparency);
             }
         } else {
-            owner.superDraw(graphics);
+            owner.postDraw(graphics);
         }
     }
 
@@ -49,22 +50,23 @@ public class LinearVanishingStrategy extends GraphicsStrategy implements OnTimer
      * Метод вызывается каждый раз при срабатывании таймера.
      * @param timerId - идентификатор сработавшего таймера, который вызвал данный метод.
      */
+    @Override
     public void onTimer(int timerId) {
         if (timerId == TimerIdMap.AWT_TEXTHINT_GRAPHICS_STRATEGY_TICK) {
             switch (state) {
                 case HIDDEN_STATE:
                     if (DEBUG) {
-                        SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("LinearVanishingStrategy.onTimer(): HIDDEN_STATE"));
+                        Debug.debug(String.valueOfC("LinearVanishingStrategy.onTimer(): HIDDEN_STATE"));
                     }
                     break;
                 case HIDING_STATE: {
-                    //todo: Возможна вероятность перехода через 10-дневный скрок запуска приложения
+                    //todo: Возможна вероятность перехода через 10-дневный срок запуска приложения
                     // Это может привести к тому, что одно время было сохранено до перехода, а второе после,
                     // следовательно два этих времени недопустимо сравнивать
                     int elapsedTime = TimerManager.millisTime() - startTime;
                     int currentTransparency = (int)((float)elapsedTime / hidingTime * 100);
                     if (DEBUG) {
-                        SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("LinearVanishingStrategy.onTimer(): HIDING_STATE: transparency=").concat(currentTransparency));
+                        Debug.debug(String.valueOfC("LinearVanishingStrategy.onTimer(): HIDING_STATE: transparency=").concat(currentTransparency));
                     }
                     if (currentTransparency >= 100) {
                         // Компонент стал полностью прозрачным
@@ -83,7 +85,7 @@ public class LinearVanishingStrategy extends GraphicsStrategy implements OnTimer
                     int elapsedTime = TimerManager.millisTime() - startTime;
                     int currentTransparency = (int) (100 - (float)elapsedTime / showingTime * 100);
                     if (DEBUG) {
-                        SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("LinearVanishingStrategy.onTimer(): SHOWING_STATE: transparency=").concat(currentTransparency));
+                        Debug.debug(String.valueOfC("LinearVanishingStrategy.onTimer(): SHOWING_STATE: transparency=").concat(currentTransparency));
                     }
                     if (currentTransparency <= 0) {
                         // Компонент стал полностью непрозрачным
@@ -98,14 +100,14 @@ public class LinearVanishingStrategy extends GraphicsStrategy implements OnTimer
                 case SHOWN_STATE: {
                     // Сработал таймер с интервалом lifeTime
                     if (DEBUG) {
-                        SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("LinearVanishingStrategy.onTimer(): SHOWN_STATE"));
+                        Debug.debug(String.valueOfC("LinearVanishingStrategy.onTimer(): SHOWN_STATE"));
                     }
                     startHiding();
                     break;
                 }
                 default:
                     if (DEBUG) {
-                        SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("LinearVanishingStrategy.onTimer(): unknown"));
+                        Debug.error(String.valueOfC("LinearVanishingStrategy.onTimer(): unknown"));
                     }
                     break;
             }
@@ -141,11 +143,6 @@ public class LinearVanishingStrategy extends GraphicsStrategy implements OnTimer
         }
     }
 
-    private void starDelayedHiding() {
-        // Запустим таймер на автоматическое скрытие компонента спустя hideTimeout миллисекунд.
-        TimerManager.setSingleTimer(TimerIdMap.AWT_TEXTHINT_GRAPHICS_STRATEGY_TICK, lifeTime, this);
-    }
-
     /**
      * Начать процесс сокрытия компонента.
      */
@@ -174,11 +171,17 @@ public class LinearVanishingStrategy extends GraphicsStrategy implements OnTimer
         }
     }
 
+    private void starDelayedHiding() {
+        // Запустим таймер на автоматическое скрытие компонента спустя hideTimeout миллисекунд.
+        TimerManager.setSingleTimer(TimerIdMap.AWT_TEXTHINT_GRAPHICS_STRATEGY_TICK, lifeTime, this);
+    }
+
     /**
      * Вернуть компонент, видимостью которого, управляет данная стратегия.
      * @return
      */
-    public Drawable getOwner() {
+    @Override
+    public PostDrawable getOwner() {
         return owner;
     }
 

@@ -7,7 +7,7 @@ import com.geargames.common.Graphics;
  * User: mikhail.kutuzov, abarakov
  * Date: 27.11.11
  */
-public class VanishingLabel extends Label {
+public class VanishingLabel extends Label implements PostDrawable {
     private LinearVanishingStrategy graphicsStrategy;
 
     public VanishingLabel() {
@@ -34,11 +34,13 @@ public class VanishingLabel extends Label {
         return graphicsStrategy.isFullTransparent();
     }
 
+    @Override
     public void draw(Graphics graphics) {
         graphicsStrategy.draw(graphics);
     }
 
-    public void superDraw(Graphics graphics) {
+    @Override
+    public void postDraw(Graphics graphics) {
         super.draw(graphics);
     }
 

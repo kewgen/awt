@@ -15,9 +15,11 @@ public class VanishFinishAdviser extends FinishAdviser {
         this.label = label;
     }
 
+    @Override
     public void onTick() {
     }
 
+    @Override
     public boolean isFinished() {
         return label.isFullTransparent();
     }

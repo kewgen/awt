@@ -6,7 +6,7 @@ import com.geargames.awt.cinematics.FinishAdviser;
 
 /**
  * User: mikhail.kutuzov
- * Date: 12/27/11
+ * Date: 12.27.11
  * Time: 9:59 AM
  */
 public class Casted extends AcceleratedObject {
@@ -35,6 +35,7 @@ public class Casted extends AcceleratedObject {
         this.time = time;
     }
 
+    @Override
     protected void setInitiated(boolean initiated) {
         this.initiated = initiated;
     }
@@ -43,14 +44,17 @@ public class Casted extends AcceleratedObject {
         this.adviser = adviser;
     }
 
+    @Override
     public FinishAdviser getFinishAdviser() {
         return adviser;
     }
 
+    @Override
     public boolean isInitiated() {
         return initiated;
     }
 
+    @Override
     public void initiate() {
         if (getAcceleration() == null) {
             throw new IllegalArgumentException("An acceleration is not set.");
@@ -76,28 +80,34 @@ public class Casted extends AcceleratedObject {
         this.drawable = drawable;
     }
 
+    @Override
     public Drawable getDrawable() {
         return drawable;
     }
 
+    @Override
     public CMovingPoint getPoint() {
         return point;
     }
 
+    @Override
     public void setY(int top) {
         initiated = false;
         y1 = top;
     }
 
+    @Override
     public void setX(int left) {
         initiated = false;
         x1 = left;
     }
 
+    @Override
     public int getX() {
         return x1;
     }
 
+    @Override
     public int getY() {
         return y1;
     }
@@ -120,15 +130,19 @@ public class Casted extends AcceleratedObject {
         this.y2 = y2;
     }
 
+    @Override
     public void onFlyFinish() {
         //Debug.log("Пупсик прилетел");
     }
 
+    @Override
     public int getHeight() {
         return drawable.getHeight();
     }
 
+    @Override
     public int getWidth() {
         return drawable.getWidth();
     }
+
 }

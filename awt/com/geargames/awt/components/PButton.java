@@ -2,7 +2,7 @@ package com.geargames.awt.components;
 
 import com.geargames.common.Graphics;
 import com.geargames.common.String;
-import com.geargames.common.env.SystemEnvironment;
+import com.geargames.common.logging.Debug;
 import com.geargames.common.packer.Index;
 import com.geargames.common.packer.PObject;
 
@@ -13,10 +13,10 @@ import com.geargames.common.packer.PObject;
  * Кнопка может находиться в одном из двух состояний - отжатом или зажатом.
  * Способ переключения состояния кнопки задается логикой работы классов-наследников.
  * Пакерный объект-прототип кнопки должен содержать следующие спрайты:
- *     s0   спрайт отжатой кнопки;
- *     s1   спрайт зажатой кнопки;
+ *     s0   спрайт отжатой кнопки (normal);
+ *     s1   спрайт зажатой кнопки (pushed);
  *     s2   спрайт выключенной кнопки (disabled);
- *     s110 фрейм задающий размеры кнопки.
+ *     s110 фрейм задающий размеры кнопки (bounds).
  */
 public abstract class PButton extends PObjectElement {
     private Index normalSkin;
@@ -31,12 +31,13 @@ public abstract class PButton extends PObjectElement {
         disabledSkin = prototype.getIndexBySlot(2);
         if (disabledSkin == null) {
             disabledSkin = normalSkin;
-            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC(
-                   "PButton: There is no skin of disabled state button ").concatC("pid= ").concatI(prototype.getPID()));
+            Debug.debug(String.valueOfC(
+                    "PButton: There is no skin of disabled state button ").concatC("pid= ").concatI(prototype.getPID()));
         }
         checked = false;
     }
 
+    @Override
     public void draw(Graphics graphics, int x, int y) {
         if (!getEnabled()) {
             disabledSkin.draw(graphics, x, y);

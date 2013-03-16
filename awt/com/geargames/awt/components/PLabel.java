@@ -21,6 +21,7 @@ public abstract class PLabel extends PElement {
     public PLabel() {
     }
 
+    @Override
     public void draw(Graphics graphics, int x, int y) {
         PFont oldFont = graphics.getFont();
         graphics.setFont(font);

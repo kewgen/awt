@@ -3,7 +3,6 @@ package com.geargames.common.packer;
 import com.geargames.common.Graphics;
 
 /**
- * Created with IntelliJ IDEA.
  * User: kewgen
  * Date: 18.09.12
  * Time: 18:39
@@ -15,6 +14,7 @@ public class PAnimation extends PrototypeIndexes {
         type = com.geargames.common.Render.T_ANIMATION;
     }
 
+    @Override
     public void draw(Graphics graphics, int x, int y) {
         super.draw(graphics, indexCur, x, y);
     }

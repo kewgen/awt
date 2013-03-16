@@ -4,8 +4,9 @@ import com.geargames.awt.Drawable;
 import com.geargames.awt.timers.OnTimerListener;
 import com.geargames.awt.timers.TimerManager;
 import com.geargames.awt.utils.MotionListener;
+import com.geargames.awt.utils.ScrollListener;
 import com.geargames.common.String;
-import com.geargames.common.env.SystemEnvironment;
+import com.geargames.common.logging.Debug;
 
 /**
  * Users: mikhail v. kutuzov, abarakov
@@ -36,6 +37,8 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
     private boolean released;
     public boolean instinctPosition;
 
+    private ScrollListener scrollListener;
+
     private int timerId;
 
     public CenteredElasticInertMotionListener() {
@@ -48,7 +51,7 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
     public void create(int center, int itemOffset, int window, int itemSize) {
         if (inertness < divider) {
             inertness = divider;
-            SystemEnvironment.getInstance().getDebug().warning(String.valueOfC("Inertness is too tiny"));
+            Debug.warning(String.valueOfC("Inertness is too tiny"));
         }
 
         this.window = window;
@@ -65,6 +68,7 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
         this.value = 0;
     }
 
+    @Override
     public void onTouch(int y) {
         endMoving();
         value = y;
@@ -72,27 +76,28 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
         storedMove = 0;
         draggingTicks = 0;
         if (Drawable.DEBUG) {
-            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("TOUCH: ").concatI(y));
+            Debug.debug(String.valueOfC("TOUCH: ").concatI(y));
         }
     }
 
+    @Override
     public void onMove(int y) {
         if (!released) {
             relativeClickedPosition = -1;
             move = y - value;
             storedMove += move;
-            position += move * accelerator;
             value = y;
+            setPosition(position + move * accelerator);
             if (Drawable.DEBUG) {
-                SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("MOVE: ").concatI(move));
-                SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("POSITION: ").concatI(position));
+                Debug.debug(String.valueOfC("MOVE: ").concatI(move));
+                Debug.debug(String.valueOfC("POSITION: ").concatI(position));
             }
         }
     }
 
     private void startMoving() {
         if (Drawable.DEBUG) {
-            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("startMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
+            Debug.debug(String.valueOfC("startMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
         }
         released = true;
         if (timerId != TimerManager.NULL_TIMER) {
@@ -104,7 +109,7 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
 
     private void endMoving() {
         if (Drawable.DEBUG) {
-            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("endMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
+            Debug.debug(String.valueOfC("endMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
         }
         released = false;
         if (timerId != TimerManager.NULL_TIMER) {
@@ -113,6 +118,7 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
         }
     }
 
+    @Override
     public void onTimer(int timerId) {
         if (timerId != this.timerId) {
             return;
@@ -128,27 +134,27 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
                         storedMove /= draggingTicks;
                     }
                 }
-                position += storedMove * accelerator;
+                setPosition(position + storedMove * accelerator);
                 if (Drawable.DEBUG) {
-                    SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("INERTIA = ").concatI(storedMove));
-                    SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("POSITION = ").concatI(position));
+                    Debug.debug(String.valueOfC("INERTIA = ").concatI(storedMove));
+                    Debug.debug(String.valueOfC("POSITION = ").concatI(position));
                 }
             } else {
                 if (relativeClickedPosition == -1) {
                     if (position > center) {
-                        position -= position - center > backStep ? backStep : position - center;
+                        setPosition(position - (position - center > backStep ? backStep : position - center));
                     } else if (position + window - itemDiff < center) {
                         int tmp = center - window - position + itemDiff;
-                        position += tmp > backStep ? backStep : tmp;
+                        setPosition(position + (tmp > backStep ? backStep : tmp));
                     } else {
                         int margin = (-position + center) % itemSize;
                         if (margin != 0) {
                             margin = getCentralPositionNumber() * itemSize + position - center;
                             if (margin > 0) {
-                                position -= margin > backStep ? backStep : margin;
+                                setPosition(position - (margin > backStep ? backStep : margin));
                             } else {
                                 margin = -margin;
-                                position += margin > backStep ? backStep : margin;
+                                setPosition(position + (margin > backStep ? backStep : margin));
                             }
                         } else {
                             endMoving(); //todo: Только здесь останавливать таймер?
@@ -157,14 +163,13 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
                 } else {
                     int clickedPosition = position + relativeClickedPosition;
                     if (clickedPosition > center) {
-                        position -= -center + clickedPosition > backStep ? backStep : -center + clickedPosition;
+                        setPosition(position - (-center + clickedPosition > backStep ? backStep : -center + clickedPosition));
                     } else if (clickedPosition < center) {
-                        position += -clickedPosition + center > backStep ? backStep : -clickedPosition + center;
+                        setPosition(position + (-clickedPosition + center > backStep ? backStep : -clickedPosition + center));
                     } else {
                         endMoving(); //todo: Здесь надо останавливать таймер?
                     }
                 }
-
             }
             draggingTicks = 0;
         } else {
@@ -182,47 +187,59 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
         }
     }
 
+    @Override
     public int getTop() {
         return center;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
-    }
-
+    @Override
     public int getPosition() {
         return position;
     }
 
+    @Override
+    public void setPosition(int position) {
+        if (this.position != position) {
+            this.position = position;
+            if (scrollListener != null) {
+                scrollListener.onPositionChanged();
+            }
+        }
+    }
+
+    @Override
     public void onRelease(int y) {
         if (Drawable.DEBUG) {
-            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("RELEASED"));
+            Debug.debug(String.valueOfC("RELEASED"));
         }
         startMoving();
     }
 
+    @Override
     public void onOutOfBounds() {
         if (Drawable.DEBUG) {
-            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("OUT OF BOUNDS"));
+            Debug.debug(String.valueOfC("OUT OF BOUNDS"));
         }
         startMoving();
     }
 
+    @Override
     public void onClick(int number) {
         relativeClickedPosition = number * itemSize;
         if (!instinctPosition) {
             if (Drawable.DEBUG) {
-                SystemEnvironment.getInstance().getDebug().trace(String.valueOfI(number));
-                SystemEnvironment.getInstance().getDebug().trace(String.valueOfI(relativeClickedPosition).concatC(" ").concatI(position));
-                SystemEnvironment.getInstance().getDebug().trace(String.valueOfI(position).concatC(" ").concatI(window));
-                SystemEnvironment.getInstance().getDebug().trace(String.valueOfI(position + window - itemDiff));
-                SystemEnvironment.getInstance().getDebug().trace(String.valueOfI(center));
+                Debug.debug(String.valueOfI(number));
+                Debug.debug(String.valueOfI(relativeClickedPosition).concatC(" ").concatI(position));
+                Debug.debug(String.valueOfI(position).concatC(" ").concatI(window));
+                Debug.debug(String.valueOfI(position + window - itemDiff));
+                Debug.debug(String.valueOfI(center));
             }
         } else {
-            position = center - relativeClickedPosition;
+            setPosition(center - relativeClickedPosition);
         }
     }
 
+    @Override
     public boolean isCentered() {
         return relativeClickedPosition != -1 && position + relativeClickedPosition == center;
     }
@@ -261,6 +278,19 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
 
     public void setInertness(int inertness) {
         this.inertness = inertness;
+    }
+
+    /**
+     * Вернет объект-слушатель следящего за изменениями позиции прокрутки списка. Чаще всего это компонент "Полоса прокрутки".
+     */
+    @Override
+    public ScrollListener getScrollListener() {
+        return scrollListener;
+    }
+
+    @Override
+    public void setScrollListener(ScrollListener scrollListener) {
+        this.scrollListener = scrollListener;
     }
 
 }

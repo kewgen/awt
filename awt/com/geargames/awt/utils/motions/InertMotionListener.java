@@ -4,8 +4,9 @@ import com.geargames.awt.Drawable;
 import com.geargames.awt.timers.OnTimerListener;
 import com.geargames.awt.timers.TimerManager;
 import com.geargames.awt.utils.MotionListener;
+import com.geargames.awt.utils.ScrollListener;
 import com.geargames.common.String;
-import com.geargames.common.env.SystemEnvironment;
+import com.geargames.common.logging.Debug;
 
 /**
  * @author mikhail v. kutuzov
@@ -30,6 +31,8 @@ public class InertMotionListener extends MotionListener implements OnTimerListen
     private int backSpeed;
     private boolean released;
 
+    private ScrollListener scrollListener;
+
     private int timerId;
 
     public InertMotionListener() {
@@ -42,7 +45,7 @@ public class InertMotionListener extends MotionListener implements OnTimerListen
     public void create(int top, int down, int window) {
         if (inertness < divider) {
             inertness = divider;
-            SystemEnvironment.getInstance().getDebug().warning(String.valueOfC("Inertness is too tiny"));
+            Debug.warning(String.valueOfC("Inertness is too tiny"));
         }
         this.top = top;
         this.down = down;
@@ -52,6 +55,7 @@ public class InertMotionListener extends MotionListener implements OnTimerListen
         this.move = 0;
     }
 
+    @Override
     public void onTouch(int y) {
         endMoving();
         value = y;
@@ -59,26 +63,27 @@ public class InertMotionListener extends MotionListener implements OnTimerListen
         storedMove = 0;
         draggingTicks = 0;
         if (Drawable.DEBUG) {
-            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("TOUCH: ").concat(y));
+            Debug.debug(String.valueOfC("TOUCH: ").concat(y));
         }
     }
 
+    @Override
     public void onMove(int y) {
         if (!released) {
             move = y - value;
             storedMove += move;
-            position += move * accelerator;
             value = y;
+            setPosition(position + move * accelerator);
             if (Drawable.DEBUG) {
-                SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("MOVE: ").concat(move));
-                SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("POSITION: ").concat(position));
+                Debug.debug(String.valueOfC("MOVE: ").concat(move));
+                Debug.debug(String.valueOfC("POSITION: ").concat(position));
             }
         }
     }
 
     private void startMoving() {
         if (Drawable.DEBUG) {
-            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("startMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
+            Debug.debug(String.valueOfC("startMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
         }
         released = true;
         if (timerId != TimerManager.NULL_TIMER) {
@@ -90,7 +95,7 @@ public class InertMotionListener extends MotionListener implements OnTimerListen
 
     private void endMoving() {
         if (Drawable.DEBUG) {
-            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("endMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
+            Debug.debug(String.valueOfC("endMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
         }
         released = false;
         if (timerId != TimerManager.NULL_TIMER) {
@@ -99,6 +104,7 @@ public class InertMotionListener extends MotionListener implements OnTimerListen
         }
     }
 
+    @Override
     public void onTimer(int timerId) {
         if (timerId != this.timerId) {
             return;
@@ -114,25 +120,25 @@ public class InertMotionListener extends MotionListener implements OnTimerListen
                         storedMove /= draggingTicks;
                     }
                 }
-                position += storedMove/* * accelerator*/; //todo: умножение на accelerator?
+                setPosition(position + storedMove/* * accelerator*/); //todo: умножение на accelerator?
                 if (Drawable.DEBUG) {
-                    SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("INERTIA = ").concat(storedMove));
-                    SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("POSITION = ").concat(position));
+                    Debug.debug(String.valueOfC("INERTIA = ").concat(storedMove));
+                    Debug.debug(String.valueOfC("POSITION = ").concat(position));
                 }
             } else {
                 if (position > top) {
                     if (Drawable.DEBUG) {
-                        SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("return up"));
+                        Debug.debug(String.valueOfC("return up"));
                     }
-                    position -= position - top > backSpeed ? backSpeed : position - top;
+                    setPosition(position - (position - top > backSpeed ? backSpeed : position - top));
                 } else if (position != top && position + window < down) {
                     if (Drawable.DEBUG) {
-                        SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("return down position=").concat(position));
-                        SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("window=").concat(window));
-                        SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("down=").concat(down));
-                        SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("top=").concat(top));
+                        Debug.debug(String.valueOfC("return down position=").concat(position));
+                        Debug.debug(String.valueOfC("window=").concat(window));
+                        Debug.debug(String.valueOfC("down=").concat(down));
+                        Debug.debug(String.valueOfC("top=").concat(top));
                     }
-                    position += down - window - position > backSpeed ? backSpeed : down - window - position;
+                    setPosition(position + (down - window - position > backSpeed ? backSpeed : down - window - position));
                 } else {
                     endMoving(); //todo: Только здесь останавливать таймер?
                 }
@@ -144,35 +150,47 @@ public class InertMotionListener extends MotionListener implements OnTimerListen
         }
     }
 
+    @Override
     public int getTop() {
         return top;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
-    }
-
+    @Override
     public int getPosition() {
         return position;
     }
 
+    @Override
+    public void setPosition(int position) {
+        if (this.position != position) {
+            this.position = position;
+            if (scrollListener != null) {
+                scrollListener.onPositionChanged();
+            }
+        }
+    }
+
+    @Override
     public void onRelease(int y) {
         if (Drawable.DEBUG) {
-            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("RELEASED"));
+            Debug.debug(String.valueOfC("RELEASED"));
         }
         startMoving();
     }
 
+    @Override
     public void onOutOfBounds() {
         if (Drawable.DEBUG) {
-            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("OUT OF BOUNDS"));
+            Debug.debug(String.valueOfC("OUT OF BOUNDS"));
         }
         startMoving();
     }
 
+    @Override
     public void onClick(int number) {
     }
 
+    @Override
     public boolean isCentered() {
         return false;
     }
@@ -199,6 +217,19 @@ public class InertMotionListener extends MotionListener implements OnTimerListen
 
     public void setInertness(int inertness) {
         this.inertness = inertness;
+    }
+
+    /**
+     * Вернет объект-слушатель следящего за изменениями позиции прокрутки списка. Чаще всего это компонент "Полоса прокрутки".
+     */
+    @Override
+    public ScrollListener getScrollListener() {
+        return scrollListener;
+    }
+
+    @Override
+    public void setScrollListener(ScrollListener scrollListener) {
+        this.scrollListener = scrollListener;
     }
 
 }

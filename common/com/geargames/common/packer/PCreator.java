@@ -6,5 +6,7 @@ package com.geargames.common.packer;
  * Из конкретного проекта необходимо предоставить реализацию этого класса.
  */
 public abstract class PCreator {
+
     public abstract PUnit createUnit(int pid, int size);
+
 }

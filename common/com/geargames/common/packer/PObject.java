@@ -1,7 +1,6 @@
 package com.geargames.common.packer;
 
 /**
- * Created with IntelliJ IDEA.
  * User: kewgen
  * Date: 18.09.12
  * Time: 19:13

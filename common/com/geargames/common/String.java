@@ -7,10 +7,12 @@ public class String {
 
     private StringBuilder string;
 
+    //todo: java.lang.String?
     private String(java.lang.String str) {
         this.string = new StringBuilder(str);
     }
 
+    //todo: StringBuilder?
     private String(StringBuilder stringBuilder) {
         string = new StringBuilder(stringBuilder);
     }

@@ -22,6 +22,7 @@ public abstract class AcceleratedObject extends MovingObject {
 
     protected abstract void setInitiated(boolean initiated);
 
+    @Override
     public void onFlyEnd() {
         setInitiated(false);
         onFlyFinish();

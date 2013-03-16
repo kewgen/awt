@@ -3,7 +3,6 @@ package com.geargames.common.packer;
 import com.geargames.common.Graphics;
 
 /**
- * Created with IntelliJ IDEA.
  * User: kewgen
  * Date: 18.09.12
  * Time: 17:54
@@ -20,6 +19,7 @@ public class PSprite extends PrototypeIndexes {
         type = com.geargames.common.Render.T_SPRITE;
     }
 
+    @Override
     public void draw(Graphics graphics, int x, int y) {
         int size = list.size();
         for (int i = 0; i < size; i++) {

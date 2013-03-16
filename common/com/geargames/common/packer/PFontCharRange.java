@@ -34,6 +34,7 @@ public class PFontCharRange extends PFont {
      * @param character
      * @return Возвращает ссылку на спрайт символа или null, если символ в шрифте не определен.
      */
+    @Override
     public PSprite getSprite(char character) {
         int index = character - firstCharacter;
         if (index >= 0 && index < amount) {
@@ -63,6 +64,7 @@ public class PFontCharRange extends PFont {
      * Вернуть базовую линию.
      * @return
      */
+    @Override
     public int getBaseLine() {
         return baseLine;
     }
@@ -71,6 +73,7 @@ public class PFontCharRange extends PFont {
      * Вернуть размер шрифта.
      * @return
      */
+    @Override
     public int getSize() {
         return height;
     }
@@ -97,10 +100,12 @@ public class PFontCharRange extends PFont {
      * @param character
      * @return
      */
+    @Override
     public int getWidth(char character) {
         return (((PSprite)characters.get(character - firstCharacter)).getIndex(0).getX());
     }
 
+    @Override
     public int getWidth(ArrayChar characters, int position, int length) {
         int width = 0;
         length += position;
@@ -110,10 +115,12 @@ public class PFontCharRange extends PFont {
         return width;
     }
 
+    @Override
     public int getWidth(String string) {
         return getWidth(string, 0, string.length());
     }
 
+    @Override
     public int getWidth(String string, int position, int length) {
         int width = 0;
         length += position;
@@ -130,4 +137,5 @@ public class PFontCharRange extends PFont {
     public ArrayList getCharacters() {
         return characters;
     }
+
 }

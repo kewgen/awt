@@ -1,6 +1,7 @@
 package com.geargames.awt.timers;
 
-import com.geargames.common.env.SystemEnvironment;
+import com.geargames.common.env.Environment;
+import com.geargames.common.logging.Debug;
 import com.geargames.common.util.ArrayList;
 import com.geargames.common.util.HashMap;
 import com.geargames.common.String;
@@ -56,14 +57,14 @@ public class TimerManager {
 
     // Время старта приложения, с него начинаются все отсчеты таймеров (в миллисекундах)
     // Такой baseTime нужен в случае, если компьютер/устройство работает бесперерывно уже более 10 суток
-    private static long baseTime = SystemEnvironment.getInstance().getEnvironment().nanoTime() / 1000000;
+    private static long baseTime = Environment.nanoTime() / 1000000;
 
     /**
      * Вернуть время в миллисекундах
      */
     //todo: Перенести метод millisTime() в класс Environment
     public static int millisTime() {
-        long time = SystemEnvironment.getInstance().getEnvironment().nanoTime() / 1000000; // Перевод из наносекунд в миллисекунды.
+        long time = Environment.nanoTime() / 1000000; // Перевод из наносекунд в миллисекунды.
         time -= baseTime;  // Нормализация времени.
         return (int) time;
     }
@@ -162,14 +163,14 @@ public class TimerManager {
     // createTimer
     private static int setTimer(int timerId, int interval, byte timerType, OnTimerListener callBackElement) {
         if (STACK_TRACE) {
-            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("TimerManager.setTimer(").concat(
+            Debug.debug(String.valueOfC("TimerManager.setTimer(").concat(
                     String.valueOfC("timer id = ").concatI(timerId)).concat(
                     String.valueOfC("; interval = ").concatI(interval)).concat(
                     String.valueOfC("; timer type = ").concatI(timerType)).concat(")"));
         }
         killTimer(timerId);
         if (DEBUG && timerIds.containsKey(timerId)) {
-            SystemEnvironment.getInstance().getDebug().warning(String.valueOfC("TimerManager.setTimer():").concat(
+            Debug.error(String.valueOfC("TimerManager.setTimer():").concat(
                     String.valueOfC(" Put timerId that is already in timerIds (")).concat(
                     String.valueOfC("timer id = ").concatI(timerId)).concat(
                     String.valueOfC("; interval = ").concatI(interval)).concat(
@@ -255,7 +256,7 @@ public class TimerManager {
     // deleteTimer, removeTimer, releaseTimer
     public static void killTimer(int timerId) {
         if (STACK_TRACE) {
-            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("TimerManager.killTimer(timer id = ").concatI(timerId).concat(")"));
+            Debug.debug(String.valueOfC("TimerManager.killTimer(timer id = ").concatI(timerId).concat(")"));
         }
         Timer timer = findTimer(timerId);
         if (timer != null) {
@@ -309,7 +310,7 @@ public class TimerManager {
     // removeTimer
     private static void releaseTimer(Timer timer) {
         if (STACK_TRACE) {
-            SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("TimerManager.releaseTimer(").concat(
+            Debug.debug(String.valueOfC("TimerManager.releaseTimer(").concat(
                     String.valueOfC("timer id = ").concatI(timer.getId())).concat(
                     String.valueOfC("; interval = ").concatI(timer.getInterval())).concat(
                     String.valueOfC("; timer type = ").concatI(timer.getTimerType())).concat(
@@ -344,7 +345,7 @@ public class TimerManager {
                     }
                     break;
                 default:
-                    SystemEnvironment.getInstance().getDebug().error(String.valueOfC("TimerManager.releaseTimer(): illegal timerType (").concat(
+                    Debug.error(String.valueOfC("TimerManager.releaseTimer(): illegal timerType (").concat(
                             String.valueOfC("timer id = ").concatI(timer.getId())).concat(
                             String.valueOfC("; interval = ").concatI(timer.getInterval())).concat(
                             String.valueOfC("; timer type = ").concatI(timer.getTimerType())).concat(")"));
@@ -385,7 +386,7 @@ public class TimerManager {
         int newTime = millisTime();
         if (false && STACK_TRACE) {
             if (initiateTimers.size() > 0 || timers.size() > 0) {
-                SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("TimerManager.update():").concat(
+                Debug.debug(String.valueOfC("TimerManager.update():").concat(
                         String.valueOfC(" initiateTimers.size() = ").concatI(initiateTimers.size())).concat(
                         String.valueOfC("; timers.size() = ").concatI(timers.size())).concat(
                         String.valueOfC("; last time = ").concatI(lastTime)).concat(
@@ -394,12 +395,11 @@ public class TimerManager {
             }
         }
         if (updateStatus != UPDATE_STATUS_NONE) {
-            //todo: это error
-            SystemEnvironment.getInstance().getDebug().warning(String.valueOfC("TimerManager.update(): Method was called at the time, when it is already running (timer manager status = ").concatI(updateStatus).concat(")"));
+            Debug.error(String.valueOfC("TimerManager.update(): Method was called at the time, when it is already running (timer manager status = ").concatI(updateStatus).concat(")"));
         }
         try {
             if (DEBUG && !unusedTimersAssist.isEmpty()) {
-                SystemEnvironment.getInstance().getDebug().warning(String.valueOfC("TimerManager.update(): list unusedTimersAssist is not empty (size = ").concatI(unusedTimersAssist.size()).concat(")"));
+                Debug.warning(String.valueOfC("TimerManager.update(): list unusedTimersAssist is not empty (size = ").concatI(unusedTimersAssist.size()).concat(")"));
             }
             // Отложенная инициализация таймеров
             for (int i = 0; i < initiateTimers.size(); i++) {
@@ -420,7 +420,7 @@ public class TimerManager {
                 //todo: список может измениться, таймеры могут быть удалены, перемещны, изменены
                 Timer timer = (Timer)tickTimers.get(i);
                 if (STACK_TRACE) {
-                    SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("TimerManager.update(): timer.onTickTimer(").concat(
+                    Debug.debug(String.valueOfC("TimerManager.update(): timer.onTickTimer(").concat(
                             String.valueOfC("timer id = ").concatI(timer.getId())).concat(
                             String.valueOfC("; interval = ").concatI(timer.getInterval())).concat(
                             String.valueOfC("; timer type = ").concatI(timer.getTimerType())).concat(
@@ -432,7 +432,7 @@ public class TimerManager {
                 try {
                     timer.onTimer();
                 } catch (Exception e) {
-                    SystemEnvironment.getInstance().getDebug().error(String.valueOfC(e.getMessage()));
+                    Debug.error(String.valueOfC(e.getMessage()));
                 }
             }
             if (!unusedTimersAssist.isEmpty()) {
@@ -447,7 +447,7 @@ public class TimerManager {
                 int timeActivation = timer.getTimeActivation();
                 if (timeActivation <= newTime) {
                     if (STACK_TRACE) {
-                        SystemEnvironment.getInstance().getDebug().trace(String.valueOfC("TimerManager.update(): timer.onTimer(").concat(
+                        Debug.debug(String.valueOfC("TimerManager.update(): timer.onTimer(").concat(
                                 String.valueOfC("timer id = ").concatI(timer.getId())).concat(
                                 String.valueOfC("; interval = ").concatI(timer.getInterval())).concat(
                                 String.valueOfC("; timer type = ").concatI(timer.getTimerType())).concat(
@@ -459,8 +459,8 @@ public class TimerManager {
                     //todo: А если в обработчике таймера что-то сделать с этим таймером (остановить, запустить повторно, изменить)?
                     try {
                         timer.onTimer();
-                    } catch (Exception e) {
-                        SystemEnvironment.getInstance().getDebug().trace(String.valueOfC(e.getMessage()));
+                    } catch (Exception ex) {
+                        Debug.error(String.valueOfC("Exception during activation timer"), ex);
                     }
 
                     if (!timer.isKilled()) {
@@ -468,7 +468,7 @@ public class TimerManager {
                             int nextTimeActivation = timer.getNextTimeActivation();
                             if (DEBUG) {
                                 if (nextTimeActivation != -1 && timeActivation >= nextTimeActivation) {
-                                    SystemEnvironment.getInstance().getDebug().warning(String.valueOfC("TimerManager.update(): timeActivation >= nextTimeActivation (").concat(
+                                    Debug.warning(String.valueOfC("TimerManager.update(): timeActivation >= nextTimeActivation (").concat(
                                             String.valueOfC("timer id=").concatI(timer.getId())).concat(
                                             String.valueOfC("; interval=").concatI(timer.getInterval())).concat(
                                             String.valueOfC("; timer type=").concatI(timer.getTimerType())).concat(
@@ -478,7 +478,7 @@ public class TimerManager {
                                             String.valueOfC("; new time =").concatI(newTime)).concat(")"));
                                 }
                                 if (nextTimeActivation != -1 && lastTime >= nextTimeActivation) {
-                                    SystemEnvironment.getInstance().getDebug().warning(String.valueOfC("TimerManager.update(): nextTimeActivation <= lastTime (").concat(
+                                    Debug.warning(String.valueOfC("TimerManager.update(): nextTimeActivation <= lastTime (").concat(
                                             String.valueOfC("timer id = ").concatI(timer.getId())).concat(
                                             String.valueOfC("; interval = ").concatI(timer.getInterval())).concat(
                                             String.valueOfC("; timer type = ").concatI(timer.getTimerType())).concat(

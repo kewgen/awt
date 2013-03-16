@@ -26,6 +26,7 @@ public abstract class HorizontalScrollView extends HorizontalScrollableArea {
     /**
      * Обработчик событий экранных касаний и клавиатуры.
      */
+    @Override
     public boolean onEvent(int code, int param, int x, int y) {
         boolean result = super.onEvent(code, param, x, y);
         if (getTouchRegion().isWithIn(x, y)) {
@@ -74,6 +75,7 @@ public abstract class HorizontalScrollView extends HorizontalScrollableArea {
      *
      * @return
      */
+    @Override
     public int getItemsAmount() {
         return getItems().size();
     }
@@ -83,10 +85,12 @@ public abstract class HorizontalScrollView extends HorizontalScrollableArea {
      *
      * @return
      */
+    @Override
     public int getItemSize() {
         return getPrototype().getDrawRegion().getWidth() + margin;
     }
 
+    @Override
     public void drawItem(Graphics graphics, int itemIndex, int x, int y) {
         ((PElement) getItems().elementAt(itemIndex)).draw(graphics, x, y);
     }
@@ -143,6 +147,7 @@ public abstract class HorizontalScrollView extends HorizontalScrollableArea {
         setInitiated(false);
     }
 
+    @Override
     public MotionListener getMotionListener() {
         return motionListener;
     }

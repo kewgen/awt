@@ -11,6 +11,7 @@ public class Label extends Drawable {
     private byte color;
     private byte anchor;
 
+    @Override
     public void draw(Graphics graphics) {
         graphics.drawString(data, x, y, anchor);
     }
@@ -39,26 +40,32 @@ public class Label extends Drawable {
         this.data = data;
     }
 
+    @Override
     public int getX() {
         return x;
     }
 
+    @Override
     public void setX(int left) {
         this.x = left;
     }
 
+    @Override
     public int getY() {
         return y;
     }
 
+    @Override
     public void setY(int top) {
         this.y = top;
     }
 
+    @Override
     public int getHeight() {
         return 0;
     }
 
+    @Override
     public int getWidth() {
         return 0;
     }

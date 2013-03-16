@@ -22,6 +22,7 @@ public abstract class PEntitledToggleButton extends PToggleButton {
         labelTitle.setText(text);
     }
 
+    @Override
     public void draw(Graphics graphics, int x, int y) {
         super.draw(graphics, x, y);
         labelTitle.draw(graphics, x + labelTitle.getX(), y + labelTitle.getY());
@@ -42,4 +43,5 @@ public abstract class PEntitledToggleButton extends PToggleButton {
     public void setFont(PFont font) {
         labelTitle.setFont(font);
     }
+
 }

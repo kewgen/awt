@@ -75,7 +75,7 @@ public abstract class PContentPanel extends PObjectElement {
      * @param x координата по оси Х в локальной системе координат элемента.
      * @param y координата по оси Y в локальной системе координат элемента.
      */
-
+    @Override
     public void draw(Graphics graphics, int x, int y) {
         for (int i = 0; i < getChildren().size(); i++) {
             PElement element = (PElement) getChildren().get(i);
@@ -96,6 +96,7 @@ public abstract class PContentPanel extends PObjectElement {
      * @param y
      * @return
      */
+    @Override
     public boolean onEvent(int code, int param, int x, int y) {
         //todo: если dedicatedConsumer стал невидимым или выключенным, у него следует отобрать все права на захват всех событий
         if (dedicatedConsumer != null) {
@@ -190,4 +191,5 @@ public abstract class PContentPanel extends PObjectElement {
     public PElement getDedicatedConsumer() {
         return dedicatedConsumer;
     }
+
 }

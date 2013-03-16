@@ -1,6 +1,6 @@
 package com.geargames.common;
 
-import com.geargames.common.env.SystemEnvironment;
+import com.geargames.common.logging.Debug;
 
 import java.util.Vector;
 
@@ -21,7 +21,7 @@ public abstract class Application {
     public void eventAdd(int eventId, int param, Object data, int x, int y) {
         boolean normalSize = msgQueue.size() < 64;
         if (!normalSize) {
-            SystemEnvironment.getInstance().getDebug().warning(String.valueOfC("Queue length exceed 64 events (length=").concatI(msgQueue.size()).concatC(")"));
+            Debug.warning(String.valueOfC("Queue length exceed 64 events (length=").concatI(msgQueue.size()).concatC(")"));
         }
         Event event = new Event(eventId, param, data, x, y);
         msgQueue.addElement(event);

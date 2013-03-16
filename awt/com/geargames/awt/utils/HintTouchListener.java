@@ -13,6 +13,7 @@ public class HintTouchListener extends TouchListener {
     public HintTouchListener() {
     }
 
+    @Override
     public void onEvent(Drawable source, int code, int param, int x, int y) {
         if (code == Event.EVENT_TOUCH_PRESSED /*&& ! ((TextHint)source).getScrollableArea().getTouchRegion().isWithIn(x, y)*/) {
             TextHint textHint = (TextHint) source;

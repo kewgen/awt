@@ -10,6 +10,8 @@ import com.geargames.common.util.Region;
 
 public class TextArea extends VerticalScrollableArea {
 
+    private final static String STR_ELLIPSIS = String.valueOfC("...");
+
     private String text;
     private PFont font;
     private int format;
@@ -22,7 +24,6 @@ public class TextArea extends VerticalScrollableArea {
     private Region region;
 
     private int[] indexes;
-    private final static String STR_ELLIPSIS = String.valueOfC("...");
     private int itemEllipsisIndex = -1;
     private int ellipsisOffsetX = 0;
 
@@ -30,14 +31,17 @@ public class TextArea extends VerticalScrollableArea {
         region = new Region();
     }
 
+    @Override
     public Region getDrawRegion() {
         return region;
     }
 
+    @Override
     public Region getTouchRegion() {
         return region;
     }
 
+    @Override
     public void initiate(Graphics graphics) {
         if (text == null || graphics == null) {
             return;
@@ -93,6 +97,7 @@ public class TextArea extends VerticalScrollableArea {
         setInitiated(true);
     }
 
+    @Override
     public void drawItem(Graphics graphics, int itemIndex, int x, int y) {
         graphics.setColor(color);
         PFont oldFont = graphics.getFont();
@@ -107,6 +112,7 @@ public class TextArea extends VerticalScrollableArea {
         graphics.setFont(oldFont);
     }
 
+    @Override
     public int getItemsAmount() {
         return indexes != null ? indexes.length / 3 : 0;
     }
@@ -115,6 +121,7 @@ public class TextArea extends VerticalScrollableArea {
         return true;
     }
 
+    @Override
     public MotionListener getMotionListener() {
         return motionListener;
     }
@@ -145,6 +152,7 @@ public class TextArea extends VerticalScrollableArea {
         setInitiated(false);
     }
 
+    @Override
     public int getItemSize() {
         return rawHeight;
     }
@@ -179,10 +187,12 @@ public class TextArea extends VerticalScrollableArea {
         setInitiated(false);
     }
 
+    @Override
     public boolean isStrictlyClipped() {
         return isEllipsis() || super.isStrictlyClipped();
     }
 
+    @Override
     public boolean isStuck() {
         return isEllipsis() || super.isStuck();
     }

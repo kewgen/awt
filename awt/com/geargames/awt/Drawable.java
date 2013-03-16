@@ -4,7 +4,7 @@ import com.geargames.common.Graphics;
 
 /**
  * Базовый класс для объектов, которые могут быть нарисованы.
- * Users: Mikhail V. Kutuzov, abarakov
+ * Users: mikhail v. kutuzov, abarakov
  * Date: 20.11.11
  */
 public abstract class Drawable extends Eventable {
@@ -17,14 +17,6 @@ public abstract class Drawable extends Eventable {
      * @param graphics графический контекст, на котором должен быть нарисован объект.
      */
     public abstract void draw(Graphics graphics);
-
-    /**
-     * A method to be used to call an ancestor's drawing method.
-     *
-     * @param graphics графический контекст, на котором должен быть нарисован объект.
-     */
-    public void superDraw(Graphics graphics) {
-    }
 
     /**
      * Вернуть смещение объекта относительно его родителя по оси X.
