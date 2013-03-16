@@ -4,14 +4,10 @@ import com.geargames.common.Port;
 import com.geargames.common.String;
 import com.geargames.common.env.SystemEnvironment;
 import com.geargames.common.network.HTTPCounter;
-import com.geargames.common.util.HashMap;
 import com.geargames.packer.Canvas;
-import com.geargames.packer.Image;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -24,17 +20,13 @@ public abstract class MIDlet extends JFrame implements HTTPCounter {
 
     protected abstract void startApp() throws IOException;
 
-    protected abstract void onPause();
-
-    protected abstract void onResume();
-
     public MIDlet() {
         initComponents();
         setVisible(true);
         setSize(Port.getW() + Port.SCREEN_DX * 2, Port.getH() + Port.SCREEN_DY + Port.SCREEN_DX);
     }
 
-    public boolean platformRequest(String url, boolean inNewView) {
+    public boolean platformRequest(String url) {
         java.awt.Desktop desktop;
         if (java.awt.Desktop.isDesktopSupported()) {
             desktop = java.awt.Desktop.getDesktop();
@@ -187,101 +179,18 @@ public abstract class MIDlet extends JFrame implements HTTPCounter {
         }
     }
 
-
     public void paint(Graphics g) {
         Manager manager = getManager();
-        if (manager == null) return;
-            com.geargames.packer.Graphics graphicsme = new com.geargames.packer.Graphics(g);
-            manager.paint(graphicsme);
-    }
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private JFrame jDesktopF;
-    private boolean isPressControl;
-    private java.awt.Point lastMovePoint;
-    // End of variables declaration//GEN-END:variables
-
-    public void updateVersion() {
-    }
-
-    public void onVibration() {
-    }
-
-    public void marketBind() {
-    }
-
-    public Object getmFacebookManager() {
-        return null;
-    }
-
-    public void facebookShare() {
-    }
-
-    public FileInputStream openFileInput(java.lang.String name) {
-        return null;
-    }
-
-    public void sendPay(com.geargames.common.String str) {
-        try {
-            platformRequest(str, true);
-        } catch (Exception e) {
-            SystemEnvironment.getInstance().getDebug().logException(e);
+        if (manager == null) {
+            return;
         }
+        com.geargames.packer.Graphics graphicsme = new com.geargames.packer.Graphics(g);
+        manager.paint(graphicsme);
     }
 
-    public void progressDialogShow(com.geargames.common.String string) {
-        SystemEnvironment.getInstance().getDebug().log(string);
-    }
-
-    public void progressDialogClose() {
-    }
-
-    public void addMetrics(String metricsName, HashMap map, int uid) {
-    }
-
-    public void addErrorMetrics(Exception e) {
-    }
-
-    public com.geargames.common.String getLanguage() {
-        return null;
-    }
-
-    public void setLanguage(com.geargames.common.String langCur) {}
-
-    public boolean isDebugMode() {
-        return false;
-    }
-
-    public void setContentView(Canvas canvas) {
-    }//android затычка
-
-    public void runOnUiThread(Runnable runnable) {
-    }//android затычка
-
-    public Image getSplash() {
-        return null;
-    }
-
-    public boolean isSplashTimeUp() {
-        return true;
-    }
-
-    public Image getImageOfSplash() {
-        return null;
-    }
-
-    public void setDisplay(Canvas canvas) {
-    }
+    private java.awt.Point lastMovePoint;
 
     public void nextKBytes() {
-    }
-
-    public int getDPI() {
-        return 120;
-    }
-
-    public String saveScreenShot(Canvas canvas, String pfp_ss) {
-        return String.valueOfC("not ready");
     }
 
     protected abstract Manager getManager();

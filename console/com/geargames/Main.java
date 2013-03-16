@@ -2,29 +2,36 @@ package com.geargames;
 
 
 import com.geargames.common.env.SystemEnvironment;
+import com.geargames.common.util.Recorder;
 import com.geargames.env.ConsoleEnvironment;
+import com.geargames.util.ConsoleRecorder;
 
+import java.io.File;
 import java.io.IOException;
 
 /** @author ewgen */
 public abstract class Main extends Logger {
 
-    /** @param args the command line arguments */
-    public static boolean IS_JAR;
-
     protected Main() {
         SystemEnvironment systemEnvironment = SystemEnvironment.getInstance();
         systemEnvironment.setDebug(new ConsoleDebug());
         systemEnvironment.setEnvironment(ConsoleEnvironment.getInstance());
+        File folder = new File("regolith.data.storage");
+        if(folder.exists()){
+            if(!folder.isDirectory()){
+                return;
+            }
+        } else {
+            folder.mkdirs();
+        }
+        Recorder.setRecorder(new ConsoleRecorder(folder, new File("regolith.property.storage")));
     }
 
     public void commonMain(String[] args) throws IOException {
         if (args != null) {
             for (String string : args) {
                 log("Read arg:" + string);
-                if (string.equals("is_jar")) {//запуск из жара
-                    IS_JAR = true;
-                } else if (string.equals("cp866")) {//кодировка лога в консоль
+                if (string.equals("cp866")) {//кодировка лога в консоль
                     ENCODE_CP866 = true;
                 } else if (string.equals("double")) {//двойная графика
                     PortPlatform.setPort(3);//DoubleGraphic(true);

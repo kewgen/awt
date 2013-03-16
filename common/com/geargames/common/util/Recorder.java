@@ -2,10 +2,19 @@ package com.geargames.common.util;
 
 /**
  * User: mkutuzov
- * Date: 14.03.13
- * На каждой платформе должно быть реализовано расширение этого класса для записи даных в хранилище устройства.
+ * Date: 15.03.13
  */
-public interface Recorder {
+public class Recorder {
+    private static AbstractRecorder recorder;
+
+    public static AbstractRecorder getRecorder() {
+        return recorder;
+    }
+
+    public static void setRecorder(AbstractRecorder recorder) {
+        Recorder.recorder = recorder;
+    }
+
     /**
      * Записать данные data в хранилище под именем name и зашифровать их способом cypher.
      *
@@ -14,7 +23,9 @@ public interface Recorder {
      * @param cypher
      * @throws Exception в случае проблем с записью.
      */
-    void store(String name, ArrayByte data, Cypher cypher) throws Exception;
+    public static void store(String name, ArrayByte data, Cypher cypher) throws Exception{
+        recorder.store(name, data, cypher);
+    }
 
     /**
      * Загрузить данные из хранилища по имени name и расшифровать их способом cypher.
@@ -23,7 +34,9 @@ public interface Recorder {
      * @return расщифрованнные данные из хранилища.
      * @throws Exception в случае проблем с чтением данных.
      */
-    ArrayByte load(String name, Cypher cypher) throws Exception;
+    public static ArrayByte load(String name, Cypher cypher) throws Exception {
+        return recorder.load(name, cypher);
+    }
 
     /**
      * Записать данные data в хранилище под именем name.
@@ -32,7 +45,9 @@ public interface Recorder {
      * @param data
      * @throws Exception в случае проблем с записью.
      */
-    void store(String name, ArrayByte data) throws Exception;
+    public static void store(String name, ArrayByte data) throws Exception{
+        recorder.store(name, data);
+    }
 
     /**
      * Загрузить данные из локального хранилища по имени name.
@@ -41,7 +56,9 @@ public interface Recorder {
      * @return
      * @throws Exception в случае отсутсвия данных.
      */
-    ArrayByte load(String name) throws Exception;
+    public static ArrayByte load(String name) throws Exception {
+        return recorder.load(name);
+    }
 
 
     /**
@@ -50,7 +67,9 @@ public interface Recorder {
      * @param name
      * @throws Exception
      */
-    void delete(String name) throws Exception;
+    public static void delete(String name) throws Exception{
+          recorder.delete(name);
+    }
 
     /**
      * Сохранить свойство data под именем name.
@@ -59,15 +78,44 @@ public interface Recorder {
      * @param data
      * @throws Exception в случае проблем с записью.
      */
-    void storeProperty(String name, String data) throws Exception;
+    public static void storeStringProperty(String name, String data) throws Exception{
+        recorder.storeStringProperty(name, data);
+    }
+
+    public static void storeIntegerProperty(String name, int data) throws  Exception {
+        recorder.storeIntegerProperty(name, data);
+    }
+
+    public static void storeDoubleProperty(String name, double data) throws Exception {
+        recorder.storeDoubleProperty(name,data);
+    }
+
+    public static void storeBooleanProperty(String name, boolean data) throws Exception {
+        recorder.storeBooleanProperty(name,data);
+    }
 
     /**
      * Загрузить свойство по имени name.
      *
      * @param name
      * @return
-     * @throws Exception в случае проблем с загрузкой данных.
+     * @throws Exception в случае отсутсвия данных.
      */
-    String loadProperty(String name) throws Exception;
+    public static String loadStringProperty(String name) throws Exception{
+          return recorder.loadStringProperty(name);
+    }
+
+    public static int loadIntegerProperty(String name) throws Exception{
+          return recorder.loadIntegerProperty(name);
+    }
+
+    public static double loadDoubleProperty(String name) throws Exception{
+          return recorder.loadDoubleProperty(name);
+    }
+
+    public static boolean loadBooleanProperty(String name) throws Exception{
+          return recorder.loadBooleanProperty(name);
+    }
+
 
 }

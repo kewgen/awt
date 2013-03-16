@@ -60,8 +60,6 @@ public class SoundPlayer implements Runnable, Player {
             if (isPlayed) taskToStop = true;
             setLoopCount(0);//останавливаем циклы
             device.close();
-//            advancedPlayer.stop();
-//            advancedPlayer.close();
         }
     }
 
@@ -79,10 +77,10 @@ public class SoundPlayer implements Runnable, Player {
 
     public void run() {
         if (isMP3) {
-            int loopCount_ = loopCount;
-            while (loopCount_ > 0 && !taskToStop) {
+            int counter = loopCount;
+            while (counter > 0 && !taskToStop) {
                 playMp3();
-                loopCount_--;
+                counter--;
             }
             taskToStop = false;
         } else {
@@ -92,7 +90,7 @@ public class SoundPlayer implements Runnable, Player {
 
     private void playWav() {
 
-        AudioInputStream audioInputStream = null;
+        AudioInputStream audioInputStream;
         try {
             if (data == null) {
                 File soundFile = new File(filename);
@@ -186,7 +184,6 @@ public class SoundPlayer implements Runnable, Player {
             isPlayed = false;
     }
 
-    @Override
     public String toString() {
         return "SoundPlayer{" +
                 "filename='" + filename + '\'' +
