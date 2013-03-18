@@ -32,8 +32,10 @@ public class ConsoleDebug extends AbstractDebug {
         try {
             Logger.getInstance().publish(message.concatCh(String.LINE_SEPARATOR));
         } catch (IOException ex) {
-            sendLogMessage(Level.ERROR, String.valueOfC("Message could not be published to the file"), ex);
-            ex.printStackTrace();
+            sendLogMessage(Level.ERROR, String.valueOfC("Message could not be published to the logfile"), ex);
+            if (Level.ERROR >= consoleLogLevelMinimum) {
+                ex.printStackTrace();
+            }
         }
     }
 

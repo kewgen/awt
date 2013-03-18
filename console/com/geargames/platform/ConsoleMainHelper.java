@@ -1,5 +1,7 @@
 package com.geargames.platform;
 
+import com.geargames.common.env.Environment;
+import com.geargames.common.logging.Debug;
 import com.geargames.common.logging.Logger;
 import com.geargames.platform.env.ConsoleEnvironment;
 import com.geargames.platform.logging.ConsoleDebug;
@@ -12,9 +14,9 @@ import com.geargames.platform.logging.ConsoleLogger;
 public class ConsoleMainHelper {
 
     public static void appInitialize() {
-        ConsoleEnvironment.setInstance(new ConsoleEnvironment());
+        Environment.setInstance(new ConsoleEnvironment());
         Logger.setInstance(new ConsoleLogger());
-        ConsoleDebug.setInstance(new ConsoleDebug());
+        Debug.setInstance(new ConsoleDebug());
     }
 
 }

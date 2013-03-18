@@ -10,71 +10,74 @@ public class Debug {
 
     public static final boolean IS_DEBUG = true;
 
-    // формат лог-записи:
-    // [ 0:00:00.065] Notice    Log session started: 29.07.2010, 01:24:25
+    private static AbstractDebug instance;
 
-//    public static void trace(String message) {
-//        AbstractDebug.getInstance().trace(message);
-//    }
+    public static AbstractDebug getInstance() {
+        return instance;
+    }
+
+    public static void setInstance(AbstractDebug instance) {
+        Debug.instance = instance;
+    }
 
     public static void log(byte level, String message) {
-        AbstractDebug.getInstance().log(level, message);
+        instance.log(level, message);
     }
 
     public static void log(byte level, String message, Exception ex) {
-        AbstractDebug.getInstance().log(level, message, ex);
+        instance.log(level, message, ex);
     }
 
     public static void debug(String message) {
-        AbstractDebug.getInstance().log(Level.DEBUG, message);
+        instance.log(Level.DEBUG, message);
     }
 
     public static void config(String message) {
-        AbstractDebug.getInstance().log(Level.CONFIG, message);
+        instance.log(Level.CONFIG, message);
     }
 
     public static void info(String message) {
-        AbstractDebug.getInstance().log(Level.INFO, message);
+        instance.log(Level.INFO, message);
     }
 
     public static void warning(String message) {
-        AbstractDebug.getInstance().log(Level.WARNING, message);
+        instance.log(Level.WARNING, message);
     }
 
     public static void warning(String message, Exception ex) {
-        AbstractDebug.getInstance().log(Level.WARNING, message, ex);
+        instance.log(Level.WARNING, message, ex);
     }
 
     public static void error(String message) {
-        AbstractDebug.getInstance().log(Level.ERROR, message);
+        instance.log(Level.ERROR, message);
     }
 
     public static void error(String message, Exception ex) {
-        AbstractDebug.getInstance().log(Level.ERROR, message, ex);
+        instance.log(Level.ERROR, message, ex);
     }
 
     public static void critical(String message) {
-        AbstractDebug.getInstance().log(Level.CRITICAL, message);
+        instance.log(Level.CRITICAL, message);
     }
 
     public static void critical(String message, Exception ex) {
-        AbstractDebug.getInstance().log(Level.CRITICAL, message, ex);
+        instance.log(Level.CRITICAL, message, ex);
     }
 
     public static void alert(String message) {
-        AbstractDebug.getInstance().log(Level.ALERT, message);
+        instance.log(Level.ALERT, message);
     }
 
     public static void alert(String message, Exception ex) {
-        AbstractDebug.getInstance().log(Level.ALERT, message, ex);
+        instance.log(Level.ALERT, message, ex);
     }
 
     public static void fatal(String message) {
-        AbstractDebug.getInstance().log(Level.FATAL, message);
+        instance.log(Level.FATAL, message);
     }
 
     public static void fatal(String message, Exception ex) {
-        AbstractDebug.getInstance().log(Level.FATAL, message, ex);
+        instance.log(Level.FATAL, message, ex);
     }
 
 }

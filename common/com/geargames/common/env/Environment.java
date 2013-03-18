@@ -6,32 +6,42 @@ package com.geargames.common.env;
  */
 public abstract class Environment {
 
+    private static AbstractEnvironment instance;
+
+    public static AbstractEnvironment getInstance() {
+        return instance;
+    }
+
+    public static void setInstance(AbstractEnvironment instance) {
+        Environment.instance = instance;
+    }
+
     public static long currentTimeMillis() {
-       return AbstractEnvironment.getInstance().currentTimeMillis();
+       return instance.currentTimeMillis();
     }
 
     public static long nanoTime() {
-        return AbstractEnvironment.getInstance().nanoTime();
+        return instance.nanoTime();
     }
 
     public static void exit(int status) {
-        AbstractEnvironment.getInstance().exit(status);
+        instance.exit(status);
     }
 
     public static int availableProcessors() {
-        return AbstractEnvironment.getInstance().availableProcessors();
+        return instance.availableProcessors();
     }
 
     public static long freeMemory() {
-        return AbstractEnvironment.getInstance().freeMemory();
+        return instance.freeMemory();
     }
 
     public static long totalMemory() {
-        return AbstractEnvironment.getInstance().totalMemory();
+        return instance.totalMemory();
     }
 
     public static long maxMemory() {
-        return AbstractEnvironment.getInstance().maxMemory();
+        return instance.maxMemory();
     }
 
 }

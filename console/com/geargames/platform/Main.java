@@ -1,5 +1,6 @@
 package com.geargames.platform;
 
+import com.geargames.common.env.Environment;
 import com.geargames.common.logging.Debug;
 import com.geargames.common.logging.Logger;
 import com.geargames.common.String;
@@ -21,9 +22,9 @@ public abstract class Main {
     public static boolean IS_JAR;
 
     protected Main() {
-        ConsoleEnvironment.setInstance(new ConsoleEnvironment());
+        Environment.setInstance(new ConsoleEnvironment());
         Logger.setInstance(new ConsoleLogger());
-        ConsoleDebug.setInstance(new ConsoleDebug());
+        Debug.setInstance(new ConsoleDebug());
         Recorder.setRecorder(new ConsoleRecorder(new File("regolith.data.storage"), new File("regolith.property.storage")));
     }
 
@@ -33,8 +34,8 @@ public abstract class Main {
                 Debug.config(String.valueOfC("Read arg:" + string));
                 if (string.equals("is_jar")) {//запуск из jar-файла
                     IS_JAR = true;
-               } else if (string.equals("debug")) {//включаем дебаг
-               }
+                } else if (string.equals("debug")) {//включаем дебаг
+                }
             }
         }
     }

@@ -6,16 +6,6 @@ package com.geargames.common.env; // env -> environment, app
  */
 public abstract class AbstractEnvironment {
 
-    private static AbstractEnvironment instance;
-
-    public static AbstractEnvironment getInstance() {
-        return instance;
-    }
-
-    public static void setInstance(AbstractEnvironment instance) {
-        AbstractEnvironment.instance = instance;
-    }
-
     public abstract long currentTimeMillis();
 
     public abstract long nanoTime();
