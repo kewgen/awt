@@ -20,7 +20,7 @@ public abstract class PManager implements com.geargames.common.Render {
 
     protected boolean DEBUG = false;
     private PCreator creator;
-    private PUnresolvedFrameManger unresolvedFrameManger;
+    private PUnresolvedFrameManager unresolvedFrameManager;
 
     public PManager() {
         isDataLoaded = false;
@@ -486,7 +486,7 @@ public abstract class PManager implements com.geargames.common.Render {
         if (pid < frames.size()) {
             return (PFrame) frames.get(pid);
         } else {
-            return unresolvedFrameManger.getFrame(pid);
+            return unresolvedFrameManager.getFrame(pid);
         }
     }
 
@@ -556,12 +556,12 @@ public abstract class PManager implements com.geargames.common.Render {
         this.creator = creator;
     }
 
-    public PUnresolvedFrameManger getUnresolvedFrameManger() {
-        return unresolvedFrameManger;
+    public PUnresolvedFrameManager getUnresolvedFrameManager() {
+        return unresolvedFrameManager;
     }
 
-    public void setUnresolvedFrameManger(PUnresolvedFrameManger unresolvedFrameManger) {
-        this.unresolvedFrameManger = unresolvedFrameManger;
+    public void setUnresolvedFrameManager(PUnresolvedFrameManager unresolvedFrameManager) {
+        this.unresolvedFrameManager = unresolvedFrameManager;
     }
 
     //тип слоя индекса
