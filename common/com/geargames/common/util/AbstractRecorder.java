@@ -6,6 +6,7 @@ package com.geargames.common.util;
  * На каждой платформе должно быть реализовано расширение этого класса для записи даных в хранилище устройства.
  */
 public interface AbstractRecorder {
+
     /**
      * Записать данные data в хранилище под именем name и зашифровать их способом cypher.
      *
@@ -43,7 +44,6 @@ public interface AbstractRecorder {
      */
     ArrayByte load(String name) throws Exception;
 
-
     /**
      * Удалить данные из хранилища.
      *
@@ -66,6 +66,7 @@ public interface AbstractRecorder {
     void storeDoubleProperty(String name, double data) throws Exception;
 
     void storeBooleanProperty(String name, boolean data) throws Exception;
+
     /**
      * Загрузить свойство по имени name.
      *
@@ -80,4 +81,5 @@ public interface AbstractRecorder {
     double loadDoubleProperty(String name) throws Exception;
 
     boolean loadBooleanProperty(String name) throws Exception;
+
 }

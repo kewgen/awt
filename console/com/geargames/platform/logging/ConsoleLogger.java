@@ -1,6 +1,5 @@
 package com.geargames.platform.logging;
 
-import com.geargames.common.String;
 import com.geargames.common.logging.Logger;
 
 import java.io.File;
@@ -23,7 +22,7 @@ public class ConsoleLogger extends Logger {
 
     @Override
     public void publish(String string) throws IOException {
-        fileWriter.append(string.toString());
+        fileWriter.append(string);
         flush();
     }
 
@@ -39,21 +38,17 @@ public class ConsoleLogger extends Logger {
 
     private void createLogFile() {
         try {
-            File out_dir = new File(logPathName.toString());
+            File out_dir = new File(logPathName);
             if (!out_dir.exists()) {
                 out_dir.mkdir();
             }
 
-            // project_20130313_20_04.log
-            SimpleDateFormat fileFormat = new SimpleDateFormat("yyyyMMdd_HH_mm");
-
-            java.lang.String fileName = logPathName + "/" + logFileName + "_" + fileFormat.format( new Date() ) + ".log";
+            // log/project_20130313_2004.log
+            SimpleDateFormat fileFormat = new SimpleDateFormat("yyyyMMdd_HHmm");
+            String fileName = logPathName + File.separator + logFileName + "_" + fileFormat.format( new Date() ) + ".log";
 
             File file = new File(fileName);
             fileWriter = new FileWriter(file);
-
-            fileWriter.append("");
-            fileWriter.flush();
         } catch (Exception e) {
             e.printStackTrace();
         }

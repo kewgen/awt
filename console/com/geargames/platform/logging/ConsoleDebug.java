@@ -30,7 +30,7 @@ public class ConsoleDebug extends AbstractDebug {
 
     private void trace(String message) {
         try {
-            Logger.getInstance().publish(message.concatCh(String.LINE_SEPARATOR));
+            Logger.getInstance().publish(message.concatCh(String.LINE_SEPARATOR).toString());
         } catch (IOException ex) {
             sendLogMessage(Level.ERROR, String.valueOfC("Message could not be published to the logfile"), ex);
             if (Level.ERROR >= consoleLogLevelMinimum) {

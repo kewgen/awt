@@ -85,16 +85,15 @@ public class ConsoleRecorder implements AbstractRecorder {
         String property = System.getProperties().getProperty(name);
         if (property == null) {
             Reader reader = new FileReader(properties);
-            try{
-            System.getProperties().load(reader);
-            }catch (Exception e){
+            try {
+                System.getProperties().load(reader);
+            } catch (Exception e) {
                 //todo
-            }
-            finally {
+            } finally {
                 reader.close();
             }
             property = System.getProperties().getProperty(name);
-            if(property == null){
+            if (property == null) {
                 throw new Exception();
             }
         }

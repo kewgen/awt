@@ -14,18 +14,17 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Users: ewgen, abarakov
+ * Users: ewgen, abarakov, mikhail v. kutuzov
  */
 public abstract class Main {
 
-    /** @param args the command line arguments */
     public static boolean IS_JAR;
 
     protected Main() {
         Environment.setInstance(new ConsoleEnvironment());
         Logger.setInstance(new ConsoleLogger());
         Debug.setInstance(new ConsoleDebug());
-        Recorder.setRecorder(new ConsoleRecorder(new File("regolith.data.storage"), new File("regolith.property.storage")));
+        Recorder.setRecorder(new ConsoleRecorder(new File(Recorder.storageFolder), new File(Recorder.storageProperties)));
     }
 
     public void commonMain(java.lang.String[] args) throws IOException {

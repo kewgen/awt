@@ -5,6 +5,10 @@ package com.geargames.common.util;
  * Date: 15.03.13
  */
 public class Recorder {
+
+    public static String storageFolder     = "project.data.storage";
+    public static String storageProperties = "project.property.storage";
+
     private static AbstractRecorder recorder;
 
     public static AbstractRecorder getRecorder() {
