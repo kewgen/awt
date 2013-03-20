@@ -53,7 +53,7 @@ public class MicroByteBuffer {
 
     /**
      * Считать байт из массива по индексу position.
-     * Если position > limit будет вызвано исключение.
+     * Если position > limit, то будет вызвано исключение.
      * @param position
      * @return
      */
