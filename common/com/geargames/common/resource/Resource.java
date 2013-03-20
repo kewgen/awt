@@ -1,56 +1,30 @@
 package com.geargames.common.resource;
 
+import com.geargames.common.util.ArrayByte;
+
 /**
- * User: abarakov
+ * User: abarakov, m.v. kutuzov
  * Date: 07.03.13
  */
 public abstract class Resource {
 
-    private byte priority;
-    private int lockCount;
+    private ResourceDescription description;
 
-    public Resource() {
-        priority = ResourcePriority.NORMAL;
-        lockCount = 0;
+    /**
+     * Вернуть описание ресурса.
+     * @return
+     */
+    public ResourceDescription getDescription() {
+        return description;
+    }
+
+    public void setDescription(ResourceDescription description) {
+        this.description = description;
     }
 
     /**
-     * Вернуть приоритет ресурса. Чем выше значение, тем менее вероятно, что неиспользуемый ресурс будет выгружен.
-     * @return одно из значений ResourcePriority
+     * Защищён ли ресурс от очистки через ResourceManager.
+     * @return true если защищён.
      */
-    public byte getPriority() {
-        return priority;
-    }
-
-    public void setPriority(byte priority) {
-        this.priority = priority;
-    }
-
-    public final boolean isLocked() {
-        return lockCount > 0;
-    }
-
-    public final void lock() {
-        lockCount++;
-        if (lockCount == 1) {
-            load();
-        }
-    }
-
-    public final boolean unlock() {
-        lockCount--;
-        if (lockCount == 0) {
-            release();
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    protected abstract void load();
-
-    protected abstract void release();
-
-    public abstract boolean isLoaded();
-
+    public abstract boolean isLocked();
 }
