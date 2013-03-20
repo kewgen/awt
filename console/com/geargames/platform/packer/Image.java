@@ -11,12 +11,13 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Port-wrapper класса Image для microedition
- */
-public class Image implements com.geargames.common.Image {
+public class Image extends com.geargames.common.Image {
 
-    public static Image createImage(int w, int h) throws IOException {
+    public boolean isLocked() {
+        return false;
+    }
+
+    public static Image createImage(int w, int h) {
         if (w == 0 || h == 0) return null;
         return new Image(new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB));
     }
@@ -98,11 +99,6 @@ public class Image implements com.geargames.common.Image {
     @Override
     public boolean isCreated() {
         return image != null;
-    }
-
-    @Override
-    public void resizeCanvas(int w, int h) {
-
     }
 
     public void rebuildFromGraphics() {

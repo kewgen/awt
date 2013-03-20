@@ -57,7 +57,9 @@ public class Result {
     private int param;
 
     public void free() {
-        if (data != null) data.free();
+        if (data != null) {
+            data.free();
+        }
     }
 
 }

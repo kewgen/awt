@@ -184,8 +184,8 @@ public abstract class MIDlet extends JFrame implements HTTPCounter {
         if (manager == null) {
             return;
         }
-        com.geargames.platform.packer.Graphics graphicsme = new com.geargames.platform.packer.Graphics(g);
-        manager.paint(graphicsme);
+        com.geargames.platform.packer.Graphics graphics = new com.geargames.platform.packer.Graphics(g);
+        manager.paint(graphics);
     }
 
     private java.awt.Point lastMovePoint;
