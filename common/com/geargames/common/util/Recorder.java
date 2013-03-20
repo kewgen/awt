@@ -6,8 +6,8 @@ package com.geargames.common.util;
  */
 public class Recorder {
 
-    public static String storageFolder     = "project.data.storage";
-    public static String storageProperties = "project.property.storage";
+    public static String storageFolder     = "data.storage";
+    public static String storageProperties = "property.storage";
 
     private static AbstractRecorder recorder;
 
