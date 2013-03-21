@@ -1,7 +1,5 @@
 package com.geargames.common.logging;
 
-import com.geargames.common.String;
-
 /**
  * User: abarakov
  * Date: 14.03.13
