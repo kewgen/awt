@@ -1,8 +1,8 @@
 package com.geargames.awt.cinematics;
 
 import com.geargames.awt.Drawable;
-import com.geargames.awt.timers.OnTimerListener;
-import com.geargames.awt.timers.TimerManager;
+import com.geargames.common.timers.TimerListener;
+import com.geargames.common.timers.TimerManager;
 import com.geargames.common.Graphics;
 import com.geargames.common.String;
 import com.geargames.common.logging.Debug;
@@ -20,7 +20,7 @@ import java.util.Vector;
  * Внутри содержится вектор точек, через которые объект пролетел, для прорисовки линии полёта в случае отладки.
  * Вектор этот будет создан только в режиме отладки.
  */
-public abstract class MovingObject extends Drawable implements OnTimerListener {
+public abstract class MovingObject extends Drawable implements TimerListener {
     private Vector points;
 
     private int timerId;

@@ -1,4 +1,4 @@
-package com.geargames.awt.timers;
+package com.geargames.common.timers;
 
 /**
  * User: abarakov

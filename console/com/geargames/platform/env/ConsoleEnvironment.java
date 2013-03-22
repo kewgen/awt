@@ -1,6 +1,8 @@
 package com.geargames.platform.env;
 
+import com.geargames.common.*;
 import com.geargames.common.env.AbstractEnvironment;
+import com.geargames.common.logging.Debug;
 
 /**
  * Users: mikhail v. kutuzov, abarakov
@@ -43,4 +45,12 @@ public class ConsoleEnvironment extends AbstractEnvironment {
         return Runtime.getRuntime().maxMemory();
     }
 
+    @Override
+    public void pause(int milliseconds) {
+        try{
+            Thread.sleep(milliseconds);
+        }catch (Exception e){
+            Debug.error(com.geargames.common.String.valueOfC("Pausing has been interrupted"), e);
+        }
+    }
 }

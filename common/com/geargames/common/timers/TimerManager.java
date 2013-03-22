@@ -1,4 +1,4 @@
-package com.geargames.awt.timers;
+package com.geargames.common.timers;
 
 import com.geargames.common.env.Environment;
 import com.geargames.common.logging.Debug;
@@ -161,7 +161,7 @@ public class TimerManager {
      * @return
      */
     // createTimer
-    private static int setTimer(int timerId, int interval, byte timerType, OnTimerListener callBackElement) {
+    private static int setTimer(int timerId, int interval, byte timerType, TimerListener callBackElement) {
         if (STACK_TRACE) {
             Debug.debug(String.valueOfC("TimerManager.setTimer(").concat(
                     String.valueOfC("timer id = ").concatI(timerId)).concat(
@@ -195,7 +195,7 @@ public class TimerManager {
      * @param callBackElement
      * @return
      */
-    public static int setSingleTimer(int timerId, int interval, OnTimerListener callBackElement) {
+    public static int setSingleTimer(int timerId, int interval, TimerListener callBackElement) {
         return setTimer(timerId, interval, Timer.SINGLE_TIMER_TYPE, callBackElement);
     }
 
@@ -204,7 +204,7 @@ public class TimerManager {
      * @param interval
      * @return
      */
-    public static int setSingleTimer(int interval, OnTimerListener callBackElement) {
+    public static int setSingleTimer(int interval, TimerListener callBackElement) {
         return setTimer(generateTimerId(), interval, Timer.SINGLE_TIMER_TYPE, callBackElement);
     }
 
@@ -216,7 +216,7 @@ public class TimerManager {
      * @return
      */
     // setMultipleTimer
-    public static int setPeriodicTimer(int timerId, int interval, OnTimerListener callBackElement) {
+    public static int setPeriodicTimer(int timerId, int interval, TimerListener callBackElement) {
         return setTimer(timerId, interval, Timer.PERIODIC_TIMER_TYPE, callBackElement);
     }
 
@@ -225,7 +225,7 @@ public class TimerManager {
      * @param interval
      * @return
      */
-    public static int setPeriodicTimer(int interval, OnTimerListener callBackElement) {
+    public static int setPeriodicTimer(int interval, TimerListener callBackElement) {
         return setTimer(generateTimerId(), interval, Timer.PERIODIC_TIMER_TYPE, callBackElement);
     }
 
@@ -236,7 +236,7 @@ public class TimerManager {
      * @return
      */
     // setMultipleTimer
-    public static int setTickTimer(int timerId, OnTimerListener callBackElement) {
+    public static int setTickTimer(int timerId, TimerListener callBackElement) {
         return setTimer(timerId, 0, Timer.TICK_TIMER_TYPE, callBackElement);
     }
 
@@ -245,7 +245,7 @@ public class TimerManager {
      * будет автоматически присвоен самим менеджером.
      * @return
      */
-    public static int setTickTimer(OnTimerListener callBackElement) {
+    public static int setTickTimer(TimerListener callBackElement) {
         return setTimer(generateTimerId(), 0, Timer.TICK_TIMER_TYPE, callBackElement);
     }
 

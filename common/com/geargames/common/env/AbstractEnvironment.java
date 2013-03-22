@@ -20,4 +20,6 @@ public abstract class AbstractEnvironment {
 
     public abstract long maxMemory();
 
+    public abstract void pause(int milliseconds);
+
 }

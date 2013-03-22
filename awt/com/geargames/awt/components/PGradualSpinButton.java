@@ -1,7 +1,7 @@
 package com.geargames.awt.components;
 
-import com.geargames.awt.timers.OnTimerListener;
-import com.geargames.awt.timers.TimerManager;
+import com.geargames.common.timers.TimerListener;
+import com.geargames.common.timers.TimerManager;
 import com.geargames.common.Event;
 import com.geargames.common.packer.PObject;
 
@@ -9,7 +9,7 @@ import com.geargames.common.packer.PObject;
  * Users: mikhail v. kutuzov, abarakov
  * Date: 27.12.12
  */
-public class PGradualSpinButton extends PTouchButton implements OnTimerListener {
+public class PGradualSpinButton extends PTouchButton implements TimerListener {
 
     private static final int REPEAT_DELAY    = 500;
     private static final int REPEAT_INTERVAL = 100;

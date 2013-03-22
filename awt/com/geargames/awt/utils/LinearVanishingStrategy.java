@@ -1,9 +1,9 @@
 package com.geargames.awt.utils;
 
 import com.geargames.awt.PostDrawable;
-import com.geargames.awt.timers.OnTimerListener;
-import com.geargames.awt.timers.TimerIdMap;
-import com.geargames.awt.timers.TimerManager;
+import com.geargames.common.timers.TimerListener;
+import com.geargames.common.timers.TimerIdMap;
+import com.geargames.common.timers.TimerManager;
 import com.geargames.common.Graphics;
 import com.geargames.common.String;
 import com.geargames.common.logging.Debug;
@@ -12,7 +12,7 @@ import com.geargames.common.logging.Debug;
  * User: mikhail.kutuzov, abarakov
  * Date: 21.11.11
  */
-public class LinearVanishingStrategy extends GraphicsStrategy implements OnTimerListener {
+public class LinearVanishingStrategy extends GraphicsStrategy implements TimerListener {
 
     private final static boolean DEBUG = false;
     public final static byte HIDDEN_STATE  = 0; // Компонент невидим/скрыт

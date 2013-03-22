@@ -1,8 +1,8 @@
 package com.geargames.awt.utils.motions;
 
 import com.geargames.awt.Drawable;
-import com.geargames.awt.timers.OnTimerListener;
-import com.geargames.awt.timers.TimerManager;
+import com.geargames.common.timers.TimerListener;
+import com.geargames.common.timers.TimerManager;
 import com.geargames.awt.utils.MotionListener;
 import com.geargames.awt.utils.ScrollListener;
 import com.geargames.common.String;
@@ -16,7 +16,7 @@ import com.geargames.common.logging.Debug;
  * @see InertMotionListener
  * @see ElasticInertMotionListener
  */
-public class CenteredElasticInertMotionListener extends MotionListener implements OnTimerListener {
+public class CenteredElasticInertMotionListener extends MotionListener implements TimerListener {
     private int divider;
     private int accelerator;
     private int relativeClickedPosition;

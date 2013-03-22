@@ -1,11 +1,11 @@
-package com.geargames.awt.timers;
+package com.geargames.common.timers;
 
 /**
  * Базовый класс объектов способных обрабатывать события таймеров.
  * User: abarakov
  * Date: 25.02.13
  */
-public interface OnTimerListener { // TimerNotificable
+public interface TimerListener { // TimerNotificable
 
     /**
      * Метод вызывается каждый раз при срабатывании таймера.
