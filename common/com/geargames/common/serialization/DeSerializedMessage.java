@@ -1,6 +1,5 @@
 package com.geargames.common.serialization;
 
-import com.geargames.common.String;
 import com.geargames.common.logging.Debug;
 
 /**
@@ -9,18 +8,17 @@ import com.geargames.common.logging.Debug;
  */
 public abstract class DeSerializedMessage {
 
-    public abstract void deSerialize(MicroByteBuffer buffer);
+    public abstract void deSerialize(MicroByteBuffer buffer) throws Exception;
 
     public abstract MicroByteBuffer getBuffer();
 
-    public void deSerialize() {
+    public void deSerialize() throws Exception {
         MicroByteBuffer buffer = getBuffer();
         deSerialize(buffer);
         // Проверка того, что сообщение было считано полностью и не считано лишних данных
         if (buffer.position() - 1 != buffer.limit()) {
-            Debug.error(String.valueOfC("DeSerializedMessage.deSerialize(): The expected position does not coincide with the actual position (").
-                            concat("expected=").concatI(buffer.limit()).
-                            concatC("; actual=").concatI(buffer.position() - 1).concatC(")"));
+            Debug.error("DeSerializedMessage.deSerialize(): The expected position does not coincide with the actual position (" +
+                            "expected=" + buffer.limit() + "; actual=" + (buffer.position() - 1) + ")");
         }
     }
 
