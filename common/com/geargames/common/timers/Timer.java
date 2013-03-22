@@ -1,4 +1,4 @@
-package com.geargames.awt.timers;
+package com.geargames.common.timers;
 
 /**
  * User: abarakov
@@ -15,7 +15,7 @@ public /*abstract*/ class Timer {
     private int timeActivation;        // Время срабатывания таймера. Время в данном контексте - это время относительно
                                        // времени старта системы
     //todo: Переименовать callBackElement
-    private OnTimerListener callBackElement; // Элемент, которому будет сообщено о срабатывании таймера
+    private TimerListener callBackElement; // Элемент, которому будет сообщено о срабатывании таймера
     // isMultiple
 //  private boolean isPeriodic;        // true, если таймер должен выполняться многократно
     private byte data; // state
@@ -37,7 +37,7 @@ public /*abstract*/ class Timer {
     /**
      * Вызывается при инициализации таймера.
      */
-    public void init(int id, int interval, byte timerType, OnTimerListener callBackElement) {
+    public void init(int id, int interval, byte timerType, TimerListener callBackElement) {
         this.id              = id;
         this.timeActivation  = interval == 0 ? 0 : TimerManager.millisTime() + interval;
         this.interval        = interval;
@@ -107,7 +107,7 @@ public /*abstract*/ class Timer {
         return timeActivation + interval;
     }
 
-    public OnTimerListener getCallBackElement() {
+    public TimerListener getCallBackElement() {
         return callBackElement;
     }
 

@@ -44,4 +44,8 @@ public abstract class Environment {
         return instance.maxMemory();
     }
 
+    public static void pause(int milliseconds){
+        instance.pause(milliseconds);
+    }
+
 }
