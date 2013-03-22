@@ -11,4 +11,5 @@ public abstract class DataOutput {
     public abstract void writeLong(long data) throws Exception;
     public abstract void writeBytes(byte[] data, int offset, int length) throws Exception;
     public abstract void writeUTF(String data) throws Exception;
+    public abstract void flush() throws Exception;
 }

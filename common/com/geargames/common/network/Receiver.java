@@ -60,12 +60,12 @@ public abstract class Receiver {
 
     protected void receiving() {
         int errors = 0;
-        short type = 0;  // ID сообщения
-        int length = 0;  // Длина данных сообщения
+        short type;  // ID сообщения
+        int length;  // Длина данных сообщения
 
         try {
             while (isRunning()) {
-                while (input.available()) {
+                while (!input.available()) {
                     if (!isRunning()) {
                         break;
                     }
@@ -77,7 +77,7 @@ public abstract class Receiver {
 
                 length = input.readShort() & 0xffff;
                 type = input.readShort();
-                int res = 0;
+                int res;
 
                 MessageLock messageLock = getMessageLockIfItExists(type);
                 if (messageLock != null) {
