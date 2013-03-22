@@ -26,7 +26,7 @@ public abstract class Network {
     }
 
     /**
-     * Присоедениться к серверу по адресу address на порте port
+     * Присоединиться к серверу по адресу address на порте port
      * @param address
      * @param port
      * @return
@@ -161,7 +161,7 @@ public abstract class Network {
      * @param messageType
      * @return true если answer успешно заполнен данными.
      */
-    public synchronized boolean getAsynchronousAnswer(ClientDeSerializedMessage answer, short messageType) {
+    public synchronized boolean getAsynchronousAnswer(ClientDeSerializedMessage answer, short messageType) throws Exception {
         DataMessage message = getAsynchronousMessageByType(messageType);
         if (message != null) {
             buffer.initiate(message.getData());

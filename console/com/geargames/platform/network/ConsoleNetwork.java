@@ -18,7 +18,7 @@ public class ConsoleNetwork extends Network {
     private Lock lock;
 
     /**
-     * Конструктору необходжимо передать байтовый буфер для заполнения ответами на синхронные сообщения.
+     * Конструктору необходимо передать байтовый буфер для заполнения ответами на синхронные сообщения.
      * @param buffer
      */
     public ConsoleNetwork(MicroByteBuffer buffer) {
