@@ -78,6 +78,7 @@ public abstract class Sender {
                 SerializedMessage message = (SerializedMessage) messageQueue.elementAt(0);
                 byte[] serialized = message.serialize();
                 output.writeBytes(serialized, 0, serialized.length);
+                output.flush();
                 messageQueue.removeElementAt(0);
                 MessageLock messageLock = network.getMessageLock();
                 messageLock.setMessageType(message.getType());

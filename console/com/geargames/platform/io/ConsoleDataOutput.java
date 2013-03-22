@@ -46,4 +46,9 @@ public class ConsoleDataOutput extends DataOutput {
     public void writeUTF(String data) throws Exception {
         output.writeUTF(data);
     }
+
+    @Override
+    public void flush() throws Exception {
+        output.flush();
+    }
 }
