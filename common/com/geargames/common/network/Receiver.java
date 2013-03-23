@@ -82,7 +82,7 @@ public abstract class Receiver {
                 MessageLock messageLock = getMessageLockIfItExists(type);
                 if (messageLock != null) {
                     // Зачитывание синхронного сообщения
-                    res = read(input, getAnswersBuffer().getBytes(), 0, length);
+                    res = input.readBytes(getAnswersBuffer().getBytes(), 0, length);
                     if (res != length) {
                         throw new Exception();
                     }
@@ -94,7 +94,7 @@ public abstract class Receiver {
                 } else {
                     // Зачитывание асинхронного сообщения
                     byte[] data = new byte[length];
-                    res = read(input, data, 0, length);
+                    res = input.readBytes(data, 0, length);
                     if (res != length) {
                         throw new Exception();
                     }
@@ -133,32 +133,4 @@ public abstract class Receiver {
         MessageLock messageLock = network.getMessageLock();
         return messageLock.isValid() && messageLock.getMessageType() == type ? messageLock : null;
     }
-
-    private int read(DataInput dis, byte bytes[], int off, int len) throws Exception {
-        if (bytes == null) {
-            throw new NullPointerException();
-        } else if (off < 0 || len < 0 || len > bytes.length - off) {
-            throw new IndexOutOfBoundsException();
-        } else if (len == 0) {
-            return 0;
-        }
-
-        int c = dis.readByte();
-        if (c == -1) {
-            return -1;
-        }
-        bytes[off] = (byte) c;
-
-        int i = 1;
-        for (; i < len; i++) {
-            c = dis.readByte();
-            if (c == -1) {
-                Debug.error(String.valueOfC(" read, c:").concatI(c).concatC(" (").concatI(i).concatC(")"));
-            }
-            bytes[off + i] = (byte) c;
-        }
-        return i;
-    }
-
-
 }
