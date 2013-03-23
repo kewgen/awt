@@ -19,6 +19,7 @@ public class ClientDeferredAnswer {
 
     public ClientDeferredAnswer(ClientDeSerializedMessage deSerializedMessage) {
         this.deSerializedMessage = deSerializedMessage;
+        deSerializedMessage.setBuffer(null);
     }
 
     public ClientDeSerializedMessage getAnswer() {

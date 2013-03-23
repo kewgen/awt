@@ -3,9 +3,7 @@ package com.geargames.common.network;
 import com.geargames.common.env.Environment;
 import com.geargames.common.io.DataInput;
 import com.geargames.common.logging.Debug;
-import com.geargames.common.String;
 import com.geargames.common.serialization.MicroByteBuffer;
-
 
 public abstract class Receiver {
     private boolean running;
@@ -17,9 +15,7 @@ public abstract class Receiver {
     }
 
     /**
-     * Работает ли вычитывающий поток?
-     *
-     * @return
+     * Вернет true, если вычитывающий поток в работает.
      */
     public boolean isRunning(){
         return running;
@@ -37,23 +33,23 @@ public abstract class Receiver {
     }
 
     /**
-     * Реализовать останов вычитывающего потока.
-     */
-    protected abstract void stopReceiving();
-
-    /**
-     * Реализовать запуск вычитывающего потока.
+     * Запустить вычитывающий поток.
      */
     protected abstract void startReceiving();
 
     /**
-     * Вернуть количество ошибок чтения, после которого будет разорвана связь  с сервером
+     * Остановить вычитывающий поток.
+     */
+    protected abstract void stopReceiving();
+
+    /**
+     * Получить максимальное количество ошибок чтения, после которого будет разорвана связь с сервером.
      * @return
      */
     public abstract int getErrorThreshold();
 
     /**
-     * Вернуть буфер для записи ответов на синхронные сообщения.
+     * Получить буфер для записи ответов на синхронные сообщения.
      * @return
      */
     protected abstract MicroByteBuffer getAnswersBuffer();
@@ -104,12 +100,12 @@ public abstract class Receiver {
                     dataMessage.setMessageType(type);
                     network.addAsynchronousMessage(dataMessage);
                 }
-                Debug.debug(String.valueOfC("Receiver: received message, type:").concatI(type).concatC("(").concatI((type & 0xff)).concatC("), len:").concatI(length).concatC(", res:").concatI(res));
+                Debug.debug("Receiver: received message: type=" + type + " (" + (type & 0xff) + "), len=" + length + ", res=" + res);
                 if (length != res) {
-                    Debug.error(String.valueOfC("Error received len, type:").concatI(type).concatC("(").concatI((type & 0xff)).concatC("), len:").concatI(length).concatC(" != res:").concatI(res));
+                    Debug.error("Error received len: type=" + type + " (" + (type & 0xff) + "), len=" + length + " != res=" + res);
                     continue;
                 } else if (res == -1) {
-                    Debug.error(String.valueOfC("Error received, type:").concatI(type).concatC("(").concatI((type & 0xff)).concatC("), len:").concatI(length));
+                    Debug.error("Error received: type=" + type + " (" + (type & 0xff) + "), len=" + length);
                     continue;
                 }
 
@@ -120,11 +116,11 @@ public abstract class Receiver {
             if (isRunning()) {
                 Environment.pause(2000);
             }
-            Debug.error(String.valueOfC("Receiver Exception: "), e);
+            Debug.error("Receiver Exception: ", e);
             if (errors > getErrorThreshold()) {
-                Debug.error(String.valueOfC("Receiver: too many errors, disconnecting"));
+                Debug.error("Receiver: too many errors, disconnecting");
                 network.disconnect();
-                return ;
+                return;
             }
         }
     }
@@ -152,13 +148,12 @@ public abstract class Receiver {
         int i = 1;
         for (; i < len; i++) {
             c = dis.readByte();
-            if (c == -1) {
-                Debug.error(String.valueOfC(" read, c:").concatI(c).concatC(" (").concatI(i).concatC(")"));
-            }
+//            if (c == -1) {
+//                Debug.error(String.valueOfC("read, c = ").concatI(c).concatC(" (").concatI(i).concatC(")"));
+//            }
             bytes[off + i] = (byte) c;
         }
         return i;
     }
-
 
 }
