@@ -1,9 +1,5 @@
 package com.geargames.common.serialization;
 
-
-import com.geargames.common.serialization.DeSerializedMessage;
-import com.geargames.common.serialization.MicroByteBuffer;
-
 /**
  * User: mkutuzov
  * Date: 04.07.12

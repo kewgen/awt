@@ -3,9 +3,7 @@ package com.geargames.common.network;
 import com.geargames.common.env.Environment;
 import com.geargames.common.io.DataInput;
 import com.geargames.common.logging.Debug;
-import com.geargames.common.String;
 import com.geargames.common.serialization.MicroByteBuffer;
-
 
 public abstract class Receiver {
     private boolean running;
@@ -17,43 +15,41 @@ public abstract class Receiver {
     }
 
     /**
-     * Работает ли вычитывающий поток?
-     *
-     * @return
+     * Вернет true, если вычитывающий поток в работает.
      */
-    public boolean isRunning(){
+    public boolean isRunning() {
         return running;
     }
 
-    public void starting(DataInput input){
+    public void starting(DataInput input) {
         this.input = input;
         running = true;
         startReceiving();
     }
 
-    public void finishing(){
+    public void finishing() {
         running = false;
         stopReceiving();
     }
 
     /**
-     * Реализовать останов вычитывающего потока.
-     */
-    protected abstract void stopReceiving();
-
-    /**
-     * Реализовать запуск вычитывающего потока.
+     * Запустить вычитывающий поток.
      */
     protected abstract void startReceiving();
 
     /**
-     * Вернуть количество ошибок чтения, после которого будет разорвана связь  с сервером
+     * Остановить вычитывающий поток.
+     */
+    protected abstract void stopReceiving();
+
+    /**
+     * Получить максимальное количество ошибок чтения, после которого будет разорвана связь с сервером.
      * @return
      */
     public abstract int getErrorThreshold();
 
     /**
-     * Вернуть буфер для записи ответов на синхронные сообщения.
+     * Получить буфер для записи ответов на синхронные сообщения.
      * @return
      */
     protected abstract MicroByteBuffer getAnswersBuffer();
@@ -63,8 +59,8 @@ public abstract class Receiver {
         short type;  // ID сообщения
         int length;  // Длина данных сообщения
 
-        try {
-            while (isRunning()) {
+        while (isRunning()) {
+            try {
                 while (!input.available()) {
                     if (!isRunning()) {
                         break;
@@ -77,7 +73,6 @@ public abstract class Receiver {
 
                 length = input.readShort() & 0xffff;
                 type = input.readShort();
-                int res;
 
                 MessageLock messageLock = getMessageLockIfItExists(type);
                 if (messageLock != null) {
@@ -98,33 +93,23 @@ public abstract class Receiver {
                     if (res != length) {
                         throw new Exception();
                     }
-                    DataMessage dataMessage = new DataMessage();
-                    dataMessage.setData(data);
-                    dataMessage.setLength(length);
-                    dataMessage.setMessageType(type);
-                    network.addAsynchronousMessage(dataMessage);
+                    if (res == -1) {
+                        Debug.critical("Error received: type=" + type + " (" + (type & 0xff) + "), len=" + length);
+                        continue;
+                    }
                 }
-                Debug.debug(String.valueOfC("Receiver: received message, type:").concatI(type).concatC("(").concatI((type & 0xff)).concatC("), len:").concatI(length).concatC(", res:").concatI(res));
-                if (length != res) {
-                    Debug.error(String.valueOfC("Error received len, type:").concatI(type).concatC("(").concatI((type & 0xff)).concatC("), len:").concatI(length).concatC(" != res:").concatI(res));
-                    continue;
-                } else if (res == -1) {
-                    Debug.error(String.valueOfC("Error received, type:").concatI(type).concatC("(").concatI((type & 0xff)).concatC("), len:").concatI(length));
-                    continue;
-                }
-
                 Environment.pause(10);
-            }
-        } catch (Exception e) {
-            errors++;
-            if (isRunning()) {
-                Environment.pause(2000);
-            }
-            Debug.error(String.valueOfC("Receiver Exception: "), e);
-            if (errors > getErrorThreshold()) {
-                Debug.error(String.valueOfC("Receiver: too many errors, disconnecting"));
-                network.disconnect();
-                return ;
+            } catch (Exception e) {
+                Debug.critical("Receiver Exception:", e);
+                errors++;
+                if (isRunning()) {
+                    Environment.pause(2000);
+                }
+                if (errors > getErrorThreshold()) {
+                    Debug.fatal("Receiver: too many errors, disconnecting (error count = " + errors + ")");
+                    network.disconnect();
+                    return;
+                }
             }
         }
     }

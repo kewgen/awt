@@ -10,9 +10,6 @@ import com.geargames.common.serialization.SerializedMessage;
 
 import java.util.Vector;
 
-/**
- * Класс запускает потоки приёма и передачи сообщений между клиентом и сервером.
- */
 public abstract class Network {
     private Vector asynchronousMessages;
     private MicroByteBuffer buffer;
