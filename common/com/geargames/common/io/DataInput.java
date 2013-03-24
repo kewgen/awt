@@ -15,7 +15,7 @@ public abstract class DataInput {
 
     public abstract String readUTF() throws Exception;
 
-    public abstract void readBytes(byte[] data, int offset, int length) throws Exception;
+    public abstract int readBytes(byte[] data, int offset, int length) throws Exception;
 
     public abstract boolean available() throws Exception;
 }
