@@ -9,7 +9,6 @@ public class MicroByteBuffer {
     private int position;
     private int limit;
     private int mark;
-
     private byte[] buffer;
 
     public MicroByteBuffer(){
@@ -37,7 +36,7 @@ public class MicroByteBuffer {
 
     public void clear(){
         position = 0;
-        limit = size();
+        limit = size() - 1;
     }
 
     public void flip(){
@@ -47,7 +46,7 @@ public class MicroByteBuffer {
 
     private void check(int position) {
         if (position < 0 || position > limit) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("position = " + position + ", limit = " + limit);
         }
     }
 
@@ -110,7 +109,7 @@ public class MicroByteBuffer {
 
     public MicroByteBuffer limit(int limit) {
         if (limit < 0 || limit >= size()) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("limit = " + limit + ", size = " + size());
         }
         this.limit = limit;
         return this;

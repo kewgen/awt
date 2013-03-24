@@ -1,13 +1,17 @@
 package com.geargames.common.serialization;
 
+import com.geargames.common.logging.Debug;
+
 import java.util.Arrays;
 
 /**
- * User: mkutuzov
+ * User: mkutuzov, abarakov
  * Date: 19.06.12
  */
 public abstract class SerializedMessage {
+
     public static final short HEAD_SIZE = 4;
+
     /**
      * Возвращает тип сообщения.
      * @return
@@ -37,9 +41,13 @@ public abstract class SerializedMessage {
         buffer.position(HEAD_SIZE);
         serialize(buffer);
         buffer.flip();
-        SimpleSerializer.serialize((short) (buffer.limit() - HEAD_SIZE), buffer);
+        short length = (short) (buffer.limit() - HEAD_SIZE);
+        if (length <= 0) {
+            Debug.critical("Serialize error: invalid message length (length = " + length + ", type = " + getType() + ")");
+        }
+        SimpleSerializer.serialize(length, buffer);
         SimpleSerializer.serialize(getType(), buffer);
-        //TODO: либо переделать на цикл либо абстрактный копирователь в gg.common
+        //TODO: либо переделать на цикл, либо абстрактный копирователь в gg.common
         return Arrays.copyOf(buffer.getBytes(), buffer.limit());
     }
 
