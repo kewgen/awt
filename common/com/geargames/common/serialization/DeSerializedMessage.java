@@ -16,9 +16,9 @@ public abstract class DeSerializedMessage {
         MicroByteBuffer buffer = getBuffer();
         deSerialize(buffer);
         // Проверка того, что сообщение было считано полностью и не считано лишних данных
-        if (buffer.position() - 1 != buffer.limit()) {
+        if (buffer.getPosition() != buffer.getLimit()) {
             Debug.error("DeSerializedMessage.deSerialize(): The expected position does not coincide with the actual position (" +
-                            "expected=" + buffer.limit() + "; actual=" + (buffer.position() - 1) + ")");
+                            "expected=" + buffer.getLimit() + "; actual=" + (buffer.getPosition()) + ")");
         }
     }
 

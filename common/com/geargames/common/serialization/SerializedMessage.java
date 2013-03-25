@@ -1,7 +1,5 @@
 package com.geargames.common.serialization;
 
-import com.geargames.common.logging.Debug;
-
 import java.util.Arrays;
 
 /**
@@ -37,14 +35,14 @@ public abstract class SerializedMessage {
     public byte[] serialize(){
         MicroByteBuffer buffer = getBuffer();
         buffer.clear();
-        buffer.position(HEAD_SIZE);
+        buffer.setPosition(HEAD_SIZE);
         serialize(buffer);
         buffer.flip();
-        short length = (short) (buffer.limit() - HEAD_SIZE);
+        short length = (short) (buffer.getLimit() - HEAD_SIZE);
         SimpleSerializer.serialize(length, buffer);
         SimpleSerializer.serialize(getType(), buffer);
         //TODO: либо переделать на цикл, либо абстрактный копирователь в gg.common
-        return Arrays.copyOf(buffer.getBytes(), buffer.limit());
+        return Arrays.copyOf(buffer.getBytes(), buffer.getLimit());
     }
 
 }

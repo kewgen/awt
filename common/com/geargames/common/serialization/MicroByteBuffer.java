@@ -1,8 +1,8 @@
 package com.geargames.common.serialization;
 
 /**
- * Класс наподобие nio.ByteBuffer, чтоб работать с массивами байтов разной длинны из одного массива.
- * User: mkutuzov
+ * Класс наподобие nio.ByteBuffer, предоставляет функционал обработки массива байтов разной длинны из одного массива.
+ * User: mkutuzov, abarakov
  * Date: 27.03.12
  */
 public class MicroByteBuffer {
@@ -14,45 +14,49 @@ public class MicroByteBuffer {
     public MicroByteBuffer(){
     }
 
+    public MicroByteBuffer(byte[] buffer) {
+        this.buffer   = buffer;
+        this.position = 0;
+        this.limit    = buffer.length;
+        this.mark     = 0;
+    }
+
     public MicroByteBuffer initiate(byte[] buffer, int length) {
         this.buffer = buffer;
-        limit(length - 1);
-        position(0);
+        setLimit(length);
+        setPosition(0);
+        mark = 0;
         return this;
     }
 
     public MicroByteBuffer initiate(byte[] buffer) {
         this.buffer = buffer;
-        limit(buffer.length - 1);
-        position(0);
+        setLimit(buffer.length);
+        setPosition(0);
+        mark = 0;
         return this;
-    }
-
-    public MicroByteBuffer(byte[] buffer) {
-        this.buffer = buffer;
-        limit(buffer.length - 1);
-        position(0);
     }
 
     public void clear(){
         position = 0;
-        limit = size() - 1;
+        limit = size();
+        mark = 0;
     }
 
     public void flip(){
-        limit = position;
+        limit = position + 1;
         position = 0;
     }
 
     private void check(int position) {
-        if (position < 0 || position > limit) {
+        if (position < 0 || position >= limit) {
             throw new IndexOutOfBoundsException("position = " + position + ", limit = " + limit);
         }
     }
 
     /**
      * Считать байт из массива по индексу position.
-     * Если position > limit, то будет вызвано исключение.
+     * Если position >= limit, то будет вызвано исключение.
      * @param position
      * @return
      */
@@ -63,7 +67,7 @@ public class MicroByteBuffer {
 
     /**
      * Считать текущий байт из массива. Нарастить счётчик массива.
-     * Если этот счётчик > limit будет вызвано исключение.
+     * Если этот счётчик >= limit будет вызвано исключение.
      * @return
      */
     public byte get() {
@@ -84,6 +88,18 @@ public class MicroByteBuffer {
         return this;
     }
 
+    public MicroByteBuffer put(MicroByteBuffer bytes) {
+        if (this.position + bytes.limit - bytes.position > this.limit) {
+            throw new IndexOutOfBoundsException("position = " + position + ", limit = " + limit + ", amount = " + (bytes.limit - bytes.position));
+        }
+        for (int i = bytes.position; i < bytes.limit; i++) {
+            this.buffer[position + i] = bytes.buffer[i];
+        }
+        this.position += bytes.limit - bytes.position;
+        bytes.position = bytes.limit;
+        return this;
+    }
+
     public MicroByteBuffer mark() {
         mark = position;
         return this;
@@ -98,26 +114,31 @@ public class MicroByteBuffer {
         return buffer.length;
     }
 
-    public int position() {
+    public int getPosition() {
         return position;
     }
 
-    public MicroByteBuffer position(int position) {
-        check(position);
+    public MicroByteBuffer setPosition(int position) {
+        if (position < 0 || position > limit) {
+            throw new IndexOutOfBoundsException("position = " + position + ", limit = " + limit);
+        }
         this.position = position;
         return this;
     }
 
-    public MicroByteBuffer limit(int limit) {
-        if (limit < -1 || limit >= size()) {
+    public int getLimit() {
+        return limit;
+    }
+
+    public MicroByteBuffer setLimit(int limit) {
+        if (limit < 0 || limit > size()) {
             throw new IndexOutOfBoundsException("limit = " + limit + ", size = " + size());
         }
         this.limit = limit;
+        if (position > limit) {
+            position = limit;
+        }
         return this;
-    }
-
-    public int limit() {
-        return limit;
     }
 
     public byte[] getBytes(){
