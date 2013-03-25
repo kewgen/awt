@@ -98,14 +98,15 @@ public abstract class Receiver {
                         Debug.critical("Error received: type=" + type + " (" + (type & 0xff) + "), len=" + length);
                         continue;
                     }
+                    DataMessage dataMessage = new DataMessage();
+                    dataMessage.setMessageType(type);
+                    dataMessage.setLength(length);
+                    dataMessage.setData(data);
+                    network.addAsynchronousMessage(dataMessage);
                 }
-                Environment.pause(10);
             } catch (Exception e) {
                 Debug.critical("Receiver Exception:", e);
                 errors++;
-                if (isRunning()) {
-                    Environment.pause(2000);
-                }
                 if (errors > getErrorThreshold()) {
                     Debug.fatal("Receiver: too many errors, disconnecting (error count = " + errors + ")");
                     network.disconnect();
