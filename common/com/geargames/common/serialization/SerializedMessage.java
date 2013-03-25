@@ -31,8 +31,7 @@ public abstract class SerializedMessage {
     public abstract void serialize(MicroByteBuffer buffer);
 
     /**
-     * Метод сериализации сообщения, опирается на то, что все сообщения имеют общую
-     * структуру заголовка, но разное содержимое.
+     * Метод сериализации сообщения, опирается на то, что все сообщения имеют общую структуру заголовка, но разное содержимое.
      * @return
      */
     public byte[] serialize(){
@@ -42,9 +41,6 @@ public abstract class SerializedMessage {
         serialize(buffer);
         buffer.flip();
         short length = (short) (buffer.limit() - HEAD_SIZE);
-        if (length <= 0) {
-            Debug.critical("Serialize error: invalid message length (length = " + length + ", type = " + getType() + ")");
-        }
         SimpleSerializer.serialize(length, buffer);
         SimpleSerializer.serialize(getType(), buffer);
         //TODO: либо переделать на цикл, либо абстрактный копирователь в gg.common
