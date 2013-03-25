@@ -2,7 +2,7 @@ package com.geargames.common.serialization;
 
 /**
  * Класс наподобие nio.ByteBuffer, предоставляет функционал обработки массива байтов разной длинны из одного массива.
- * User: mkutuzov, abarakov
+ * Users: mkutuzov, abarakov
  * Date: 27.03.12
  */
 public class MicroByteBuffer {
