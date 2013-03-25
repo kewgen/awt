@@ -73,38 +73,28 @@ public abstract class Receiver {
 
                 length = input.readShort() & 0xffff;
                 type = input.readShort();
+                int res;
 
-                if (length <= 0) {
-                    Debug.critical("Error received len: type=" + type + " (" + (type & 0xff) + "), len=" + length);
-                } else {
-                    Debug.debug("Receiver: received message: type=" + type + " (" + (type & 0xff) + "), len=" + length);
-                    int res;
-                    MessageLock messageLock = getMessageLockIfItExists(type);
-                    if (messageLock != null) {
-                        // Зачитывание синхронного сообщения
-                        res = read(input, getAnswersBuffer().getBytes(), 0, length);
-                        if (res != length) {
-                            throw new Exception("Error received len: type=" + type + " (" + (type & 0xff) + "), len=" + length + " != res=" + res);
-                        }
-                        MicroByteBuffer buffer = getAnswersBuffer();
-                        buffer.initiate(getAnswersBuffer().getBytes(), length);
-                        messageLock.getMessage().setBuffer(buffer);
-                        messageLock.setValid(false);
-                        messageLock.getLock().release();
-                    } else {
-                        // Зачитывание асинхронного сообщения
-                        byte[] data = new byte[length];
-                        res = read(input, data, 0, length);
-                        if (res != length) {
-                            throw new Exception("Error received len: type=" + type + " (" + (type & 0xff) + "), len=" + length + " != res=" + res);
-                        }
-                        DataMessage dataMessage = new DataMessage();
-                        dataMessage.setData(data);
-                        dataMessage.setLength(length);
-                        dataMessage.setMessageType(type);
-                        network.addAsynchronousMessage(dataMessage);
+                MessageLock messageLock = getMessageLockIfItExists(type);
+                if (messageLock != null) {
+                    // Зачитывание синхронного сообщения
+                    res = input.readBytes(getAnswersBuffer().getBytes(), 0, length);
+                    if (res != length) {
+                        throw new Exception("Error received len: type=" + type + " (" + (type & 0xff) + "), len=" + length + " != res=" + res);
                     }
-                    if (res == -1) {
+                    MicroByteBuffer buffer = getAnswersBuffer();
+                    buffer.initiate(getAnswersBuffer().getBytes(), length);
+                    messageLock.getMessage().setBuffer(buffer);
+                    messageLock.setValid(false);
+                    messageLock.getLock().release();
+                } else {
+                    // Зачитывание асинхронного сообщения
+                    byte[] data = new byte[length];
+                    res = input.readBytes(data, 0, length);
+                    if (res != length) {
+                        throw new Exception();
+                    }
+                    if (res <= 0) {
                         Debug.critical("Error received: type=" + type + " (" + (type & 0xff) + "), len=" + length);
                         continue;
                     }
@@ -129,28 +119,4 @@ public abstract class Receiver {
         MessageLock messageLock = network.getMessageLock();
         return messageLock.isValid() && messageLock.getMessageType() == type ? messageLock : null;
     }
-
-    private int read(DataInput dis, byte bytes[], int off, int len) throws Exception {
-        if (bytes == null) {
-            throw new NullPointerException();
-        } else if (off < 0 || len < 0 || len > bytes.length - off) {
-            throw new IndexOutOfBoundsException();
-        } else if (len == 0) {
-            return 0;
-        }
-
-        int c = dis.readByte();
-        if (c == -1) {
-            return -1;
-        }
-        bytes[off] = (byte) c;
-
-        int i = 1;
-        for (; i < len; i++) {
-            c = dis.readByte();
-            bytes[off + i] = (byte) c;
-        }
-        return i;
-    }
-
 }

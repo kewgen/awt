@@ -43,8 +43,8 @@ public class ConsoleDataInput extends DataInput {
         return input.readUTF();
     }
 
-    public void readBytes(byte[] data, int offset, int length) throws Exception {
-        input.read(data, offset, length);
+    public int readBytes(byte[] data, int offset, int length) throws Exception {
+        return input.read(data, offset, length);
     }
 
     public boolean available() throws Exception {
