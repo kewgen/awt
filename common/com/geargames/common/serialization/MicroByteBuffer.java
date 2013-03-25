@@ -103,12 +103,13 @@ public class MicroByteBuffer {
     }
 
     public MicroByteBuffer position(int position) {
+        check(position);
         this.position = position;
         return this;
     }
 
     public MicroByteBuffer limit(int limit) {
-        if (limit < 0 || limit >= size()) {
+        if (limit < -1 || limit >= size()) {
             throw new IndexOutOfBoundsException("limit = " + limit + ", size = " + size());
         }
         this.limit = limit;
