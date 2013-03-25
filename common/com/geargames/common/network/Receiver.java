@@ -73,13 +73,14 @@ public abstract class Receiver {
 
                 length = input.readShort() & 0xffff;
                 type = input.readShort();
+                int res;
 
                 MessageLock messageLock = getMessageLockIfItExists(type);
                 if (messageLock != null) {
                     // Зачитывание синхронного сообщения
                     res = input.readBytes(getAnswersBuffer().getBytes(), 0, length);
                     if (res != length) {
-                        throw new Exception();
+                        throw new Exception("Error received len: type=" + type + " (" + (type & 0xff) + "), len=" + length + " != res=" + res);
                     }
                     MicroByteBuffer buffer = getAnswersBuffer();
                     buffer.initiate(getAnswersBuffer().getBytes(), length);
@@ -93,7 +94,7 @@ public abstract class Receiver {
                     if (res != length) {
                         throw new Exception();
                     }
-                    if (res == -1) {
+                    if (res <= 0) {
                         Debug.critical("Error received: type=" + type + " (" + (type & 0xff) + "), len=" + length);
                         continue;
                     }
