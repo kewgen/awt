@@ -14,6 +14,8 @@ public class TimerIdMap {
 
     // awt components timers
     public final static int AWT_TEXTHINT_GRAPHICS_STRATEGY_TICK = -5001;
-//    public final static int AWT_SPINBOX_BUTTON_TICK             = -6001;
+//  public final static int AWT_SPINBOX_BUTTON_TICK             = -6001;
+
+    public final static int NETWORK_ANSWER_READER_TIMER         = -7001;
 
 }
