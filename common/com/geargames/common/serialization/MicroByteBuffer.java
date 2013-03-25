@@ -44,7 +44,7 @@ public class MicroByteBuffer {
     }
 
     public void flip(){
-        limit = position + 1;
+        limit = position;
         position = 0;
     }
 
