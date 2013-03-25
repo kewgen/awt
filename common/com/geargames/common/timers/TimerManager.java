@@ -80,6 +80,7 @@ public class TimerManager {
     private static ArrayList tickTimers         = new ArrayList(16);
     // Массив соответствий, id -> timer. Нужен только для ускорения поиска таймера по его id. Можно упразднить, т.к.
     // id также хранится и в самом объекте таймера.
+    //todo: HashMap должен быть с ключем типа int, а не Object
     private static HashMap   timerIds           = new HashMap();     //todo: можно попробовать избавиться от этого списка
     // Список таймеров, требующих инициализации и размещения в основном списке таймеров.
     private static ArrayList initiateTimers     = new ArrayList(8);

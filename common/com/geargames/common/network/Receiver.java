@@ -74,6 +74,7 @@ public abstract class Receiver {
                 length = input.readShort() & 0xffff;
                 type = input.readShort();
                 int res;
+                Debug.debug("Receiver: received message: type=" + type + " (" + (type & 0xff) + "), len=" + length);
 
                 MessageLock messageLock = getMessageLockIfItExists(type);
                 if (messageLock != null) {
@@ -92,7 +93,7 @@ public abstract class Receiver {
                     byte[] data = new byte[length];
                     res = input.readBytes(data, 0, length);
                     if (res != length) {
-                        throw new Exception();
+                        throw new Exception("Error received len: type=" + type + " (" + (type & 0xff) + "), len=" + length + " != res=" + res);
                     }
                     if (res <= 0) {
                         Debug.critical("Error received: type=" + type + " (" + (type & 0xff) + "), len=" + length);
@@ -119,4 +120,5 @@ public abstract class Receiver {
         MessageLock messageLock = network.getMessageLock();
         return messageLock.isValid() && messageLock.getMessageType() == type ? messageLock : null;
     }
+
 }
