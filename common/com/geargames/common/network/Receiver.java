@@ -95,7 +95,7 @@ public abstract class Receiver {
                     if (res != length) {
                         throw new Exception("Error received len: type=" + type + " (" + (type & 0xff) + "), len=" + length + " != res=" + res);
                     }
-                    if (res <= 0) {
+                    if (res < 0) {
                         Debug.critical("Error received: type=" + type + " (" + (type & 0xff) + "), len=" + length);
                         continue;
                     }
