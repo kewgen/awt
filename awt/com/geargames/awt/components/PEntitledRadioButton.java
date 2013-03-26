@@ -9,18 +9,16 @@ import com.geargames.common.String;
 /**
  * User: mikhail v. kutuzov
  * Date: 14.12.12
- * Time: 23:50
  */
-public abstract class PEntitledRadioButton extends PRadioButton {
+public class PEntitledRadioButton extends PRadioButton {
     private PLabel labelTitle;
 
-    public PEntitledRadioButton(PObject prototype, String text) {
+    public PEntitledRadioButton(PObject prototype) {
         super(prototype);
         IndexObject index = (IndexObject) prototype.getIndexBySlot(2);
         labelTitle = new PSimpleLabel(index);
         labelTitle.setX(index.getX());
         labelTitle.setY(index.getY());
-        labelTitle.setText(text);
     }
 
     @Override

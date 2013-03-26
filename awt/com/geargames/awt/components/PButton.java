@@ -1,7 +1,6 @@
 package com.geargames.awt.components;
 
 import com.geargames.common.Graphics;
-import com.geargames.common.String;
 import com.geargames.common.logging.Debug;
 import com.geargames.common.packer.Index;
 import com.geargames.common.packer.PObject;
@@ -17,6 +16,15 @@ import com.geargames.common.packer.PObject;
  *     s1   спрайт зажатой кнопки (pushed);
  *     s2   спрайт выключенной кнопки (disabled);
  *     s110 фрейм задающий размеры кнопки (bounds).
+ * Предлагается следующая схема спрайтов для любых кнопок:
+ *     s0      normal   нормальное состояние;
+ *     s1      pushed   зажатая, было произведено переключение;
+ *     s2 (s0)          нажатая, но курсор не над кнопкой;
+ *     s3 (s0) hot      курсор над не нажатой кнопкой;
+ *     s4 (s1) pressed  нажатая, кнопка зажата курсором, но переключения еще не произошло;
+ *     s5      disabled задизейбленная кнопка;
+ *     s6               подсвеченная кнопка или спрайт для подсветки кнопки в любом состоянии;
+ *     s10     caption  слот для заголовка кнопки.
  */
 public abstract class PButton extends PObjectElement {
     private Index normalSkin;
@@ -31,8 +39,7 @@ public abstract class PButton extends PObjectElement {
         disabledSkin = prototype.getIndexBySlot(2);
         if (disabledSkin == null) {
             disabledSkin = normalSkin;
-            Debug.debug(String.valueOfC(
-                    "PButton: There is no skin of disabled state button ").concatC("pid= ").concatI(prototype.getPID()));
+            Debug.debug("PButton: There is no skin of disabled state button (pid = " + prototype.getPID() + ")");
         }
         checked = false;
     }

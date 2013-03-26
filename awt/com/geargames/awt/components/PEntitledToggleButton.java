@@ -10,16 +10,15 @@ import com.geargames.common.String;
  * User: abarakov
  * Date: 14.02.13
  */
-public abstract class PEntitledToggleButton extends PToggleButton {
+public class PEntitledToggleButton extends PToggleButton {
     private PLabel labelTitle;
 
-    public PEntitledToggleButton(PObject prototype, String text) {
+    public PEntitledToggleButton(PObject prototype) {
         super(prototype);
         IndexObject index = (IndexObject) prototype.getIndexBySlot(2);
         labelTitle = new PSimpleLabel(index);
         labelTitle.setX(index.getX());
         labelTitle.setY(index.getY());
-        labelTitle.setText(text);
     }
 
     @Override

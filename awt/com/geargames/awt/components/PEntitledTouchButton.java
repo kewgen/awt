@@ -9,18 +9,16 @@ import com.geargames.common.String;
 /**
  * User: mikhail v. kutuzov
  * Date: 14.12.12
- * Time: 14:29
  */
-public abstract class PEntitledTouchButton extends PTouchButton {
+public class PEntitledTouchButton extends PTouchButton {
     private PLabel labelTitle;
 
-    public PEntitledTouchButton(PObject prototype, String text) {
+    public PEntitledTouchButton(PObject prototype) {
         super(prototype);
         IndexObject index = (IndexObject) prototype.getIndexBySlot(2);
         labelTitle = new PSimpleLabel(index);
         labelTitle.setX(index.getX());
         labelTitle.setY(index.getY());
-        labelTitle.setText(text);
     }
 
     @Override
