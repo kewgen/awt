@@ -133,6 +133,23 @@ public abstract class Network {
     }
 
     /**
+     * Вычитать всю очередь сообщений.
+     * Считанные сообщения удаляются из Network.
+     * @return массив необработанных DataMessage.
+     */
+    public DataMessage[] getAsynchronousDataMessages(){
+        getAsynchronousLock().lock();
+        int size = asynchronousMessages.size();
+        DataMessage[] messages = new DataMessage[size];
+        for(int i = 0; i < size; i++){
+            messages[i] = (DataMessage)asynchronousMessages.get(i);
+        }
+        asynchronousMessages.clear();
+        getAsynchronousLock().release();
+        return messages;
+    }
+
+    /**
      * Достать самый старый ответ на асинхронное сообщение типа type.
      * @param type
      * @return
