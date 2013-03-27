@@ -7,6 +7,12 @@ package com.geargames.common.network;
  */
 public interface DataMessageListener {
     /**
+     * Желаемый интервал опроса очереди асинхронных сообщений(в миллисекундах).
+     * @return
+     */
+    int getInterval();
+
+    /**
      * Вернуть массив типов ожидаемых сообщений.
      * @return
      */
