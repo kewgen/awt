@@ -6,8 +6,6 @@ import com.geargames.common.util.ArrayList;
 import com.geargames.common.util.HashMap;
 import com.geargames.common.String;
 
-import java.util.Random;
-
 /**
  * Класс предоставляющий функционал по использованию таймеров.
  * Каждый таймер обладает следующими обязательными свойствами:
@@ -32,7 +30,7 @@ import java.util.Random;
  * Когда любой из типов таймеров срабатывает, у элемента callBackElement будет вызван метод onTimer(), в который будет
  * передан id сработавшего таймера.
  * User: abarakov
- * Date: 23.02.13 8:54
+ * Date: 23.02.13
  */
 public class TimerManager {
 
@@ -49,9 +47,6 @@ public class TimerManager {
     private static final byte UPDATE_STATUS_NONE        = 0; // метод update не выполняется
     private static final byte TICK_TIMERS_UPDATE_STATUS = 1; // в методе update апдейтятся tick-таймеры
     private static final byte TIMERS_UPDATE_STATUS      = 2; // в методе update апдейтятся таймеры
-
-//    private static TimerManager instance;
-    private static Random random = null; //todo: Думается, что рандом-генератор должен быть один на всю программу
 
     // ----- Функционал получения точного времени на основе тиков процессора -------------------------------------------
 
@@ -105,20 +100,6 @@ public class TimerManager {
 //        lastTime = millisTime();
 //    }
 
-    // ----- Instance management ---------------------------------------------------------------------------------------
-
-//    public static TimerManager getInstance() {
-//        if (instance == null) {
-//            instance = new TimerManager();
-//            if (random == null) {
-//                random = new Random();
-//            }
-//        }
-//        return instance;
-//    }
-
-    // ----- Property management ---------------------------------------------------------------------------------------
-
     // ----- Вспомогательные методы ------------------------------------------------------------------------------------
 
     /**
@@ -127,12 +108,6 @@ public class TimerManager {
      */
     //todo: тип id-шника - int или short?
     private static int generateTimerId() {
-//        int id;
-//        do {
-//          id = random.nextInt(DINAMIC_TIMER_ID_MAX - DINAMIC_TIMER_ID_MIN + 1) + DINAMIC_TIMER_ID_MAX;
-//        } while (timerIds.containsKey(id));
-//        return id;
-
         if (nextDinamicId < 0 || nextDinamicId > DINAMIC_TIMER_ID_MAX) {
             nextDinamicId = DINAMIC_TIMER_ID_MIN;
         }
@@ -161,7 +136,6 @@ public class TimerManager {
      * @param callBackElement
      * @return
      */
-    // createTimer
     private static int setTimer(int timerId, int interval, byte timerType, TimerListener callBackElement) {
         if (STACK_TRACE) {
             Debug.debug(String.valueOfC("TimerManager.setTimer(").concat(
@@ -236,7 +210,6 @@ public class TimerManager {
      * @param callBackElement
      * @return
      */
-    // setMultipleTimer
     public static int setTickTimer(int timerId, TimerListener callBackElement) {
         return setTimer(timerId, 0, Timer.TICK_TIMER_TYPE, callBackElement);
     }
@@ -383,7 +356,7 @@ public class TimerManager {
     /**
      * Метод вызывается в цикле mainLoop.
      */
-    public static void update(/*int elapsedTime*/) {
+    public static void update() {
         int newTime = millisTime();
         if (false && STACK_TRACE) {
             if (initiateTimers.size() > 0 || timers.size() > 0) {
@@ -523,4 +496,5 @@ public class TimerManager {
             updateStatus = UPDATE_STATUS_NONE;
         }
     }
+
 }
