@@ -13,13 +13,16 @@ public class ClientDeferredAnswer {
     public ClientDeferredAnswer(){
     }
 
-    public void setDeSerializedMessage(ClientDeSerializedMessage deSerializedMessage) {
+    public ClientDeferredAnswer(ClientDeSerializedMessage deSerializedMessage) {
         this.deSerializedMessage = deSerializedMessage;
     }
 
-    public ClientDeferredAnswer(ClientDeSerializedMessage deSerializedMessage) {
+    public ClientDeSerializedMessage getDeSerializedMessage() {
+        return deSerializedMessage;
+    }
+
+    public void setDeSerializedMessage(ClientDeSerializedMessage deSerializedMessage) {
         this.deSerializedMessage = deSerializedMessage;
-        deSerializedMessage.setBuffer(null);
     }
 
     public ClientDeSerializedMessage getAnswer() {

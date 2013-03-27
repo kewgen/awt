@@ -111,14 +111,12 @@ public abstract class Network {
      * @param answer
      * @return
      */
-    public ClientDeferredAnswer sendSynchronousMessage(SerializedMessage request, ClientDeSerializedMessage answer){
+    public void sendSynchronousMessage(SerializedMessage request, ClientDeferredAnswer answer){
         MessageLock lock = getMessageLock();
         lock.setMessageType(request.getType());
         lock.setValid(true);
-        lock.setMessage(answer);
+        lock.setMessage(answer.getDeSerializedMessage());
         sender.sendMessage(request);
-
-        return new ClientDeferredAnswer(answer);
     }
 
     /**

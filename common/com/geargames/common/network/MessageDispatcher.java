@@ -38,25 +38,28 @@ public class MessageDispatcher implements TimerListener {
      * @param listener
      */
     public void register(DataMessageListener listener) {
-        if (listeners.isEmpty()) {
-            period = listener.getInterval();
-            id = TimerManager.setPeriodicTimer(period, this);
-        } else if (period > listener.getInterval()) {
-            period = listener.getInterval();
-            TimerManager.setPeriodicTimer(id, period, this);
-        }
-
-        listeners.add(listener);
         short[] types = listener.getTypes();
-        int length = types.length;
-        for (int i = 0; i < length; i++) {
-            int type = types[i];
-            ArrayList typeListeners = (ArrayList) listenersByType.get(type);
-            if (typeListeners == null) {
-                typeListeners = new ArrayList();
-                listenersByType.set(type, typeListeners);
+        if (types != null) {
+            if (listeners.isEmpty()) {
+                period = listener.getInterval();
+                id = TimerManager.setPeriodicTimer(period, this);
+            } else if (period > listener.getInterval()) {
+                period = listener.getInterval();
+                TimerManager.setPeriodicTimer(id, period, this);
             }
-            typeListeners.add(listener);
+
+            listeners.add(listener);
+
+            int length = types.length;
+            for (int i = 0; i < length; i++) {
+                int type = types[i];
+                ArrayList typeListeners = (ArrayList) listenersByType.get(type);
+                if (typeListeners == null) {
+                    typeListeners = new ArrayList();
+                    listenersByType.set(type, typeListeners);
+                }
+                typeListeners.add(listener);
+            }
         }
     }
 
@@ -75,7 +78,7 @@ public class MessageDispatcher implements TimerListener {
         if (listener.getInterval() == period) {
             size = listeners.size();
             if (size > 0) {
-                period = ((DataMessageListener)listeners.get(0)).getInterval();
+                period = ((DataMessageListener) listeners.get(0)).getInterval();
                 for (int i = 1; i < size; i++) {
                     int time = ((DataMessageListener) listeners.get(i)).getInterval();
                     if (period > time) {
@@ -89,7 +92,11 @@ public class MessageDispatcher implements TimerListener {
         }
     }
 
-    @Override
+    /**
+     * Всем подписчика отсылается один экземпляр класса DataMessage, поэтому экземпляры DataMessage
+     * стоит использовать только для чтения.
+     * @param timerId - идентификатор сработавшего таймера, который вызвал данный метод.
+     */
     public void onTimer(int timerId) {
         DataMessage[] messages = network.getAsynchronousDataMessages();
         for (int i = 0; i < messages.length; i++) {
