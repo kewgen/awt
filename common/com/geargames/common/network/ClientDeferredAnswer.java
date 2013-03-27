@@ -13,10 +13,6 @@ public class ClientDeferredAnswer {
     public ClientDeferredAnswer(){
     }
 
-    public ClientDeferredAnswer(ClientDeSerializedMessage deSerializedMessage) {
-        this.deSerializedMessage = deSerializedMessage;
-    }
-
     public ClientDeSerializedMessage getDeSerializedMessage() {
         return deSerializedMessage;
     }
