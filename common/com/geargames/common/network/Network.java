@@ -116,7 +116,7 @@ public abstract class Network {
     }
 
     /**
-     * Послать сообщение и получить объект - десериализованный ответ.
+     * Послать сообщение request и получить объект - десериализованный ответ answer (переданный в параметрах метода).
      *
      * @param request
      * @param answer
@@ -132,11 +132,12 @@ public abstract class Network {
 
         for (int i = 0; i < attempt; i++) {
             if (!lock.isValid()) {
+                answer.deSerialize();
                 return;
             }
             Environment.pause(100);
         }
-        throw new Exception();
+        throw new Exception("waiting time has been expired for a message : " + request.getType());
     }
 
     /**
