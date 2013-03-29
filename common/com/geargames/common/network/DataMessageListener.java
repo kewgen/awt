@@ -1,5 +1,7 @@
 package com.geargames.common.network;
 
+import com.geargames.common.serialization.ClientDeSerializedMessage;
+
 /**
  * User: mkutuzov
  * Date: 25.03.13
@@ -20,7 +22,8 @@ public interface DataMessageListener {
 
     /**
      * Вызывается MessageDispatcher в случае получения ожидаемого сообщения.
-     * @param dataMessage
+     * @param message
+     * @param type
      */
-    void onReceive(final DataMessage dataMessage);
+    void onReceive(ClientDeSerializedMessage message, short type);
 }
