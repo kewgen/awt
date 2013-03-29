@@ -1,5 +1,6 @@
 package com.geargames.common.network;
 
+import com.geargames.common.serialization.ClientDeSerializedMessage;
 import com.geargames.common.timers.TimerListener;
 import com.geargames.common.timers.TimerManager;
 import com.geargames.common.util.ArrayList;
@@ -12,7 +13,7 @@ import com.geargames.common.util.ArrayObject;
  * После доставки сообщений из Network подписчикам происходит их удаление из Network.
  * Рассылка происходит с наименьшим требуемым подписчиками периодом(каждый подписчик возвращает этот желаемый параметр).
  */
-public class MessageDispatcher implements TimerListener {
+public abstract class MessageDispatcher implements TimerListener {
     private ArrayList listeners;
     private ArrayObject listenersByType;
     private Network network;
@@ -104,8 +105,10 @@ public class MessageDispatcher implements TimerListener {
             ArrayList listeners = (ArrayList) listenersByType.get(message.getMessageType());
             int size = listeners.size();
             for (int j = 0; j < size; j++) {
-                ((DataMessageListener) listeners.get(j)).onReceive(message);
+                ((DataMessageListener) listeners.get(j)).onReceive(getMessage(message), message.getMessageType());
             }
         }
     }
+
+    protected abstract ClientDeSerializedMessage getMessage(DataMessage dataMessage);
 }

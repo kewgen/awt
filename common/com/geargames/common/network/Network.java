@@ -1,5 +1,6 @@
 package com.geargames.common.network;
 
+import com.geargames.common.env.Environment;
 import com.geargames.common.io.DataInput;
 import com.geargames.common.io.DataOutput;
 import com.geargames.common.logging.Debug;
@@ -24,19 +25,20 @@ public abstract class Network {
 
     /**
      * Присоединиться к серверу по адресу address на порте port
+     *
      * @param address
      * @param port
      * @return
      */
-    public boolean connect(String address, int port){
+    public boolean connect(String address, int port) {
         socket = createSocket(address, port);
-        try{
+        try {
             socket.connect();
             receiver = createReceiver(socket.getDataInput());
             sender = createSender(socket.getDataOutput());
             receiver.starting(socket.getDataInput());
             sender.starting(socket.getDataOutput());
-        }catch (Exception e){
+        } catch (Exception e) {
             Debug.error(com.geargames.common.String.valueOfC("Server connection could not be established"), e);
             return false;
         }
@@ -46,7 +48,7 @@ public abstract class Network {
     /**
      * Отсоедениться.
      */
-    public void disconnect(){
+    public void disconnect() {
         sender.finishing();
         receiver.finishing();
         socket.disconnect();
@@ -54,30 +56,35 @@ public abstract class Network {
 
     /**
      * Порт сервера.
+     *
      * @return
      */
     public abstract int getPort();
 
     /**
      * IP адрес сервера.
+     *
      * @return
      */
     public abstract String getAddress();
 
     /**
      * Создать поток для отправки соообщений серверу.
+     *
      * @return
      */
     protected abstract Sender createSender(DataOutput output);
 
     /**
      * Создать поток для чтения сообщений сервера.
+     *
      * @return
      */
     protected abstract Receiver createReceiver(DataInput input);
 
     /**
      * Создать платформенный сокет.
+     *
      * @param string
      * @param port
      * @return
@@ -86,12 +93,14 @@ public abstract class Network {
 
     /**
      * Вернём симафор для доступа очереди асинхронных ответов.
+     *
      * @return
      */
     protected abstract Lock getAsynchronousLock();
 
     /**
      * Вернём сообщение-блокировку синхронных сообщений.
+     *
      * @return
      */
     public abstract MessageLock getMessageLock();
@@ -99,6 +108,7 @@ public abstract class Network {
     /**
      * Послать сообщение на сервер.
      * Ответ ожидать через очередь асинхронных сообщений.
+     *
      * @param message
      */
     public void sendMessage(SerializedMessage message) {
@@ -106,21 +116,33 @@ public abstract class Network {
     }
 
     /**
-     * Послать сообщение и получить объект-отложенный ответ.
+     * Послать сообщение request и получить объект - десериализованный ответ answer (переданный в параметрах метода).
+     *
      * @param request
      * @param answer
-     * @return
+     * @param attempt
+     * @return успешность ожидания и заполения данными ответа answer на сообщение request.
      */
-    public void sendSynchronousMessage(SerializedMessage request, ClientDeferredAnswer answer){
+    public void sendSynchronousMessage(SerializedMessage request, ClientDeSerializedMessage answer, int attempt) throws Exception {
         MessageLock lock = getMessageLock();
         lock.setMessageType(request.getType());
         lock.setValid(true);
-        lock.setMessage(answer.getDeSerializedMessage());
+        lock.setMessage(answer);
         sender.sendMessage(request);
+
+        for (int i = 0; i < attempt; i++) {
+            if (!lock.isValid()) {
+                answer.deSerialize();
+                return;
+            }
+            Environment.pause(100);
+        }
+        throw new Exception("waiting time has been expired for a message : " + request.getType());
     }
 
     /**
      * Вернуть количество асинхронных ответов ожидающих обработки.
+     *
      * @return
      */
     public int getAsynchronousMessagesSize() {
@@ -133,14 +155,15 @@ public abstract class Network {
     /**
      * Вычитать всю очередь сообщений.
      * Считанные сообщения удаляются из Network.
+     *
      * @return массив необработанных DataMessage.
      */
-    public DataMessage[] getAsynchronousDataMessages(){
+    public DataMessage[] getAsynchronousDataMessages() {
         getAsynchronousLock().lock();
         int size = asynchronousMessages.size();
         DataMessage[] messages = new DataMessage[size];
-        for(int i = 0; i < size; i++){
-            messages[i] = (DataMessage)asynchronousMessages.get(i);
+        for (int i = 0; i < size; i++) {
+            messages[i] = (DataMessage) asynchronousMessages.get(i);
         }
         asynchronousMessages.clear();
         getAsynchronousLock().release();
@@ -149,6 +172,7 @@ public abstract class Network {
 
     /**
      * Достать самый старый ответ на асинхронное сообщение типа type.
+     *
      * @param type
      * @return
      */
@@ -169,6 +193,7 @@ public abstract class Network {
 
     /**
      * Прочитать ответ на асинхронное сообщение типа messageType в объект answer.
+     *
      * @param answer
      * @param messageType
      * @return true если answer успешно заполнен данными.
@@ -188,6 +213,7 @@ public abstract class Network {
 
     /**
      * Добавить ответ на асинхронный запрос в очередь.
+     *
      * @param dataMessage
      */
     public void addAsynchronousMessage(DataMessage dataMessage) {

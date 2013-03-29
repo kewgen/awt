@@ -9,36 +9,51 @@ import com.geargames.common.serialization.ClientDeSerializedMessage;
  */
 public class ClientDeferredAnswer {
     private ClientDeSerializedMessage deSerializedMessage;
-
-    public ClientDeferredAnswer(){
-    }
+    private boolean deserialized;
 
     public ClientDeSerializedMessage getDeSerializedMessage() {
         return deSerializedMessage;
     }
 
+    /**
+     * Установить объект deSerializedMessage который будет синхронно опрашиваться о данных и в случае удачи, десериализует их
+     * в игровые обекты.
+     * @param deSerializedMessage
+     */
     public void setDeSerializedMessage(ClientDeSerializedMessage deSerializedMessage) {
         this.deSerializedMessage = deSerializedMessage;
+        deserialized = false;
     }
 
     public ClientDeSerializedMessage getAnswer() {
-        if (deSerializedMessage.ready()) {
+        if (deserialized) {
             return deSerializedMessage;
         } else {
             return null;
         }
     }
 
+    /**
+     * Считать сообщение за attempt попыток с приостановкой текущего потока в случае отсутсвия данных.
+     * Десериализовать данные способом определённым реализацией deSerializedMessage.
+     *
+     * @param attempt
+     * @return
+     * @throws Exception в случае ошибки десериализации.
+     */
     public boolean retrieve(int attempt) throws Exception {
-        int i = 0;
-        while (getAnswer() == null) {
-            if (i++ >= attempt) {
-                return false;
+        if (!deserialized) {
+            int i = 0;
+            while (getAnswer() == null) {
+                if (i++ >= attempt) {
+                    return false;
+                }
+                Environment.pause(100);
             }
-            Environment.pause(100);
+            getAnswer().deSerialize();
+            deserialized = true;
         }
-        getAnswer().deSerialize();
-        return true;
+        return deserialized;
     }
 
 }

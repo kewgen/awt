@@ -10,13 +10,10 @@ public abstract class DrawablePPanel extends DrawablePElement {
     /**
      * Обработчик события появления панельки верхнего уровня.
      */
-    public void onShow() {
-    }
-
+    public abstract void onShow();
     /**
      * Обработчик события сокрытия панельки верхнего уровня.
      */
-    public void onHide() {
-    }
+    public abstract void onHide();
 
 }
