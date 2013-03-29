@@ -42,7 +42,7 @@ public class PStepSpinBox extends PValueComponent {
                 buttonUp.setBox(this);
                 addActiveChild(buttonUp, index);
                 break;
-            case 2:
+            case 109:
                 label = new PSimpleLabel(index);
                 addPassiveChild(label, index);
                 break;
