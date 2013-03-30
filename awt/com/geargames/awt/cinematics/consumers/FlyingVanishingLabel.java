@@ -11,7 +11,7 @@ public class FlyingVanishingLabel {
 
     private static Flying instance;
 
-    public static Flying show(com.geargames.common.String data, int x, int y, byte color) {
+    public static Flying show(String data, int x, int y, byte color) {
         if (instance == null) {
             instance = new Flying();
             VanishingLabel label = new VanishingLabel();

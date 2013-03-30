@@ -2,7 +2,6 @@ package com.geargames.platform.packer;
 
 import com.geargames.common.Port;
 import com.geargames.common.Render;
-import com.geargames.common.String;
 import com.geargames.common.logging.Debug;
 import com.geargames.common.packer.PAffine;
 import com.geargames.platform.Manager;
@@ -49,7 +48,7 @@ public class Graphics implements com.geargames.common.Graphics {
                         tmp.drawImage(frame.getImage(), 0 - frame.getSrcX(), 0 - frame.getSrcY());
                         image_cash[frame_id] = img_.getImage();
                     } catch (Exception e) {
-                        Debug.error(String.valueOfC("Could not draw image properly "), e);
+                        Debug.error("Could not draw image properly ", e);
                     }
                 }
 
@@ -332,7 +331,7 @@ public class Graphics implements com.geargames.common.Graphics {
         }
         // TrimRight():
         int last = position + length - 1;
-        while (last >= position && string.charAt(last) <= String.SPACE) {
+        while (last >= position && string.charAt(last) <= ' ') {
             last--;
         }
         length = last - position + 1;

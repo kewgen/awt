@@ -50,7 +50,7 @@ public class ConsoleEnvironment extends AbstractEnvironment {
         try{
             Thread.sleep(milliseconds);
         }catch (Exception e){
-            Debug.error(com.geargames.common.String.valueOfC("Pausing has been interrupted"), e);
+            Debug.error("Pausing has been interrupted", e);
         }
     }
 }

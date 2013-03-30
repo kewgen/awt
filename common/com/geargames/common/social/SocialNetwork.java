@@ -1,7 +1,6 @@
 package com.geargames.common.social;
 
 import com.geargames.common.Image;
-import com.geargames.common.String;
 
 /**
  * Created with IntelliJ IDEA.

@@ -4,7 +4,6 @@ import com.geargames.common.Render;
 import com.geargames.common.logging.Debug;
 import com.geargames.common.packer.Particle;
 import com.geargames.common.packer.Particles;
-import com.geargames.common.String;
 import com.geargames.common.util.ArrayList;
 
 import java.util.Random;
@@ -94,7 +93,7 @@ public class Emitter extends com.geargames.common.packer.EmitProcess {
                 g.getRender().getAnimation(pid).draw(g, px, py, tick);
                 break;
             default:
-                Debug.warning(String.valueOfC("Packer element type not found:").concat(type));
+                Debug.warning("Packer element type not found:"+type);
         }
     }
 

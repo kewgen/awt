@@ -1,7 +1,5 @@
 package com.geargames.common.social;
 
-import com.geargames.common.String;
-
 /**
  * Created with IntelliJ IDEA.
  * User: kewgen
@@ -31,7 +29,7 @@ public interface Social {
 
 
     public String getFacebookURL();
-    public com.geargames.common.String getVkontakteURL();
+    public String getVkontakteURL();
     public String getTwitterURL();
 
     public void onPostSended(boolean isSended);

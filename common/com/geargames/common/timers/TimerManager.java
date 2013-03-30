@@ -4,7 +4,6 @@ import com.geargames.common.env.Environment;
 import com.geargames.common.logging.Debug;
 import com.geargames.common.util.ArrayList;
 import com.geargames.common.util.HashMap;
-import com.geargames.common.String;
 
 /**
  * Класс предоставляющий функционал по использованию таймеров.
@@ -138,18 +137,18 @@ public class TimerManager {
      */
     private static int setTimer(int timerId, int interval, byte timerType, TimerListener callBackElement) {
         if (STACK_TRACE) {
-            Debug.debug(String.valueOfC("TimerManager.setTimer(").concat(
-                    String.valueOfC("timer id = ").concatI(timerId)).concat(
-                    String.valueOfC("; interval = ").concatI(interval)).concat(
-                    String.valueOfC("; timer type = ").concatI(timerType)).concat(")"));
+            Debug.debug("TimerManager.setTimer("+
+                    "timer id = "+timerId +
+                    "; interval = "+interval+
+                    "; timer type = "+timerType+")");
         }
         killTimer(timerId);
         if (DEBUG && timerIds.containsKey(timerId)) {
-            Debug.error(String.valueOfC("TimerManager.setTimer():").concat(
-                    String.valueOfC(" Put timerId that is already in timerIds (")).concat(
-                    String.valueOfC("timer id = ").concatI(timerId)).concat(
-                    String.valueOfC("; interval = ").concatI(interval)).concat(
-                    String.valueOfC("; timer type = ").concatI(timerType)).concat(")"));
+            Debug.error("TimerManager.setTimer():"+
+                    " Put timerId that is already in timerIds ("+
+                    "timer id = "+timerId+
+                    "; interval = "+interval+
+                    "; timer type = "+timerType+")");
         }
         Timer timer;
         if (!unusedTimers.isEmpty()) {
@@ -230,7 +229,7 @@ public class TimerManager {
     // deleteTimer, removeTimer, releaseTimer
     public static void killTimer(int timerId) {
         if (STACK_TRACE) {
-            Debug.debug(String.valueOfC("TimerManager.killTimer(timer id = ").concatI(timerId).concat(")"));
+            Debug.debug("TimerManager.killTimer(timer id = "+timerId+")");
         }
         Timer timer = findTimer(timerId);
         if (timer != null) {
@@ -284,11 +283,11 @@ public class TimerManager {
     // removeTimer
     private static void releaseTimer(Timer timer) {
         if (STACK_TRACE) {
-            Debug.debug(String.valueOfC("TimerManager.releaseTimer(").concat(
-                    String.valueOfC("timer id = ").concatI(timer.getId())).concat(
-                    String.valueOfC("; interval = ").concatI(timer.getInterval())).concat(
-                    String.valueOfC("; timer type = ").concatI(timer.getTimerType())).concat(
-                    String.valueOfC("; timer manager status = ").concatI(updateStatus)).concat(")"));
+            Debug.debug("TimerManager.releaseTimer("+
+                    "timer id = "+timer.getId()+
+                    "; interval = "+timer.getInterval()+
+                    "; timer type = "+timer.getTimerType()+
+                    "; timer manager status = "+updateStatus+")");
         }
 //        timer.setInterval(0); // Это для того, чтобы таймер не пересоздался в методе update
         if (timer.isKilled()) {
@@ -319,10 +318,10 @@ public class TimerManager {
                     }
                     break;
                 default:
-                    Debug.error(String.valueOfC("TimerManager.releaseTimer(): illegal timerType (").concat(
-                            String.valueOfC("timer id = ").concatI(timer.getId())).concat(
-                            String.valueOfC("; interval = ").concatI(timer.getInterval())).concat(
-                            String.valueOfC("; timer type = ").concatI(timer.getTimerType())).concat(")"));
+                    Debug.error("TimerManager.releaseTimer(): illegal timerType ("+
+                            "timer id = "+timer.getId()+
+                            "; interval = "+timer.getInterval()+
+                            "; timer type = "+timer.getTimerType()+")");
             }
         }
         timerIds.remove(timer.getId());
@@ -360,20 +359,20 @@ public class TimerManager {
         int newTime = millisTime();
         if (false && STACK_TRACE) {
             if (initiateTimers.size() > 0 || timers.size() > 0) {
-                Debug.debug(String.valueOfC("TimerManager.update():").concat(
-                        String.valueOfC(" initiateTimers.size() = ").concatI(initiateTimers.size())).concat(
-                        String.valueOfC("; timers.size() = ").concatI(timers.size())).concat(
-                        String.valueOfC("; last time = ").concatI(lastTime)).concat(
-                        String.valueOfC("; new time = ").concatI(newTime)).concat(
-                        String.valueOfC("; delta time = ").concatI(newTime - lastTime)));
+                Debug.debug("TimerManager.update():"+
+                        " initiateTimers.size() = "+initiateTimers.size()+
+                        "; timers.size() = "+timers.size()+
+                        "; last time = "+lastTime+
+                        "; new time = "+newTime+
+                        "; delta time = "+(newTime - lastTime));
             }
         }
         if (updateStatus != UPDATE_STATUS_NONE) {
-            Debug.error(String.valueOfC("TimerManager.update(): Method was called at the time, when it is already running (timer manager status = ").concatI(updateStatus).concat(")"));
+            Debug.error("TimerManager.update(): Method was called at the time, when it is already running (timer manager status = "+updateStatus+")");
         }
         try {
             if (DEBUG && !unusedTimersAssist.isEmpty()) {
-                Debug.warning(String.valueOfC("TimerManager.update(): list unusedTimersAssist is not empty (size = ").concatI(unusedTimersAssist.size()).concat(")"));
+                Debug.warning("TimerManager.update(): list unusedTimersAssist is not empty (size = "+unusedTimersAssist.size()+")");
             }
             // Отложенная инициализация таймеров
             for (int i = 0; i < initiateTimers.size(); i++) {
@@ -394,19 +393,19 @@ public class TimerManager {
                 //todo: список может измениться, таймеры могут быть удалены, перемещны, изменены
                 Timer timer = (Timer)tickTimers.get(i);
                 if (STACK_TRACE) {
-                    Debug.debug(String.valueOfC("TimerManager.update(): timer.onTickTimer(").concat(
-                            String.valueOfC("timer id = ").concatI(timer.getId())).concat(
-                            String.valueOfC("; interval = ").concatI(timer.getInterval())).concat(
-                            String.valueOfC("; timer type = ").concatI(timer.getTimerType())).concat(
-                            String.valueOfC("; time activation = ").concatI(timer.getTimeActivation())).concat(
-                            String.valueOfC("; next time activation = ").concatI(timer.getNextTimeActivation())).concat(
-                            String.valueOfC("; last time = ").concatI(lastTime)).concat(
-                            String.valueOfC("; new time = ").concatI(newTime)).concat(")"));
+                    Debug.debug("TimerManager.update(): timer.onTickTimer("+
+                            "timer id = "+timer.getId()+
+                            "; interval = "+timer.getInterval()+
+                            "; timer type = "+timer.getTimerType()+
+                            "; time activation = "+timer.getTimeActivation()+
+                            "; next time activation = "+timer.getNextTimeActivation()+
+                            "; last time = "+lastTime+
+                            "; new time = "+newTime+")");
                 }
                 try {
                     timer.onTimer();
                 } catch (Exception e) {
-                    Debug.error(String.valueOfC(e.getMessage()));
+                    Debug.error(e.getMessage());
                 }
             }
             if (!unusedTimersAssist.isEmpty()) {
@@ -421,20 +420,20 @@ public class TimerManager {
                 int timeActivation = timer.getTimeActivation();
                 if (timeActivation <= newTime) {
                     if (STACK_TRACE) {
-                        Debug.debug(String.valueOfC("TimerManager.update(): timer.onTimer(").concat(
-                                String.valueOfC("timer id = ").concatI(timer.getId())).concat(
-                                String.valueOfC("; interval = ").concatI(timer.getInterval())).concat(
-                                String.valueOfC("; timer type = ").concatI(timer.getTimerType())).concat(
-                                String.valueOfC("; time activation = ").concatI(timeActivation)).concat(
-                                String.valueOfC("; next time activation = ").concatI(timer.getNextTimeActivation())).concat(
-                                String.valueOfC("; last time = ").concatI(lastTime)).concat(
-                                String.valueOfC("; new time = ").concatI(newTime)).concat(")"));
+                        Debug.debug("TimerManager.update(): timer.onTimer("+
+                                "timer id = "+timer.getId()+
+                                "; interval = "+timer.getInterval()+
+                                "; timer type = "+timer.getTimerType()+
+                                "; time activation = "+timeActivation+
+                                "; next time activation = "+timer.getNextTimeActivation()+
+                                "; last time = "+lastTime+
+                                "; new time = "+newTime+")");
                     }
                     //todo: А если в обработчике таймера что-то сделать с этим таймером (остановить, запустить повторно, изменить)?
                     try {
                         timer.onTimer();
                     } catch (Exception ex) {
-                        Debug.error(String.valueOfC("Exception during activation timer"), ex);
+                        Debug.error("Exception during activation timer", ex);
                     }
 
                     if (!timer.isKilled()) {
@@ -442,24 +441,24 @@ public class TimerManager {
                             int nextTimeActivation = timer.getNextTimeActivation();
                             if (DEBUG) {
                                 if (nextTimeActivation != -1 && timeActivation >= nextTimeActivation) {
-                                    Debug.warning(String.valueOfC("TimerManager.update(): timeActivation >= nextTimeActivation (").concat(
-                                            String.valueOfC("timer id=").concatI(timer.getId())).concat(
-                                            String.valueOfC("; interval=").concatI(timer.getInterval())).concat(
-                                            String.valueOfC("; timer type=").concatI(timer.getTimerType())).concat(
-                                            String.valueOfC("; time activation=").concatI(timeActivation)).concat(
-                                            String.valueOfC("; next time activation=").concatI(nextTimeActivation)).concat(
-                                            String.valueOfC("; last time =").concatI(lastTime)).concat(
-                                            String.valueOfC("; new time =").concatI(newTime)).concat(")"));
+                                    Debug.warning("TimerManager.update(): timeActivation >= nextTimeActivation ("+
+                                            "timer id="+timer.getId()+
+                                            "; interval="+timer.getInterval()+
+                                            "; timer type="+timer.getTimerType()+
+                                            "; time activation="+timeActivation+
+                                            "; next time activation="+nextTimeActivation+
+                                            "; last time ="+lastTime+
+                                            "; new time ="+newTime+")");
                                 }
                                 if (nextTimeActivation != -1 && lastTime >= nextTimeActivation) {
-                                    Debug.warning(String.valueOfC("TimerManager.update(): nextTimeActivation <= lastTime (").concat(
-                                            String.valueOfC("timer id = ").concatI(timer.getId())).concat(
-                                            String.valueOfC("; interval = ").concatI(timer.getInterval())).concat(
-                                            String.valueOfC("; timer type = ").concatI(timer.getTimerType())).concat(
-                                            String.valueOfC("; time activation = ").concatI(timeActivation)).concat(
-                                            String.valueOfC("; next time activation = ").concatI(nextTimeActivation)).concat(
-                                            String.valueOfC("; last time = ").concatI(lastTime)).concat(
-                                            String.valueOfC("; new time = ").concatI(newTime)).concat(")"));
+                                    Debug.warning("TimerManager.update(): nextTimeActivation <= lastTime ("+
+                                            "timer id = "+timer.getId()+
+                                            "; interval = "+timer.getInterval()+
+                                            "; timer type = "+timer.getTimerType()+
+                                            "; time activation = "+timeActivation+
+                                            "; next time activation = "+nextTimeActivation+
+                                            "; last time = "+lastTime+
+                                            "; new time = "+newTime+")");
                                 }
                             }
                             // Таймер требует повторной активации, поэтому он должен быть обновлен и перемещен в списке.

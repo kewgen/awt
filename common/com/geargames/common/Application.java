@@ -21,7 +21,7 @@ public abstract class Application {
     public void eventAdd(int eventId, int param, Object data, int x, int y) {
         boolean normalSize = msgQueue.size() < 64;
         if (!normalSize) {
-            Debug.warning(String.valueOfC("Queue length exceed 64 events (length=").concatI(msgQueue.size()).concatC(")"));
+            Debug.warning("Queue length exceed 64 events (length="+msgQueue.size()+")");
         }
         Event event = new Event(eventId, param, data, x, y);
         msgQueue.addElement(event);

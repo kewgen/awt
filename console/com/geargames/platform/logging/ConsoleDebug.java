@@ -16,6 +16,7 @@ import java.util.TimeZone;
  * Date: 14.03.13
  */
 public class ConsoleDebug extends AbstractDebug {
+    private static final char LINE_SEPARATOR  = '\n';
 
     // Минимальный уровень логгирования для консоли вывода. Сообщения более низкого уровня в консоль выводиться не будут.
     public static int consoleLogLevelMinimum = Debug.IS_DEBUG ? Level.DEBUG : Level.ALL;
@@ -29,7 +30,7 @@ public class ConsoleDebug extends AbstractDebug {
 
     private void trace(String message) {
         try {
-            Logger.getInstance().publish(message + com.geargames.common.String.LINE_SEPARATOR);
+            Logger.getInstance().publish(message + LINE_SEPARATOR);
         } catch (IOException ex) {
             sendLogMessage(Level.ERROR, "Message could not be published to the logfile", ex);
             if (Level.ERROR >= consoleLogLevelMinimum) {
@@ -95,7 +96,7 @@ public class ConsoleDebug extends AbstractDebug {
 
         StackTraceElement[] stackTrace = ex.getStackTrace();
         for (int i = 0; i < stackTrace.length; i++) {
-            stringBuilder.append(com.geargames.common.String.LINE_SEPARATOR);
+            stringBuilder.append(LINE_SEPARATOR);
             stringBuilder.append(stackTrace[i].toString());
         }
 

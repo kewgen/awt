@@ -2,7 +2,6 @@ package com.geargames.platform.media;
 
 import com.geargames.common.logging.Debug;
 import com.geargames.common.util.Recorder;
-import com.geargames.common.String;
 import com.geargames.common.util.ArrayByte;
 
 import java.util.Hashtable;
@@ -31,7 +30,7 @@ public class Pool {
 
     public void play(int id, int volume) {
         if (list.get(id) == null) {
-            Debug.error(String.valueOfC("Sound not found, id:").concat(id));
+            Debug.error("Sound not found, id:"+id);
             return;
         }
         list.get(id).setVolume(volume);

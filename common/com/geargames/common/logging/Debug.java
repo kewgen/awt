@@ -77,45 +77,4 @@ public class Debug {
     public static void fatal(String message, Exception ex) {
         instance.log(Level.FATAL, message, ex);
     }
-
-    public static void log(byte level, com.geargames.common.String message) {
-        instance.log(level, message.toString());
-    }
-
-    public static void log(byte level, com.geargames.common.String message, Exception ex) {
-        instance.log(level, message.toString(), ex);
-    }
-
-    public static void debug(com.geargames.common.String message) {
-        instance.log(Level.DEBUG, message.toString());
-    }
-
-    public static void config(com.geargames.common.String message) {
-        instance.log(Level.CONFIG, message.toString());
-    }
-
-    public static void info(com.geargames.common.String message) {
-        instance.log(Level.INFO, message.toString());
-    }
-
-    public static void warning(com.geargames.common.String message) {
-        instance.log(Level.WARNING, message.toString());
-    }
-
-    public static void warning(com.geargames.common.String message, Exception ex) {
-        instance.log(Level.WARNING, message.toString(), ex);
-    }
-
-    public static void error(com.geargames.common.String message) {
-        instance.log(Level.ERROR, message.toString());
-    }
-
-    public static void error(com.geargames.common.String message, Exception ex) {
-        instance.log(Level.ERROR, message.toString(), ex);
-    }
-
-    public static void critical(com.geargames.common.String message, Exception ex) {
-        instance.log(Level.CRITICAL, message.toString(), ex);
-    }
-
 }

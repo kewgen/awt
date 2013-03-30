@@ -1,7 +1,6 @@
 package com.geargames.awt.components;
 
 import com.geargames.common.Graphics;
-import com.geargames.common.String;
 import com.geargames.common.packer.IndexObject;
 import com.geargames.common.packer.PFont;
 import com.geargames.common.packer.PObject;
@@ -58,7 +57,7 @@ public class PStepSpinBox extends PValueComponent {
     }
 
     private void initiate() {
-        label.setText(String.valueOfI(value));
+        label.setText(""+value);
         initiated = true;
     }
 

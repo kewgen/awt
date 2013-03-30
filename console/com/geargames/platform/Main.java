@@ -3,7 +3,6 @@ package com.geargames.platform;
 import com.geargames.common.env.Environment;
 import com.geargames.common.logging.Debug;
 import com.geargames.common.logging.Logger;
-import com.geargames.common.String;
 import com.geargames.common.util.Recorder;
 import com.geargames.platform.env.ConsoleEnvironment;
 import com.geargames.platform.logging.ConsoleDebug;
@@ -30,7 +29,7 @@ public abstract class Main {
     public void commonMain(java.lang.String[] args) throws IOException {
         if (args != null) {
             for (java.lang.String string : args) {
-                Debug.config(String.valueOfC("Read arg:" + string));
+                Debug.config("Read arg:" + string);
                 if (string.equals("is_jar")) {//запуск из jar-файла
                     IS_JAR = true;
                 } else if (string.equals("debug")) {//включаем дебаг

@@ -62,7 +62,7 @@ public abstract class TablesLoader {
         short trow_count = dis.readShort();
         ttable_len -= 2;
         tinfo_len -= 2;
-        String str = String.valueOfC("Load table[").concatI(trow_count).concatC(",").concatI(tcol_count).concatC("]");
+        String str = "Load table["+trow_count+","+tcol_count+"]";
 
         for (int i = tinfo_len; i > 0; i--) {//отсчитываем до начала первого массива
             dis.readByte();
@@ -83,13 +83,15 @@ public abstract class TablesLoader {
             short aarray_len = dis.readShort();
             ttable_len -= 2;
             ainfo_len -= 2;
-            if (DEBUG) str = str.concatC("\n col[").concatI(col).concatC("]\t");
+            if (DEBUG) str = str+"\n col["+col+"]\t";
 
             for (int row = 0; row < trow_count; row++) {
                 int size = readBlock(dis, atype, array, row, col);
                 ttable_len -= size;
                 ainfo_len -= size;
-                if (DEBUG) str = str.concat(array.get(row, col)).concatC(",");
+                if (DEBUG) {
+                    str = str+array.get(row, col)+",";
+                }
             }
 
             for (int i = ainfo_len; i > 0; i--) {//отсчитываем до начала след первого массива
@@ -126,7 +128,7 @@ public abstract class TablesLoader {
         short trow_count = dis.readShort();
         ttable_len -= 2;
         tinfo_len -= 2;
-        String str = String.valueOfC("Load table[").concatI(trow_count).concatC(",").concatI(tcol_count).concatC("]");
+        String str = "Load table["+trow_count+","+tcol_count+"]";
 
         for (int i = tinfo_len; i > 0; i--) {//отсчитываем до начала первого массива
             dis.readByte();
@@ -147,13 +149,17 @@ public abstract class TablesLoader {
             short aarray_len = dis.readShort();
             ttable_len -= 2;
             ainfo_len -= 2;
-            if (DEBUG) str = str.concatC("\n col[").concatI(col).concatC("]\t");
+            if (DEBUG) {
+                str = str+"\n col["+col+"]\t";
+            }
 
             for (int row = 0; row < trow_count; row++) {
                 int size = readBlock(dis, atype, array, row, col);
                 ttable_len -= size;
                 ainfo_len -= size;
-                if (DEBUG) str = str.concat(array.get(row, col)).concatC(",");
+                if (DEBUG) {
+                    str = str+array.get(row, col)+",";
+                }
             }
 
             for (int i = ainfo_len; i > 0; i--) {//отсчитываем до начала след первого массива
@@ -216,7 +222,7 @@ public abstract class TablesLoader {
                 break;
             case 12://define('F_STR2_ANSI', 		12);
                 int len = dis.readUnsignedShort();
-                array.set(row, col, String.valueOfC(readUTF(dis, len)));
+                array.set(row, col, readUTF(dis, len));
 //                String string = String.valueOfC(dis.readUTF());
 //                array[row][col] = string;
 //                int len = string.length();

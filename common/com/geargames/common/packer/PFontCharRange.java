@@ -2,7 +2,6 @@ package com.geargames.common.packer;
 
 import com.geargames.common.util.ArrayChar;
 import com.geargames.common.util.ArrayList;
-import com.geargames.common.String;
 
 /**
  * User: mikhail v. kutuzov, abarakov

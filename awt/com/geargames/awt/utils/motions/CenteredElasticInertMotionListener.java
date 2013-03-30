@@ -5,7 +5,6 @@ import com.geargames.common.timers.TimerListener;
 import com.geargames.common.timers.TimerManager;
 import com.geargames.awt.utils.MotionListener;
 import com.geargames.awt.utils.ScrollListener;
-import com.geargames.common.String;
 import com.geargames.common.logging.Debug;
 
 /**
@@ -51,7 +50,7 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
     public void create(int center, int itemOffset, int window, int itemSize) {
         if (inertness < divider) {
             inertness = divider;
-            Debug.warning(String.valueOfC("Inertness is too tiny"));
+            Debug.warning("Inertness is too tiny");
         }
 
         this.window = window;
@@ -76,7 +75,7 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
         storedMove = 0;
         draggingTicks = 0;
         if (Drawable.DEBUG) {
-            Debug.debug(String.valueOfC("TOUCH: ").concatI(y));
+            Debug.debug("TOUCH: "+y);
         }
     }
 
@@ -89,15 +88,15 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
             value = y;
             setPosition(position + move * accelerator);
             if (Drawable.DEBUG) {
-                Debug.debug(String.valueOfC("MOVE: ").concatI(move));
-                Debug.debug(String.valueOfC("POSITION: ").concatI(position));
+                Debug.debug("MOVE: "+move);
+                Debug.debug("POSITION: "+position);
             }
         }
     }
 
     private void startMoving() {
         if (Drawable.DEBUG) {
-            Debug.debug(String.valueOfC("startMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
+            Debug.debug("startMoving(): released="+released+"; timerId="+timerId);
         }
         released = true;
         if (timerId != TimerManager.NULL_TIMER) {
@@ -109,7 +108,7 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
 
     private void endMoving() {
         if (Drawable.DEBUG) {
-            Debug.debug(String.valueOfC("endMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
+            Debug.debug("endMoving(): released="+released+"; timerId="+timerId);
         }
         released = false;
         if (timerId != TimerManager.NULL_TIMER) {
@@ -136,8 +135,8 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
                 }
                 setPosition(position + storedMove * accelerator);
                 if (Drawable.DEBUG) {
-                    Debug.debug(String.valueOfC("INERTIA = ").concatI(storedMove));
-                    Debug.debug(String.valueOfC("POSITION = ").concatI(position));
+                    Debug.debug("INERTIA = "+storedMove);
+                    Debug.debug("POSITION = "+position);
                 }
             } else {
                 if (relativeClickedPosition == -1) {
@@ -210,7 +209,7 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
     @Override
     public void onRelease(int y) {
         if (Drawable.DEBUG) {
-            Debug.debug(String.valueOfC("RELEASED"));
+            Debug.debug("RELEASED");
         }
         startMoving();
     }
@@ -218,7 +217,7 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
     @Override
     public void onOutOfBounds() {
         if (Drawable.DEBUG) {
-            Debug.debug(String.valueOfC("OUT OF BOUNDS"));
+            Debug.debug("OUT OF BOUNDS");
         }
         startMoving();
     }
@@ -228,11 +227,11 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
         relativeClickedPosition = number * itemSize;
         if (!instinctPosition) {
             if (Drawable.DEBUG) {
-                Debug.debug(String.valueOfI(number));
-                Debug.debug(String.valueOfI(relativeClickedPosition).concatC(" ").concatI(position));
-                Debug.debug(String.valueOfI(position).concatC(" ").concatI(window));
-                Debug.debug(String.valueOfI(position + window - itemDiff));
-                Debug.debug(String.valueOfI(center));
+                Debug.debug(""+number);
+                Debug.debug(relativeClickedPosition+" "+position);
+                Debug.debug(position+" "+window);
+                Debug.debug("" + (position + window - itemDiff));
+                Debug.debug(""+center);
             }
         } else {
             setPosition(center - relativeClickedPosition);

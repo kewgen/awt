@@ -3,14 +3,13 @@ package com.geargames.awt.components;
 import com.geargames.awt.utils.*;
 import com.geargames.awt.utils.motions.InertMotionListener;
 import com.geargames.awt.utils.motions.StubMotionListener;
-import com.geargames.common.String;
 import com.geargames.common.Graphics;
 import com.geargames.common.packer.PFont;
 import com.geargames.common.util.Region;
 
 public class TextArea extends VerticalScrollableArea {
 
-    private final static String STR_ELLIPSIS = String.valueOfC("...");
+    private final static String STR_ELLIPSIS = "...";
 
     private String text;
     private PFont font;

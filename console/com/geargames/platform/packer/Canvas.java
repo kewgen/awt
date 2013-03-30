@@ -2,7 +2,6 @@ package com.geargames.platform.packer;
 
 import com.geargames.common.Port;
 import com.geargames.common.logging.Debug;
-import com.geargames.common.String;
 import com.geargames.platform.Manager;
 
 /**
@@ -12,13 +11,13 @@ public class Canvas extends java.awt.Canvas {
 
     public Canvas(Manager manager, int scaleMin, int scaleMax) {
         isTouchSupport = true;
-        Debug.config(String.valueOfC("Canvas.Touch " + (isTouchSupport ? "is supported." : "is not supported.")));
+        Debug.config("Canvas.Touch " + (isTouchSupport ? "is supported." : "is not supported."));
     }
 
     @Override
     public void paint(java.awt.Graphics g) {
         super.paint(g);
-        Debug.debug(String.valueOfC("paint"));
+        Debug.debug("paint");
     }
 
     public void repaintStart() {//метод Android
@@ -136,7 +135,7 @@ public class Canvas extends java.awt.Canvas {
                 return (char) keyCode;
 
         } catch (Exception e) {
-            Debug.error(String.valueOfC("checking QWERTY key."), e);
+            Debug.error("checking QWERTY key.", e);
         }
         return retval;
     }

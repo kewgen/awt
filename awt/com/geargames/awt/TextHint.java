@@ -5,7 +5,6 @@ import com.geargames.awt.components.TextArea;
 import com.geargames.awt.utils.*;
 import com.geargames.common.Port;
 import com.geargames.common.Render;
-import com.geargames.common.String;
 import com.geargames.common.Graphics;
 import com.geargames.common.packer.PFont;
 import com.geargames.common.packer.PFrame;
@@ -86,7 +85,7 @@ public class TextHint extends PopUp implements PostDrawable {
      * @param scrollable   если true, то текст подсказки можно будет скроллить
      * @param font         шрифт, которым будет отрисовываться текст подсказки
      */
-    public static void show(com.geargames.common.String text, int x, int y, int showingTime, int lifeTime, int hidingTime,
+    public static void show(String text, int x, int y, int showingTime, int lifeTime, int hidingTime,
                             PFont font, boolean scrollable/*, int color, int margin*/) {
         TextHint instance = getInstance();
         instance.textArea.setText(text);
