@@ -10,7 +10,6 @@ import java.util.Vector;
 /**
  * User: mikhail v. kutuzov, abarakov
  * Date: 27.11.12
- * Time: 16:39
  */
 public abstract class VerticalScrollView extends VerticalScrollableArea {
     private MotionListener motionListener;

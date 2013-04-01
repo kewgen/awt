@@ -61,6 +61,9 @@ public abstract class PPanelManager {
         } else {
             modal.modalEvent(code, param, x, y);
         }
+        //todo: TextHint должен получать события, находясь в списке callableElements, а не в индивидуальном порядке
+        TextHint hintElement = TextHint.getInstance();
+        hintElement.onEvent(code, param, x, y);
     }
 
     /**
@@ -104,6 +107,10 @@ public abstract class PPanelManager {
             //todo: если элемент панельки невидим, то и рисовать его не следует
             ((Drawable) drawableElements.get(i)).draw(graphics);
         }
+
+        //todo: TextHint должен отрисовываться находясь в списке drawableElements, а не в индивидуальном порядке
+        TextHint hintElement = TextHint.getInstance();
+        hintElement.draw(graphics);
     }
 
     /**

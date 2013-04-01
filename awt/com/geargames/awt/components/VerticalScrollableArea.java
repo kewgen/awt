@@ -8,7 +8,6 @@ import com.geargames.common.Graphics;
 /**
  * User: mikhail v. kutuzov, abarakov
  * Date: 27.11.12
- * Time: 16:17
  */
 public abstract class VerticalScrollableArea extends ScrollableArea {
 
@@ -23,14 +22,10 @@ public abstract class VerticalScrollableArea extends ScrollableArea {
             graphics.drawRect(x + touchRegion.getMinX(), y + touchRegion.getMinY(), touchRegion.getWidth(), touchRegion.getHeight());
             graphics.drawRect(x + drawRegion.getMinX(), y + drawRegion.getMinY(), drawRegion.getWidth(), drawRegion.getHeight());
         }
-//        int clipMin = y;
-//        int clipMax = clipMin + drawRegion.getHeight();
-//        graphics.setClip(x + drawRegion.getMinX(), y + drawRegion.getMinY(), drawRegion.getWidth(), drawRegion.getHeight());
-//        int localPosition = clipMin + getPosition();
 
         graphics.setClip(x + drawRegion.getMinX(), y + drawRegion.getMinY(), drawRegion.getWidth(), drawRegion.getHeight());
         int localPosition = y + getPosition();
-        int clipMin = y + drawRegion.getMinY(); // todo-discussion: изменено, верно ли?
+        int clipMin = y + drawRegion.getMinY();
         int clipMax = clipMin + drawRegion.getHeight();
         if (isStrictlyClipped()) {
             for (int i = 0; i < getItemsAmount(); i++) {

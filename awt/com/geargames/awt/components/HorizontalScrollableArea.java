@@ -8,7 +8,6 @@ import com.geargames.common.Graphics;
 /**
  * User: mikhail v. kutuzov, abarakov
  * Date: 27.11.12
- * Time: 16:32
  */
 public abstract class HorizontalScrollableArea extends ScrollableArea {
 
@@ -26,7 +25,7 @@ public abstract class HorizontalScrollableArea extends ScrollableArea {
 
         graphics.setClip(x + drawRegion.getMinX(), y + drawRegion.getMinY(), drawRegion.getWidth(), drawRegion.getHeight());
         int localPosition = x + getPosition();
-        int clipMin = x + drawRegion.getMinX(); // todo-discussion: изменено, верно ли?
+        int clipMin = x + drawRegion.getMinX();
         int clipMax = clipMin + drawRegion.getWidth();
         if (isStrictlyClipped()) {
             for (int i = 0; i < getItemsAmount(); i++) {
@@ -84,7 +83,7 @@ public abstract class HorizontalScrollableArea extends ScrollableArea {
     }
 
     /**
-     * Вернуть высоту видимой области
+     * Вернуть ширину видимой области.
      *
      * @return
      */

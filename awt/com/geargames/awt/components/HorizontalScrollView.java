@@ -10,7 +10,6 @@ import java.util.Vector;
 /**
  * User: mikhail v. kutuzov, abarakov
  * Date: 27.11.12
- * Time: 21:19
  */
 public abstract class HorizontalScrollView extends HorizontalScrollableArea {
     private MotionListener motionListener;
@@ -53,7 +52,7 @@ public abstract class HorizontalScrollView extends HorizontalScrollableArea {
     }
 
     /**
-     * Вернуть индекс элемента списка по заданной линейной координате
+     * Вернуть индекс элемента списка по заданной линейной координате.
      *
      * @param pos
      * @return

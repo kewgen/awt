@@ -6,6 +6,7 @@ import com.geargames.awt.utils.*;
 import com.geargames.common.Port;
 import com.geargames.common.Render;
 import com.geargames.common.Graphics;
+import com.geargames.common.logging.Debug;
 import com.geargames.common.packer.Index;
 import com.geargames.common.packer.PFont;
 import com.geargames.common.packer.PFrame;
@@ -89,6 +90,7 @@ public class TextHint extends PopUp implements PostDrawable {
      */
     public static void show(String text, int x, int y, int showingTime, int lifeTime, int hidingTime,
                             PFont font, boolean scrollable/*, int color, int margin*/) {
+        Debug.debug("TextHint.show(): x = " + x + "; y = " + y + "; text = '" + text + "'");
         TextHint instance = getInstance();
         instance.textArea.setText(text);
         instance.textArea.setFont(font);
