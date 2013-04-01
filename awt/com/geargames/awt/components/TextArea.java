@@ -205,4 +205,8 @@ public class TextArea extends VerticalScrollableArea {
         setInitiated(false);
     }
 
+    @Override
+    public int getItemOffsetX() {
+        return 0;
+    }
 }

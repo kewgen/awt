@@ -18,6 +18,7 @@ public class PVerticalScrollView extends VerticalScrollView {
     private PPrototypeElement prototypeElement;
     private Region drawRegion;
     private Region touchRegion;
+    private int itemOffset;
 
     public PVerticalScrollView(PObject prototype) {
         Index index = prototype.getIndexBySlot(110);
@@ -50,6 +51,8 @@ public class PVerticalScrollView extends VerticalScrollView {
         prototypeElement = new PPrototypeElement();
         prototypeElement.setPrototype(index0.getPrototype());
 
+        itemOffset = index0.getX();
+
         Region tmp = new Region();
         PObject objectPrototype = (PObject)index0.getPrototype();
         index = objectPrototype.getIndexBySlot(110);
@@ -64,6 +67,11 @@ public class PVerticalScrollView extends VerticalScrollView {
         } else {
             setMargin(0);
         }
+    }
+
+    @Override
+    public int getItemOffsetX() {
+        return itemOffset;
     }
 
     @Override
