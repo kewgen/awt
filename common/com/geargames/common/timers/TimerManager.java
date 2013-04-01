@@ -405,7 +405,7 @@ public class TimerManager {
                 try {
                     timer.onTimer();
                 } catch (Exception e) {
-                    Debug.error(e.getMessage());
+                    Debug.error("Exception during activation timer", e);
                 }
             }
             if (!unusedTimersAssist.isEmpty()) {
