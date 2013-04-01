@@ -18,6 +18,7 @@ public class PHorizontalScrollView extends HorizontalScrollView {
     private PPrototypeElement prototypeElement;
     private Region drawRegion;
     private Region touchRegion;
+    private int itemOffset;
 
     public PHorizontalScrollView(PObject prototype) {
         Index index = prototype.getIndexBySlot(110);
@@ -47,6 +48,8 @@ public class PHorizontalScrollView extends HorizontalScrollView {
         IndexObject index0 = (IndexObject) prototype.getIndexBySlot(0);
         IndexObject index1 = (IndexObject) prototype.getIndexBySlot(1);
 
+        itemOffset = index0.getY();
+
         prototypeElement = new PPrototypeElement();
         prototypeElement.setPrototype(index0.getPrototype());
 
@@ -64,6 +67,10 @@ public class PHorizontalScrollView extends HorizontalScrollView {
         } else {
             setMargin(0);
         }
+    }
+
+    public int getItemOffsetY() {
+        return itemOffset;
     }
 
     @Override

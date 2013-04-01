@@ -30,14 +30,14 @@ public abstract class HorizontalScrollableArea extends ScrollableArea {
         if (isStrictlyClipped()) {
             for (int i = 0; i < getItemsAmount(); i++) {
                 if (localPosition >= clipMin && localPosition + getItemSize() <= clipMax) {
-                    drawItem(graphics, i, localPosition, y);
+                    drawItem(graphics, i, localPosition, y + getItemOffsetY());
                 }
                 localPosition += getItemSize();
             }
         } else {
             for (int i = 0; i < getItemsAmount(); i++) {
                 if (localPosition + getItemSize() > clipMin && localPosition - getItemSize() <= clipMax) {
-                    drawItem(graphics, i, localPosition, y);
+                    drawItem(graphics, i, localPosition, y + getItemOffsetY());
                 }
                 localPosition += getItemSize();
             }
@@ -108,4 +108,10 @@ public abstract class HorizontalScrollableArea extends ScrollableArea {
         }
     }
 
+
+    /**
+     * Вернуть смещение осей координат по оси y для всех элементов списка.
+     * @return
+     */
+    public abstract int getItemOffsetY();
 }

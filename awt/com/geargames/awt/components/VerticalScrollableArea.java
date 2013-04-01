@@ -30,14 +30,14 @@ public abstract class VerticalScrollableArea extends ScrollableArea {
         if (isStrictlyClipped()) {
             for (int i = 0; i < getItemsAmount(); i++) {
                 if (localPosition >= clipMin && localPosition + getItemSize() <= clipMax) {
-                    drawItem(graphics, i, x, localPosition);
+                    drawItem(graphics, i, x + getItemOffsetX(), localPosition);
                 }
                 localPosition += getItemSize();
             }
         } else {
             for (int i = 0; i < getItemsAmount(); i++) {
                 if (localPosition + getItemSize() > clipMin && localPosition - getItemSize() <= clipMax) {
-                    drawItem(graphics, i, x, localPosition);
+                    drawItem(graphics, i, x + getItemOffsetX(), localPosition);
                 }
                 localPosition += getItemSize();
             }
@@ -111,4 +111,10 @@ public abstract class VerticalScrollableArea extends ScrollableArea {
         }
     }
 
+
+    /**
+     * Вернуть смещение по оси x для всех элементов списка.
+     * @return
+     */
+    public abstract int getItemOffsetX();
 }

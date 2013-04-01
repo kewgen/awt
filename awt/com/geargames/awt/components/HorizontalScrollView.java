@@ -4,6 +4,7 @@ import com.geargames.awt.utils.MotionListener;
 import com.geargames.common.Event;
 import com.geargames.common.Graphics;
 import com.geargames.common.Port;
+import com.geargames.common.util.Region;
 
 import java.util.Vector;
 
@@ -29,8 +30,10 @@ public abstract class HorizontalScrollView extends HorizontalScrollableArea {
     public boolean onEvent(int code, int param, int x, int y) {
         boolean result = super.onEvent(code, param, x, y);
         if (getTouchRegion().isWithIn(x, y)) {
-            int number = getItemAtLinearPosition(x);
+            int number = getItemAtLinearPosition(x, y);
             if (0 <= number && number < getItemsAmount()) {
+                PElement item = ((PElement) getItems().elementAt(number));
+                int offsetX = getItemOffsetX(number);
                 switch (code) {
                     case Event.EVENT_TOUCH_PRESSED:
                         touchX = x;
@@ -38,14 +41,14 @@ public abstract class HorizontalScrollView extends HorizontalScrollableArea {
                         currentLastClicked = number;
                         break;
                     case Event.EVENT_TOUCH_RELEASED:
+                        item.onEvent(code, param, x - offsetX, y - getItemOffsetY());
                         if (Math.abs(touchX - x) <= Port.TOUCH_ROUND && Math.abs(touchY - y) <= Port.TOUCH_ROUND) {
                             getMotionListener().onClick(number);
-                            ((PElement) getItems().elementAt(number)).onEvent(code, param, x, y);
-                            ((PElement) getItems().elementAt(number)).onEvent(Event.EVENT_SYNTHETIC_CLICK, number, x, y);
+                            item.onEvent(Event.EVENT_SYNTHETIC_CLICK, number, x - offsetX, y - getItemOffsetY());
                         }
                         return result;
                 }
-                ((PElement) getItems().elementAt(number)).onEvent(code, param, x, y);
+                item.onEvent(code, param, x - offsetX, y - getItemOffsetY());
             }
         }
         return result;
@@ -54,19 +57,24 @@ public abstract class HorizontalScrollView extends HorizontalScrollableArea {
     /**
      * Вернуть индекс элемента списка по заданной линейной координате.
      *
-     * @param pos
+     * @param x
      * @return
      */
-    public int getItemAtLinearPosition(int pos) {
-        int length = -getPosition() + pos;
-        if (length % getItemSize() > getItemSize() - margin) {
+    public int getItemAtLinearPosition(int x, int y) {
+        Region region = getPrototype().getDrawRegion();
+        if (y >= getItemOffsetY() + region.getMinY() && y <= getItemOffsetY() + region.getMaxY()) {
+            int length = -getPosition() + x;
+            if (length % getItemSize() > getItemSize() - margin) {
+                return -1;
+            }
+            int i = length / getItemSize();
+            if (length > i * getItemSize() + getPrototype().getDrawRegion().getWidth()) {
+                return -1;
+            }
+            return i;
+        } else {
             return -1;
         }
-        int i = length / getItemSize();
-        if (length > i * getItemSize() + getPrototype().getDrawRegion().getWidth()) {
-            return -1;
-        }
-        return i;
     }
 
     /**
@@ -160,4 +168,12 @@ public abstract class HorizontalScrollView extends HorizontalScrollableArea {
         this.motionListener = motionListener;
     }
 
+    /**
+     * Вернуть смещение осей координат по оси x для элемента номер number.
+     * @param number
+     * @return
+     */
+    public int getItemOffsetX(int number) {
+        return getPosition() +  getItemSize()*number - getPrototype().getDrawRegion().getMinX();
+    }
 }
