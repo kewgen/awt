@@ -1,6 +1,5 @@
 package com.geargames.common.network;
 
-import com.geargames.common.String;
 import com.geargames.common.io.DataOutput;
 import com.geargames.common.logging.Debug;
 import com.geargames.common.serialization.SerializedMessage;
@@ -86,11 +85,11 @@ public abstract class Sender {
             } catch (Exception e) {
                 errors++;
                 if (errors > getErrorThreshold()) {
-                    Debug.error(com.geargames.common.String.valueOfC("Sender: too many errors, disconnecting"), e);
+                    Debug.error("Sender: too many errors, disconnecting", e);
                     network.disconnect();
                     return;
                 }
-                Debug.error(String.valueOfC("Sender exception"), e);
+                Debug.error("Sender exception", e);
             }
         }
     }

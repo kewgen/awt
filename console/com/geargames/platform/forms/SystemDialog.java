@@ -3,7 +3,6 @@ package com.geargames.platform.forms;
 import com.geargames.common.logging.Debug;
 
 import javax.swing.*;
-import com.geargames.common.String;
 
 /**
  * User: kewgen
@@ -18,7 +17,7 @@ public abstract class SystemDialog extends com.geargames.common.SystemDialog {
     }
 
     protected Object onCreateDialog(int id) {
-        Debug.debug(String.valueOfC("Dialog.").concat(text));
+        Debug.debug("Dialog."+text);
         int action = -1;
         switch (type) {
             case ONE_BUTTON:

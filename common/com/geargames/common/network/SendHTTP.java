@@ -214,7 +214,7 @@ public abstract class SendHTTP {
         return -1;
     }
 
-    public void setHost(com.geargames.common.String host) {
+    public void setHost(String host) {
         this.host = host.toString();
     }
 

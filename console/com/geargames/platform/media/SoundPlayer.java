@@ -3,7 +3,6 @@ package com.geargames.platform.media;
 import com.geargames.common.logging.Debug;
 import com.geargames.common.media.Player;
 import com.geargames.common.util.ArrayByte;
-import com.geargames.common.String;
 import javazoom.jl.player.JavaSoundAudioDevice;
 import javazoom.jl.player.advanced.AdvancedPlayer;
 
@@ -44,7 +43,7 @@ public class SoundPlayer implements Runnable, Player {
         taskToStop = false;
         isPlayed = false;
         setLoopCount(1);
-        Debug.debug(String.valueOfC("Sound created." + toString()));
+        Debug.debug("Sound created." + toString());
     }
 
     @Override
@@ -102,7 +101,7 @@ public class SoundPlayer implements Runnable, Player {
             if (data == null) {
                 File soundFile = new File(filename.toString());
                 if (!soundFile.exists()) {
-                    Debug.error(String.valueOfC("Wave file not found: ").concat(filename));
+                    Debug.error("Wave file not found: "+filename);
                     return;
                 }
                 audioInputStream = AudioSystem.getAudioInputStream(soundFile);
@@ -112,11 +111,11 @@ public class SoundPlayer implements Runnable, Player {
                 is.close();
             }
         } catch (UnsupportedAudioFileException e) {
-            Debug.error(String.valueOfC(toString()));
-            Debug.error(String.valueOfC(""), e);
+            Debug.error(toString());
+            Debug.error("", e);
             return;
         } catch (IOException e) {
-            Debug.error(String.valueOfC(""), e);
+            Debug.error("", e);
             return;
         }
 
@@ -128,13 +127,13 @@ public class SoundPlayer implements Runnable, Player {
             auline = (SourceDataLine) AudioSystem.getLine(info);
             auline.open(format);
         } catch (LineUnavailableException e) {
-            Debug.error(String.valueOfC(""), e);
+            Debug.error("", e);
             return;
         } catch (IllegalArgumentException e) {
-            Debug.error(String.valueOfC(""), e);
+            Debug.error("", e);
             return;
         } catch (Exception e) {
-            Debug.error(String.valueOfC(""), e);
+            Debug.error("", e);
             return;
         }
 
@@ -159,7 +158,7 @@ public class SoundPlayer implements Runnable, Player {
             }
             audioInputStream.close();
         } catch (IOException e) {
-            Debug.error(String.valueOfC(""), e);
+            Debug.error("", e);
         } finally {
             auline.drain();
             auline.close();
@@ -186,7 +185,7 @@ public class SoundPlayer implements Runnable, Player {
             is.close();
 
         } catch (Exception e) {
-            Debug.error(String.valueOfC(""), e);
+            Debug.error("", e);
         }
             isPlayed = false;
     }

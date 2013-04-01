@@ -5,7 +5,6 @@ import com.geargames.common.timers.TimerListener;
 import com.geargames.common.timers.TimerIdMap;
 import com.geargames.common.timers.TimerManager;
 import com.geargames.common.Graphics;
-import com.geargames.common.String;
 import com.geargames.common.logging.Debug;
 
 /**
@@ -56,7 +55,7 @@ public class LinearVanishingStrategy extends GraphicsStrategy implements TimerLi
             switch (state) {
                 case HIDDEN_STATE:
                     if (DEBUG) {
-                        Debug.debug(String.valueOfC("LinearVanishingStrategy.onTimer(): HIDDEN_STATE"));
+                        Debug.debug("LinearVanishingStrategy.onTimer(): HIDDEN_STATE");
                     }
                     break;
                 case HIDING_STATE: {
@@ -66,7 +65,7 @@ public class LinearVanishingStrategy extends GraphicsStrategy implements TimerLi
                     int elapsedTime = TimerManager.millisTime() - startTime;
                     int currentTransparency = (int)((float)elapsedTime / hidingTime * 100);
                     if (DEBUG) {
-                        Debug.debug(String.valueOfC("LinearVanishingStrategy.onTimer(): HIDING_STATE: transparency=").concat(currentTransparency));
+                        Debug.debug("LinearVanishingStrategy.onTimer(): HIDING_STATE: transparency="+currentTransparency);
                     }
                     if (currentTransparency >= 100) {
                         // Компонент стал полностью прозрачным
@@ -85,7 +84,7 @@ public class LinearVanishingStrategy extends GraphicsStrategy implements TimerLi
                     int elapsedTime = TimerManager.millisTime() - startTime;
                     int currentTransparency = (int) (100 - (float)elapsedTime / showingTime * 100);
                     if (DEBUG) {
-                        Debug.debug(String.valueOfC("LinearVanishingStrategy.onTimer(): SHOWING_STATE: transparency=").concat(currentTransparency));
+                        Debug.debug("LinearVanishingStrategy.onTimer(): SHOWING_STATE: transparency="+currentTransparency);
                     }
                     if (currentTransparency <= 0) {
                         // Компонент стал полностью непрозрачным
@@ -100,14 +99,14 @@ public class LinearVanishingStrategy extends GraphicsStrategy implements TimerLi
                 case SHOWN_STATE: {
                     // Сработал таймер с интервалом lifeTime
                     if (DEBUG) {
-                        Debug.debug(String.valueOfC("LinearVanishingStrategy.onTimer(): SHOWN_STATE"));
+                        Debug.debug("LinearVanishingStrategy.onTimer(): SHOWN_STATE");
                     }
                     startHiding();
                     break;
                 }
                 default:
                     if (DEBUG) {
-                        Debug.error(String.valueOfC("LinearVanishingStrategy.onTimer(): unknown"));
+                        Debug.error("LinearVanishingStrategy.onTimer(): unknown");
                     }
                     break;
             }

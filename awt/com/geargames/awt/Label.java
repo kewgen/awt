@@ -1,6 +1,5 @@
 package com.geargames.awt;
 
-import com.geargames.common.String;
 import com.geargames.common.Graphics;
 
 @Deprecated

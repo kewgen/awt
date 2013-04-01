@@ -4,7 +4,6 @@ import com.geargames.awt.Label;
 import com.geargames.awt.VanishingLabel;
 import com.geargames.awt.cinematics.CMovingPoint;
 import com.geargames.awt.cinematics.CPoint;
-import com.geargames.common.String;
 
 /**
  * user: Mikhail V. Kutuzov
@@ -35,7 +34,7 @@ public class MovingObjectsFactory {
      * @param time расчётное время полёта
      * @return объект движущийся во времени
      */
-    public static AcceleratedObject createCasted(com.geargames.common.String data, int x, int y, int x2, int y2, int time) {
+    public static AcceleratedObject createCasted(String data, int x, int y, int x2, int y2, int time) {
         Casted casted = new Casted();
         Label label = new Label();
         casted.setDrawable(label);

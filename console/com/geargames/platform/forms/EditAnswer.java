@@ -7,5 +7,5 @@ package com.geargames.platform.forms;
  * Time: 14:59
  */
 public interface EditAnswer {
-    void onEditClose(com.geargames.common.String string);
+    void onEditClose(String string);
 }

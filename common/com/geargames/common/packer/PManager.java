@@ -1,7 +1,6 @@
 package com.geargames.common.packer;
 
 import com.geargames.common.*;
-import com.geargames.common.String;
 import com.geargames.common.util.ArrayByte;
 import com.geargames.common.util.ArrayIntegerDual;
 import com.geargames.common.util.ArrayList;
@@ -9,6 +8,7 @@ import com.geargames.common.util.ArrayList;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.String;
 
 /**
  * User: kewgen
@@ -308,14 +308,14 @@ public abstract class PManager implements com.geargames.common.Render {
             for (int i = 0; i < PARAM_COUNT; i++) {
                 int len = dis.readShort();
                 arrayDual.createY(i, len);
-                String str = String.valueOfC("Load ").concatI(i).concatC("\tlen:").concatI(len).concatC(" ");
+                String str = "Load "+i+"\tlen:"+len+" ";
                 if (i < PARAM_BYTE_COUNT) {//BYTE
                     ArrayByte arrayByte = new ArrayByte(len);
                     dis.read(arrayByte.getArray(), 0, len);
                     for (int a = 0; a < len; a++) {
                         arrayDual.set(i, a, arrayByte.get(a));
                         if (DEBUG && a < 100) {
-                            str = str.concatI(arrayDual.get(i, a)).concatC(",");
+                            str = str+arrayDual.get(i, a)+",";
                         }
                     }
                     arrayByte.free();
@@ -325,7 +325,7 @@ public abstract class PManager implements com.geargames.common.Render {
                     for (int a = 0; a < len; a++) {
                         arrayDual.set(i, a, ((arrayByte.get(a * 2) << 8) | (arrayByte.get(a * 2 + 1) & 0xff)));
                         if (DEBUG && a < 100) {
-                            str = str.concatI(arrayDual.get(i, a)).concatC(",");
+                            str = str+arrayDual.get(i, a)+",";
                         }
                     }
                     arrayByte.free();
@@ -336,7 +336,7 @@ public abstract class PManager implements com.geargames.common.Render {
                         arrayDual.set(i, a, ((arrayByte.get(a * 4) << 24) | ((arrayByte.get(a * 4 + 1) & 0xff) << 16)
                                 | ((arrayByte.get(a * 4 + 2) & 0xff) << 8) | (arrayByte.get(a * 4 + 3) & 0xff)));
                         if (DEBUG && a < 100) {
-                            str = str.concatI(arrayDual.get(i, a)).concatC(",");
+                            str = str+arrayDual.get(i, a)+",";
                         }
                     }
                     arrayByte.free();
@@ -400,7 +400,7 @@ public abstract class PManager implements com.geargames.common.Render {
                 image = image2;
             }
             images.set(img_cur, image);
-            System.out.println(String.valueOfC("Image created(").concatI(img_cur).concatC(")"));
+            System.out.println("Image created("+img_cur+")");
         }
         if (Port.OPEN_GL) {
             graphics.addTexture((Image) images.get(img_cur));

@@ -5,7 +5,6 @@ import com.geargames.common.timers.TimerListener;
 import com.geargames.common.timers.TimerManager;
 import com.geargames.awt.utils.MotionListener;
 import com.geargames.awt.utils.ScrollListener;
-import com.geargames.common.String;
 import com.geargames.common.logging.Debug;
 
 /**
@@ -46,7 +45,7 @@ public class ElasticInertMotionListener extends MotionListener implements TimerL
     public void create(int top, int down, int window, int itemSize) {
         if (inertness < divider) {
             inertness = divider;
-            Debug.warning(String.valueOfC("Inertness is too tiny"));
+            Debug.warning("Inertness is too tiny");
         }
         this.top = top;
         this.down = down;
@@ -65,7 +64,7 @@ public class ElasticInertMotionListener extends MotionListener implements TimerL
         storedMove = 0;
         draggingTicks = 0;
         if (Drawable.DEBUG) {
-            Debug.debug(String.valueOfC("TOUCH: ").concat(y));
+            Debug.debug("TOUCH: "+y);
         }
     }
 
@@ -77,15 +76,15 @@ public class ElasticInertMotionListener extends MotionListener implements TimerL
             value = y;
             setPosition(position + move * accelerator);
             if (Drawable.DEBUG) {
-                Debug.debug(String.valueOfC("MOVE: ").concat(move));
-                Debug.debug(String.valueOfC("POSITION: ").concat(position));
+                Debug.debug("MOVE: "+move);
+                Debug.debug("POSITION: "+position);
             }
         }
     }
 
     private void startMoving() {
         if (Drawable.DEBUG) {
-            Debug.debug(String.valueOfC("startMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
+            Debug.debug("startMoving(): released="+released+"; timerId="+timerId);
         }
         released = true;
         if (timerId != TimerManager.NULL_TIMER) {
@@ -97,7 +96,7 @@ public class ElasticInertMotionListener extends MotionListener implements TimerL
 
     private void endMoving() {
         if (Drawable.DEBUG) {
-            Debug.debug(String.valueOfC("endMoving(): released=").concatB(released).concatC("; timerId=").concatI(timerId));
+            Debug.debug("endMoving(): released="+released+"; timerId="+timerId);
         }
         released = false;
         if (timerId != TimerManager.NULL_TIMER) {
@@ -124,8 +123,8 @@ public class ElasticInertMotionListener extends MotionListener implements TimerL
                 }
                 setPosition(position + storedMove * accelerator);
                 if (Drawable.DEBUG) {
-                    Debug.debug(String.valueOfC("INERTIA = ").concat(storedMove));
-                    Debug.debug(String.valueOfC("POSITION = ").concat(position));
+                    Debug.debug("INERTIA = "+storedMove);
+                    Debug.debug("POSITION = "+position);
                 }
             } else {
                 if (position > top) {
@@ -176,7 +175,7 @@ public class ElasticInertMotionListener extends MotionListener implements TimerL
     @Override
     public void onRelease(int y) {
         if (Drawable.DEBUG) {
-            Debug.debug(String.valueOfC("RELEASED"));
+            Debug.debug("RELEASED");
         }
         startMoving();
     }
@@ -184,7 +183,7 @@ public class ElasticInertMotionListener extends MotionListener implements TimerL
     @Override
     public void onOutOfBounds() {
         if (Drawable.DEBUG) {
-            Debug.debug(String.valueOfC("OUT OF BOUNDS"));
+            Debug.debug("OUT OF BOUNDS");
         }
         startMoving();
     }

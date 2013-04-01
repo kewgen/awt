@@ -2,7 +2,6 @@ package com.geargames.platform.forms;
 
 
 import com.geargames.platform.MIDlet;
-import com.geargames.common.String;
 
 /**
  *
@@ -121,7 +120,7 @@ public class Edit extends javax.swing.JFrame {
 
     void setConstant() {
         setVisible(false);
-        editAnswer.onEditClose(String.valueOfC(jTextField1.getText()));
+        editAnswer.onEditClose(jTextField1.getText());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

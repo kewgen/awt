@@ -1,6 +1,5 @@
 package com.geargames.common.packer;
 
-import com.geargames.common.String;
 import com.geargames.common.util.ArrayChar;
 
 /**

@@ -3,7 +3,6 @@ package com.geargames.awt.components;
 import com.geargames.common.packer.IndexObject;
 import com.geargames.common.Graphics;
 import com.geargames.common.packer.PFont;
-import com.geargames.common.String;
 
 /**
  * User: mikhail v. kutuzov

@@ -39,7 +39,7 @@ public abstract class Network {
             receiver.starting(socket.getDataInput());
             sender.starting(socket.getDataOutput());
         } catch (Exception e) {
-            Debug.error(com.geargames.common.String.valueOfC("Server connection could not be established"), e);
+            Debug.error("Server connection could not be established", e);
             return false;
         }
         return true;

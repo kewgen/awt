@@ -1,7 +1,6 @@
 package com.geargames.platform.packer;
 
 import com.geargames.platform.Manager;
-import com.geargames.common.String;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

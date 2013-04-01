@@ -1,7 +1,6 @@
 package com.geargames.platform;
 
 import com.geargames.common.Port;
-import com.geargames.common.String;
 import com.geargames.common.logging.Debug;
 import com.geargames.common.network.HTTPCounter;
 
@@ -36,7 +35,7 @@ public abstract class MIDlet extends JFrame implements HTTPCounter {
                     uri = new java.net.URI(url.toString());
                     desktop.browse(uri);
                 } catch (Exception e) {
-                    Debug.error(String.valueOfC("A platform browser has not found an uri"), e);
+                    Debug.error("A platform browser has not found an uri", e);
                 }
             }
         }
@@ -44,7 +43,7 @@ public abstract class MIDlet extends JFrame implements HTTPCounter {
     }
 
     public void notifyDestroyed() {
-        Debug.debug(String.valueOfC("MIDlet.notifyDestroyed"));
+        Debug.debug("MIDlet.notifyDestroyed");
         System.exit(0);
     }
 
@@ -54,7 +53,7 @@ public abstract class MIDlet extends JFrame implements HTTPCounter {
             //абсолютный путь - "/res.."
             //относительный - "res.." относительно папки класса
             java.lang.String p = "/res" + path;
-            Debug.debug(String.valueOfC("MIDlet.getResourceAsStream, name:").concat(p));
+            Debug.debug("MIDlet.getResourceAsStream, name: "+p);
             return getClass().getResourceAsStream(p);//иЗНУТРи ЖАРА!
         } else {
             File file = new File("./res" + path);
