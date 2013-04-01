@@ -7,8 +7,10 @@ import com.geargames.common.Port;
 import com.geargames.common.Render;
 import com.geargames.common.String;
 import com.geargames.common.Graphics;
+import com.geargames.common.packer.Index;
 import com.geargames.common.packer.PFont;
 import com.geargames.common.packer.PFrame;
+import com.geargames.common.packer.PObject;
 import com.geargames.common.util.Region;
 
 /**
@@ -156,19 +158,31 @@ public class TextHint extends PopUp implements PostDrawable {
         return false;
     }
 
+    /**
+     * @param w1 ширина left и right элементов
+     * @param h1 высота top и bottom элементов
+     * @param w2 ширина middle элементов
+     * @param h2 высота middle элементов
+     */
     private void setBlocksSizes(int w1, int h1, int w2, int h2) {//размеры крайних и центрального блока
-        topLeftSkin.setHeight(Port.getConvertedValue(h1));
         topLeftSkin.setWidth(Port.getConvertedValue(w1));
-        topMiddleSkin.setHeight(Port.getConvertedValue(h2));
+        topLeftSkin.setHeight(Port.getConvertedValue(h1));
         topMiddleSkin.setWidth(Port.getConvertedValue(w2));
-
-        topLeftSkin.copyTo(topRightSkin);
-        topLeftSkin.copyTo(middleLeftSkin);
-        topMiddleSkin.copyTo(middleMiddleSkin);
-        topLeftSkin.copyTo(middleRightSkin);
-        topLeftSkin.copyTo(bottomLeftSkin);
-        topMiddleSkin.copyTo(bottomMiddleSkin);
-        topLeftSkin.copyTo(bottomRightSkin);
+        topMiddleSkin.setHeight(Port.getConvertedValue(h1));
+        topRightSkin.setWidth(Port.getConvertedValue(w1));
+        topRightSkin.setHeight(Port.getConvertedValue(h1));
+        middleLeftSkin.setWidth(Port.getConvertedValue(w1));
+        middleLeftSkin.setHeight(Port.getConvertedValue(h2));
+        middleMiddleSkin.setWidth(Port.getConvertedValue(w2));
+        middleMiddleSkin.setHeight(Port.getConvertedValue(h2));
+        middleRightSkin.setWidth(Port.getConvertedValue(w1));
+        middleRightSkin.setHeight(Port.getConvertedValue(h2));
+        bottomLeftSkin.setWidth(Port.getConvertedValue(w1));
+        bottomLeftSkin.setHeight(Port.getConvertedValue(h1));
+        bottomMiddleSkin.setWidth(Port.getConvertedValue(w2));
+        bottomMiddleSkin.setHeight(Port.getConvertedValue(h1));
+        bottomRightSkin.setWidth(Port.getConvertedValue(w1));
+        bottomRightSkin.setHeight(Port.getConvertedValue(h1));
     }
 
     private void setText(String text) {
@@ -311,23 +325,28 @@ public class TextHint extends PopUp implements PostDrawable {
      * Установить скин подложки и размеры составляющих её частей.
      *
      * @param skin
-     * @param render
-     * @param w1
-     * @param h1
-     * @param w2
-     * @param h2
      */
-    public void setSkinObject(PFrame skin, Render render, int w1, int h1, int w2, int h2) {
+    public void setSkinObject(PObject skin) {
+        topLeftSkin.setPrototype(skin.getIndex(0).getPrototype());
+        topMiddleSkin.setPrototype(skin.getIndex(1).getPrototype());
+        topRightSkin.setPrototype(skin.getIndex(2).getPrototype());
+        middleLeftSkin.setPrototype(skin.getIndex(3).getPrototype());
+        middleMiddleSkin.setPrototype(skin.getIndex(4).getPrototype());
+        middleRightSkin.setPrototype(skin.getIndex(5).getPrototype());
+        bottomLeftSkin.setPrototype(skin.getIndex(6).getPrototype());
+        bottomMiddleSkin.setPrototype(skin.getIndex(7).getPrototype());
+        bottomRightSkin.setPrototype(skin.getIndex(8).getPrototype());
+
+        Index indexTL = skin.getIndex(0); // indexTopLeft
+        Index indexMM = skin.getIndex(4); // indexMiddleMiddle
+        Index indexBR = skin.getIndex(8); // indexBottomRight
+
+        int w1 = indexMM.getX() - indexTL.getX();
+        int h1 = indexMM.getY() - indexTL.getY();
+        int w2 = indexBR.getX() - indexMM.getX();
+        int h2 = indexBR.getY() - indexMM.getY();
+
         instance.setBlocksSizes(w1, h1, w2, h2);
-        topLeftSkin.setPrototype(skin);
-        topMiddleSkin.setPrototype(render.getFrame(skin.getPID() + 1));
-        topRightSkin.setPrototype(render.getFrame(skin.getPID() + 2));
-        middleLeftSkin.setPrototype(render.getFrame(skin.getPID() + 3));
-        middleMiddleSkin.setPrototype(render.getFrame(skin.getPID() + 4));
-        middleRightSkin.setPrototype(render.getFrame(skin.getPID() + 5));
-        bottomLeftSkin.setPrototype(render.getFrame(skin.getPID() + 6));
-        bottomMiddleSkin.setPrototype(render.getFrame(skin.getPID() + 7));
-        bottomRightSkin.setPrototype(render.getFrame(skin.getPID() + 8));
         initiated = false;
     }
 

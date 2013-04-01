@@ -11,8 +11,8 @@ public class ItemSkin {
     private Prototype prototype;
     private int width;
     private int height;
-    private int offsetX;
-    private int offsetY;
+//    private int offsetX;
+//    private int offsetY;
 
     public Prototype getPrototype() {
         return prototype;
@@ -38,26 +38,26 @@ public class ItemSkin {
         this.height = height;
     }
 
-    public int getOffsetX() {
-        return offsetX;
-    }
-
-    public void setOffsetX(int offsetX) {
-        this.offsetX = offsetX;
-    }
-
-    public int getOffsetY() {
-        return offsetY;
-    }
-
-    public void setOffsetY(int offsetY) {
-        this.offsetY = offsetY;
-    }
+//    public int getOffsetX() {
+//        return offsetX;
+//    }
+//
+//    public void setOffsetX(int offsetX) {
+//        this.offsetX = offsetX;
+//    }
+//
+//    public int getOffsetY() {
+//        return offsetY;
+//    }
+//
+//    public void setOffsetY(int offsetY) {
+//        this.offsetY = offsetY;
+//    }
 
     public ItemSkin copy() {
         ItemSkin item = new ItemSkin();
-        item.setOffsetY(getOffsetY());
-        item.setOffsetX(getOffsetX());
+//        item.setOffsetY(getOffsetY());
+//        item.setOffsetX(getOffsetX());
         item.setPrototype(getPrototype());
         item.setHeight(getHeight());
         item.setWidth(getWidth());
@@ -65,8 +65,8 @@ public class ItemSkin {
     }
 
     public void copyTo(ItemSkin item) {
-        item.setOffsetY(getOffsetY());
-        item.setOffsetX(getOffsetX());
+//        item.setOffsetY(getOffsetY());
+//        item.setOffsetX(getOffsetX());
         item.setPrototype(getPrototype());
         item.setHeight(getHeight());
         item.setWidth(getWidth());

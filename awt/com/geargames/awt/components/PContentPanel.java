@@ -30,7 +30,7 @@ public abstract class PContentPanel extends PObjectElement {
             if (index.isSlot()) {
                 createSlotElementByIndex(index, prototype);
             } else {
-                createDefaultElementByIndex(index);
+                createDefaultElementByIndex(index, prototype);
             }
         }
     }
@@ -43,7 +43,7 @@ public abstract class PContentPanel extends PObjectElement {
     /**
      * Создать все остальные не "слотовые" объекты по индексу объекта.
      */
-    protected void createDefaultElementByIndex(IndexObject index) {
+    protected void createDefaultElementByIndex(IndexObject index, PObject parentPrototype) {
         PPrototypeElement simple = new PPrototypeElement();
         simple.setPrototype(index.getPrototype());
         addPassiveChild(simple, index.getX(), index.getY());
