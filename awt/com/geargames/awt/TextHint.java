@@ -160,30 +160,30 @@ public class TextHint extends PopUp implements PostDrawable {
     }
 
     /**
-     * @param w1 ширина left и right элементов
-     * @param h1 высота top и bottom элементов
-     * @param w2 ширина middle элементов
-     * @param h2 высота middle элементов
+     * @param wLeftRight ширина left и right элементов
+     * @param hTopBottom высота top и bottom элементов
+     * @param wMiddle ширина middle элементов
+     * @param hMiddle высота middle элементов
      */
-    private void setBlocksSizes(int w1, int h1, int w2, int h2) {//размеры крайних и центрального блока
-        topLeftSkin.setWidth(Port.getConvertedValue(w1));
-        topLeftSkin.setHeight(Port.getConvertedValue(h1));
-        topMiddleSkin.setWidth(Port.getConvertedValue(w2));
-        topMiddleSkin.setHeight(Port.getConvertedValue(h1));
-        topRightSkin.setWidth(Port.getConvertedValue(w1));
-        topRightSkin.setHeight(Port.getConvertedValue(h1));
-        middleLeftSkin.setWidth(Port.getConvertedValue(w1));
-        middleLeftSkin.setHeight(Port.getConvertedValue(h2));
-        middleMiddleSkin.setWidth(Port.getConvertedValue(w2));
-        middleMiddleSkin.setHeight(Port.getConvertedValue(h2));
-        middleRightSkin.setWidth(Port.getConvertedValue(w1));
-        middleRightSkin.setHeight(Port.getConvertedValue(h2));
-        bottomLeftSkin.setWidth(Port.getConvertedValue(w1));
-        bottomLeftSkin.setHeight(Port.getConvertedValue(h1));
-        bottomMiddleSkin.setWidth(Port.getConvertedValue(w2));
-        bottomMiddleSkin.setHeight(Port.getConvertedValue(h1));
-        bottomRightSkin.setWidth(Port.getConvertedValue(w1));
-        bottomRightSkin.setHeight(Port.getConvertedValue(h1));
+    private void setBlocksSizes(int wLeftRight, int hTopBottom, int wMiddle, int hMiddle) {//размеры крайних и центрального блока
+        topLeftSkin.setWidth(Port.getConvertedValue(wLeftRight));
+        topLeftSkin.setHeight(Port.getConvertedValue(hTopBottom));
+        topMiddleSkin.setWidth(Port.getConvertedValue(wMiddle));
+        topMiddleSkin.setHeight(Port.getConvertedValue(hTopBottom));
+        topRightSkin.setWidth(Port.getConvertedValue(wLeftRight));
+        topRightSkin.setHeight(Port.getConvertedValue(hTopBottom));
+        middleLeftSkin.setWidth(Port.getConvertedValue(wLeftRight));
+        middleLeftSkin.setHeight(Port.getConvertedValue(hMiddle));
+        middleMiddleSkin.setWidth(Port.getConvertedValue(wMiddle));
+        middleMiddleSkin.setHeight(Port.getConvertedValue(hMiddle));
+        middleRightSkin.setWidth(Port.getConvertedValue(wLeftRight));
+        middleRightSkin.setHeight(Port.getConvertedValue(hMiddle));
+        bottomLeftSkin.setWidth(Port.getConvertedValue(wLeftRight));
+        bottomLeftSkin.setHeight(Port.getConvertedValue(hTopBottom));
+        bottomMiddleSkin.setWidth(Port.getConvertedValue(wMiddle));
+        bottomMiddleSkin.setHeight(Port.getConvertedValue(hTopBottom));
+        bottomRightSkin.setWidth(Port.getConvertedValue(wLeftRight));
+        bottomRightSkin.setHeight(Port.getConvertedValue(hTopBottom));
     }
 
     private void setText(String text) {

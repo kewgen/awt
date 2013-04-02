@@ -17,12 +17,6 @@ public abstract class HorizontalScrollableArea extends ScrollableArea {
             initiate(graphics);
         }
         Region drawRegion = getDrawRegion();
-        if (Drawable.DEBUG) {
-            Region touchRegion = getTouchRegion();
-            graphics.drawRect(x + touchRegion.getMinX(), y + touchRegion.getMinY(), touchRegion.getWidth(), touchRegion.getHeight());
-            graphics.drawRect(x + drawRegion.getMinX(), y + drawRegion.getMinY(), drawRegion.getWidth(), drawRegion.getHeight());
-        }
-
         graphics.setClip(x + drawRegion.getMinX(), y + drawRegion.getMinY(), drawRegion.getWidth(), drawRegion.getHeight());
         int localPosition = x + getPosition();
         int clipMin = x + drawRegion.getMinX();
@@ -43,6 +37,11 @@ public abstract class HorizontalScrollableArea extends ScrollableArea {
             }
         }
         graphics.resetClip();
+        if (Drawable.DEBUG) {
+            Region touchRegion = getTouchRegion();
+            graphics.drawRect(x + touchRegion.getMinX(), y + touchRegion.getMinY(), touchRegion.getWidth(), touchRegion.getHeight());
+            graphics.drawRect(x + drawRegion.getMinX(), y + drawRegion.getMinY(), drawRegion.getWidth(), drawRegion.getHeight());
+        }
     }
 
     /**

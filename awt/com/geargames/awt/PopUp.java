@@ -6,55 +6,54 @@ import com.geargames.common.util.Region;
 import com.geargames.common.Graphics;
 
 /**
- * User: mikhail.kutuzov
+ * User: mikhail.kutuzov, abarakov
  * Date: 13.11.11
- * Time: 15:05
  */
 public abstract class PopUp extends Drawable {
 
     @Override
     public void draw(Graphics graphics) {
         Region tmp = getRegionToDraw(graphics);
-        if (DEBUG) {
-            graphics.drawRect(tmp.getMinX(), tmp.getMinY(), tmp.getWidth(), tmp.getHeight());
-        }
         int xAmount = 2 + ((tmp.getWidth() - getMiddleLeftSkin().getWidth() - getMiddleRightSkin().getWidth()) / getMiddleMiddleSkin().getWidth());
         int yAmount = 2 + ((tmp.getHeight() - getTopLeftSkin().getHeight() - getBottomLeftSkin().getHeight()) / getMiddleMiddleSkin().getHeight());
-        int width = getX();
-        for (int i = 0; i < xAmount; i++) {
+        int xOffset = getX();
+        for (int iX = 0; iX < xAmount; iX++) {
             ItemSkin itemSkin = null;
-            for (int j = 0; j < yAmount; j++) {
-                if (i == 0) {
-                    if (j == 0) {
+            int yOffset = getY();
+            for (int iY = 0; iY < yAmount; iY++) {
+                if (iX == 0) {
+                    if (iY == 0) {
                         itemSkin = getTopLeftSkin();
-                    } else if (j == yAmount - 1) {
+                    } else if (iY == yAmount - 1) {
                         itemSkin = getBottomLeftSkin();
                     } else {
                         itemSkin = getMiddleLeftSkin();
                     }
-                } else if (i == xAmount - 1) {
-                    if (j == 0) {
+                } else if (iX == xAmount - 1) {
+                    if (iY == 0) {
                         itemSkin = getTopRightSkin();
-                    } else if (j == yAmount - 1) {
+                    } else if (iY == yAmount - 1) {
                         itemSkin = getBottomRightSkin();
                     } else {
                         itemSkin = getMiddleRightSkin();
                     }
                 } else {
-                    if (j == 0) {
+                    if (iY == 0) {
                         itemSkin = getTopMiddleSkin();
-                    } else if (j == yAmount - 1) {
+                    } else if (iY == yAmount - 1) {
                         itemSkin = getBottomMiddleSkin();
                     } else {
                         itemSkin = getMiddleMiddleSkin();
                     }
                 }
-                itemSkin.getPrototype().draw(graphics, width,
-                        getY() + itemSkin.getHeight() * j);
+                itemSkin.getPrototype().draw(graphics, xOffset, yOffset);
+                yOffset += itemSkin.getHeight();
             }
-            width += itemSkin.getWidth();
+            xOffset += itemSkin.getWidth();
         }
         if (DEBUG) {
+            graphics.drawRect(tmp.getMinX(), tmp.getMinY(), tmp.getWidth(), tmp.getHeight());
+
             Region inner = getScrollableArea().getDrawRegion();
             graphics.drawRect(inner.getMinX() + getX(), inner.getMinY() + getY(), inner.getWidth(), inner.getHeight());
         }
