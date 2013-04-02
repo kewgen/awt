@@ -1,5 +1,6 @@
 package com.geargames.common.network;
 
+import com.geargames.common.logging.Debug;
 import com.geargames.common.serialization.ClientDeSerializedMessage;
 import com.geargames.common.timers.TimerListener;
 import com.geargames.common.timers.TimerManager;
@@ -103,12 +104,28 @@ public abstract class MessageDispatcher implements TimerListener {
         for (int i = 0; i < messages.length; i++) {
             DataMessage message = messages[i];
             ArrayList listeners = (ArrayList) listenersByType.get(message.getMessageType());
-            int size = listeners.size();
-            for (int j = 0; j < size; j++) {
-                ((DataMessageListener) listeners.get(j)).onReceive(getMessage(message), message.getMessageType());
+            if (listeners.size() == 0) {
+                unhandledMessageHandler(message);
+            } else {
+                try {
+                    ClientDeSerializedMessage deserializedMessage = getMessage(message);
+                    deserializedMessage.deSerialize();
+                    short messageType = message.getMessageType();
+                    for (int j = 0; j < listeners.size(); j++) {
+                        ((DataMessageListener) listeners.get(j)).onReceive(deserializedMessage, messageType);
+                    }
+                } catch (Exception e) {
+                    //todo: Отправить обработку исключения подписчику на ошибки
+                    Debug.error("Could not deserialize answer", e);
+                }
             }
         }
     }
 
     protected abstract ClientDeSerializedMessage getMessage(DataMessage dataMessage);
+
+    protected void unhandledMessageHandler(DataMessage message) {
+        //todo: Оповестить подписчиков на ошибки о получении неизвестного сообщения.
+    }
+
 }

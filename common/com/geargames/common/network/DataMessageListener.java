@@ -8,22 +8,24 @@ import com.geargames.common.serialization.ClientDeSerializedMessage;
  * Слушатель полученных сообщений.
  */
 public interface DataMessageListener {
+
     /**
-     * Желаемый интервал опроса очереди асинхронных сообщений(в миллисекундах).
+     * Желаемый интервал опроса очереди асинхронных сообщений (в миллисекундах).
      * @return
      */
     int getInterval();
 
     /**
-     * Вернуть массив типов ожидаемых сообщений.
+     * Получить массив типов ожидаемых сообщений.
      * @return
      */
     short[] getTypes();
 
     /**
-     * Вызывается MessageDispatcher в случае получения ожидаемого сообщения.
+     * Вызывается MessageDispatcher'ом в случае получения одного из ожидаемых сообщений.
      * @param message
      * @param type
      */
     void onReceive(ClientDeSerializedMessage message, short type);
+
 }
