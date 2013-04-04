@@ -17,12 +17,6 @@ public abstract class VerticalScrollableArea extends ScrollableArea {
             initiate(graphics);
         }
         Region drawRegion = getDrawRegion();
-        if (Drawable.DEBUG) {
-            Region touchRegion = getTouchRegion();
-            graphics.drawRect(x + touchRegion.getMinX(), y + touchRegion.getMinY(), touchRegion.getWidth(), touchRegion.getHeight());
-            graphics.drawRect(x + drawRegion.getMinX(), y + drawRegion.getMinY(), drawRegion.getWidth(), drawRegion.getHeight());
-        }
-
         graphics.setClip(x + drawRegion.getMinX(), y + drawRegion.getMinY(), drawRegion.getWidth(), drawRegion.getHeight());
         int localPosition = y + getPosition();
         int clipMin = y + drawRegion.getMinY();
@@ -43,6 +37,11 @@ public abstract class VerticalScrollableArea extends ScrollableArea {
             }
         }
         graphics.resetClip();
+        if (Drawable.DEBUG) {
+            Region touchRegion = getTouchRegion();
+            graphics.drawRect(x + touchRegion.getMinX(), y + touchRegion.getMinY(), touchRegion.getWidth(), touchRegion.getHeight());
+            graphics.drawRect(x + drawRegion.getMinX(), y + drawRegion.getMinY(), drawRegion.getWidth(), drawRegion.getHeight());
+        }
     }
 
     /**
@@ -65,15 +64,12 @@ public abstract class VerticalScrollableArea extends ScrollableArea {
         }
         if (getTouchRegion().isWithIn(x, y)) {
             switch (code) {
-//                case Event.EVENT_KEY_PRESSED:
                 case Event.EVENT_TOUCH_PRESSED:
                     getMotionListener().onTouch(y);
                     break;
-//                case Event.EVENT_KEY_REPEATED:
                 case Event.EVENT_TOUCH_MOVED:
                     getMotionListener().onMove(y);
                     break;
-//                case Event.EVENT_KEY_RELEASED:
                 case Event.EVENT_TOUCH_RELEASED:
                     getMotionListener().onRelease(y);
                     break;

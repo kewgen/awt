@@ -52,7 +52,9 @@ public class CenteredElasticInertMotionListener extends MotionListener implement
             inertness = divider;
             Debug.warning("Inertness is too tiny");
         }
-
+        if (itemSize == 0) {
+            Debug.error("itemSize == 0");
+        }
         this.window = window;
         this.position = center;
         this.backStep = itemSize / 10;

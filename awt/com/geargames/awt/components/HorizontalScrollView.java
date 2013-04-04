@@ -174,6 +174,7 @@ public abstract class HorizontalScrollView extends HorizontalScrollableArea {
      * @return
      */
     public int getItemOffsetX(int number) {
-        return getPosition() +  getItemSize()*number - getPrototype().getDrawRegion().getMinX();
+        return getPosition() + getItemSize() * number - getPrototype().getDrawRegion().getMinX();
     }
+
 }

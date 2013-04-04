@@ -48,10 +48,10 @@ public class PVerticalScrollView extends VerticalScrollView {
         IndexObject index0 = (IndexObject) prototype.getIndexBySlot(0);
         IndexObject index1 = (IndexObject) prototype.getIndexBySlot(1);
 
+        itemOffset = index0.getX();
+
         prototypeElement = new PPrototypeElement();
         prototypeElement.setPrototype(index0.getPrototype());
-
-        itemOffset = index0.getX();
 
         Region tmp = new Region();
         PObject objectPrototype = (PObject)index0.getPrototype();
