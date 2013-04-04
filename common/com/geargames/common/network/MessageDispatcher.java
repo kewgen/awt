@@ -18,7 +18,7 @@ public abstract class MessageDispatcher implements TimerListener {
     private ArrayList listeners;
     private ArrayObject listenersByType;
     private Network network;
-    private int id;
+    private int timerId;
     private int period;
 
     /**
@@ -32,6 +32,7 @@ public abstract class MessageDispatcher implements TimerListener {
         this.network = network;
         this.listenersByType = new ArrayObject(size);
         this.listeners = new ArrayList();
+        this.timerId = TimerManager.NULL_TIMER;
     }
 
     /**
@@ -42,12 +43,12 @@ public abstract class MessageDispatcher implements TimerListener {
     public void register(DataMessageListener listener) {
         short[] types = listener.getTypes();
         if (types != null) {
-            if (listeners.isEmpty()) {
+            if (timerId == TimerManager.NULL_TIMER) {
                 period = listener.getInterval();
-                id = TimerManager.setPeriodicTimer(period, this);
+                timerId = TimerManager.setPeriodicTimer(period, this);
             } else if (period > listener.getInterval()) {
                 period = listener.getInterval();
-                TimerManager.setPeriodicTimer(id, period, this);
+                TimerManager.setPeriodicTimer(timerId, period, this);
             }
 
             listeners.add(listener);
@@ -73,7 +74,10 @@ public abstract class MessageDispatcher implements TimerListener {
     public void unregister(DataMessageListener listener) {
         int size = listenersByType.length();
         for (int i = 0; i < size; i++) {
-            ((ArrayList) listenersByType.get(i)).remove(listener);
+            ArrayList typeListeners = (ArrayList) listenersByType.get(i);
+            if (typeListeners != null) {
+                typeListeners.remove(listener);
+            }
         }
         listeners.remove(listener);
 
@@ -82,14 +86,15 @@ public abstract class MessageDispatcher implements TimerListener {
             if (size > 0) {
                 period = ((DataMessageListener) listeners.get(0)).getInterval();
                 for (int i = 1; i < size; i++) {
-                    int time = ((DataMessageListener) listeners.get(i)).getInterval();
-                    if (period > time) {
-                        period = time;
+                    int otherPeriod = ((DataMessageListener) listeners.get(i)).getInterval();
+                    if (period > otherPeriod) {
+                        period = otherPeriod;
                     }
                 }
-                TimerManager.setPeriodicTimer(id, period, this);
+                TimerManager.setPeriodicTimer(timerId, period, this);
             } else {
-                TimerManager.killTimer(id);
+                TimerManager.killTimer(timerId);
+                timerId = TimerManager.NULL_TIMER;
             }
         }
     }
@@ -100,11 +105,12 @@ public abstract class MessageDispatcher implements TimerListener {
      * @param timerId - идентификатор сработавшего таймера, который вызвал данный метод.
      */
     public void onTimer(int timerId) {
+        // Должно быть this.timerId == timerId
         DataMessage[] messages = network.getAsynchronousDataMessages();
         for (int i = 0; i < messages.length; i++) {
             DataMessage message = messages[i];
             ArrayList listeners = (ArrayList) listenersByType.get(message.getMessageType());
-            if (listeners.size() == 0) {
+            if (listeners == null || listeners.size() == 0) {
                 unhandledMessageHandler(message);
             } else {
                 try {
