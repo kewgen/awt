@@ -69,6 +69,7 @@ public class PHorizontalScrollView extends HorizontalScrollView {
         }
     }
 
+    @Override
     public int getItemOffsetY() {
         return itemOffset;
     }

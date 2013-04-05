@@ -39,21 +39,21 @@ public abstract class VerticalScrollView extends VerticalScrollableArea {
                         touchY = y;
                         break;
                     case Event.EVENT_TOUCH_RELEASED:
-                        item.onEvent(code, param, x - getItemOffsetX(), y);
+                        item.onEvent(code, param, x - getItemOffsetX(), y - offsetY);
                         if (Math.abs(touchX - x) <= Port.TOUCH_ROUND && Math.abs(touchY - y) <= Port.TOUCH_ROUND) {
                             getMotionListener().onClick(number);
                             item.onEvent(Event.EVENT_SYNTHETIC_CLICK, number, x - getItemOffsetX(), y - offsetY);
                         }
                         return result;
                 }
-                ((PElement) getItems().elementAt(number)).onEvent(code, param, x - getItemOffsetX() , y - offsetY);
+                item.onEvent(code, param, x - getItemOffsetX() , y - offsetY);
             }
         }
         return result;
     }
 
     /**
-     * Вернуть индекс элемента списка по заданной линейной координате
+     * Вернуть индекс элемента списка по заданной линейной координате.
      *
      * @param y
      * @return
@@ -148,14 +148,12 @@ public abstract class VerticalScrollView extends VerticalScrollableArea {
     }
 
     /**
-     * Вернуть смещение по оси y для элмента номер number.
+     * Вернуть смещение осей координат по оси y для элемента номер number.
      * @param number
      * @return
      */
     public int getItemOffsetY(int number) {
-        return getPosition() + getItemSize()*number - getPrototype().getDrawRegion().getMinY();
+        return getPosition() + getItemSize() * number - getPrototype().getDrawRegion().getMinY();
     }
-
-
 
 }

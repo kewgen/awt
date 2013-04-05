@@ -22,7 +22,7 @@ public abstract class PPanelManager {
     private ArrayList preHideElements;
     private ArrayList previousModals;
 
-    private DrawablePElement modal;
+    private DrawablePPanel modal;
 
     private boolean hideAll;
 
@@ -156,6 +156,7 @@ public abstract class PPanelManager {
         }
         modal = element;
         element.init();
+        element.onShow();
         drawableElements.add(element);
     }
 
@@ -164,6 +165,7 @@ public abstract class PPanelManager {
      */
     public void hideModal() {
         preHideElements.add(modal);
+        modal.onHide();
         if (previousModals.size() > 0) {
             modal = (DrawablePPanel) previousModals.remove(previousModals.size() - 1);
         } else {

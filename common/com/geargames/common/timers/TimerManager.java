@@ -105,7 +105,6 @@ public class TimerManager {
      * Вернуть id таймера, который еще не занят.
      * @return
      */
-    //todo: тип id-шника - int или short?
     private static int generateTimerId() {
         if (nextDinamicId < 0 || nextDinamicId > DINAMIC_TIMER_ID_MAX) {
             nextDinamicId = DINAMIC_TIMER_ID_MIN;

@@ -47,6 +47,9 @@ public class ElasticInertMotionListener extends MotionListener implements TimerL
             inertness = divider;
             Debug.warning("Inertness is too tiny");
         }
+        if (itemSize == 0) {
+            Debug.error("itemSize == 0");
+        }
         this.top = top;
         this.down = down;
         this.window = window;

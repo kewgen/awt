@@ -1,10 +1,14 @@
 package com.geargames.awt.utils;
 
+import com.geargames.awt.components.HorizontalScrollView;
+import com.geargames.awt.components.VerticalScrollView;
 import com.geargames.awt.utils.motions.CenteredElasticInertMotionListener;
+import com.geargames.awt.utils.motions.ElasticInertMotionListener;
 import com.geargames.awt.utils.motions.InertMotionListener;
 import com.geargames.awt.utils.motions.StubMotionListener;
 import com.geargames.common.Graphics;
 import com.geargames.common.util.Region;
+import com.geargames.common.util.Math;
 
 /**
  * User: mikhail.kutuzov
@@ -123,7 +127,7 @@ public class ScrollHelper {
                                                                         Region region, int itemsAmount, int itemSize, int itemMargin, int itemOffset, int format) {
         int size = itemsAmount * itemSize;
         if (size <= region.getWidth()) {
-            stubMotionListener.create(getXBegin(region, itemsAmount, itemSize, format) + itemOffset + (itemMargin >> 1));
+            stubMotionListener.create(getXBegin(region, itemsAmount, itemSize, format) + itemOffset + (itemMargin / 2));
             return stubMotionListener;
         } else {
             return adjustHorizontalInertMotionListener(inertMotionListener, region, itemsAmount, itemSize);
@@ -144,10 +148,38 @@ public class ScrollHelper {
         return motionListener;
     }
 
+    public static ElasticInertMotionListener adjustVerticalInertMotionListener(ElasticInertMotionListener motionListener, VerticalScrollView scrollView) {
+        int size = scrollView.getItemsAmount() * scrollView.getItemSize();
+        motionListener.create(scrollView.getDrawRegion().getMinY(), scrollView.getDrawRegion().getMaxY(), size, scrollView.getItemSize());
+        return motionListener;
+    }
+
     public static InertMotionListener adjustHorizontalInertMotionListener(InertMotionListener motionListener, Region region, int itemsAmount, int itemSize) {
         int size = itemsAmount * itemSize;
         motionListener.create(region.getMinX(), region.getMaxX(), size);
         return motionListener;
+    }
+
+    /**
+     * Настраивает MotionListener горизонтального списка таким образом, чтобы элементы списка располагались по центру
+     * компонента, в случае, если все элементы списка видимы, в этом случае список будет не прокручиваемым.
+     * @param elasticInertMotionListener
+     * @param stubMotionListener
+     * @param scrollView
+     * @return
+     * @author abarakov
+     */
+    public static MotionListener adjustHorzCenteredListElasticInertMotionListener(
+            ElasticInertMotionListener elasticInertMotionListener, StubMotionListener stubMotionListener, HorizontalScrollView scrollView) {
+        int size = scrollView.getItemsAmount() * scrollView.getItemSize();
+        int left = getXBegin(scrollView.getDrawRegion(), scrollView.getItemsAmount(), scrollView.getItemSize(), Graphics.HCENTER);
+        if (size <= scrollView.getDrawRegion().getWidth()) {
+            stubMotionListener.create(left);
+            return stubMotionListener;
+        } else {
+            elasticInertMotionListener.create(left, Math.min(left + size, scrollView.getDrawRegion().getMaxX()), size, scrollView.getItemSize());
+            return elasticInertMotionListener;
+        }
     }
 
 
@@ -160,7 +192,8 @@ public class ScrollHelper {
      * @param itemOffset сдвиг элемента списка
      * @return
      */
-    public static CenteredElasticInertMotionListener adjustHorizontalCenteredMenuMotionListener(CenteredElasticInertMotionListener motionListener, Region region, int itemsAmount, int itemSize, int itemOffset) {
+    public static CenteredElasticInertMotionListener adjustHorizontalCenteredMenuMotionListener(
+            CenteredElasticInertMotionListener motionListener, Region region, int itemsAmount, int itemSize, int itemOffset) {
         int size = itemsAmount * itemSize;
         motionListener.create(region.getMinX(), itemOffset, size, itemSize);
         return motionListener;
