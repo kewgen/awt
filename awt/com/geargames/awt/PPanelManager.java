@@ -119,11 +119,12 @@ public abstract class PPanelManager {
      * @param element
      */
     public void show(DrawablePPanel element) {
-        //todo: панелька уже может быть сейчас отображена
-        drawableElements.add(element);
-        callableElements.add(element);
-        element.init();
-        element.onShow();
+        if (!drawableElements.contains(element)) {
+            drawableElements.add(element);
+            callableElements.add(element);
+            element.init();
+            element.onShow();
+        }
     }
 
     /**
