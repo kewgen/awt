@@ -10,6 +10,8 @@ import com.geargames.common.util.ArrayList;
  * Базовый класс для действий с игровыми окнами.
  */
 public abstract class PPanelManager {
+    private Screen screen;
+
     private int eventX;
     private int eventY;
 
@@ -31,6 +33,7 @@ public abstract class PPanelManager {
         preHideElements = new ArrayList();
         previousModals = new ArrayList();
         modal = null;
+        screen = null;
         hideAll = false;
     }
 
@@ -43,6 +46,7 @@ public abstract class PPanelManager {
      * @param y
      */
     public void onEvent(int code, int param, int x, int y) {
+        screen.onEvent(code, param, x, y);
         eventX = x;
         eventY = y;
         if (modal == null) {
@@ -90,6 +94,7 @@ public abstract class PPanelManager {
      * @param graphics
      */
     public void draw(Graphics graphics) {
+        screen.draw(graphics);
         if (!preHideElements.isEmpty()) {
             drawableElements.removeAll(preHideElements);
             preHideElements.clear();
@@ -145,7 +150,7 @@ public abstract class PPanelManager {
      *
      * @param element
      */
-    public void showModal(DrawablePElement element) {
+    public void showModal(DrawablePPanel element) {
         if (modal != null) {
             previousModals.add(modal);
         }
@@ -182,4 +187,16 @@ public abstract class PPanelManager {
         }
     }
 
+    /**
+     * Установить Screen как подложку для отображаемых окошек.
+     *
+     * @param screen
+     */
+    public void changeScreen(Screen screen) {
+        if (this.screen != null) {
+            screen.onHide();
+        }
+        this.screen = screen;
+        screen.onShow();
+    }
 }
