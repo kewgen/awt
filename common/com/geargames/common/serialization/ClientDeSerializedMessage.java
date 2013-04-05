@@ -7,10 +7,6 @@ package com.geargames.common.serialization;
 public abstract class ClientDeSerializedMessage extends DeSerializedMessage {
     private MicroByteBuffer buffer;
 
-    public boolean ready() {
-        return getBuffer() != null;
-    }
-
     public MicroByteBuffer getBuffer() {
         return buffer;
     }

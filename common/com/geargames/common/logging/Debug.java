@@ -77,4 +77,5 @@ public class Debug {
     public static void fatal(String message, Exception ex) {
         instance.log(Level.FATAL, message, ex);
     }
+
 }

@@ -58,7 +58,7 @@ public abstract class MessageDispatcher implements TimerListener {
                 int type = types[i];
                 ArrayList typeListeners = (ArrayList) listenersByType.get(type);
                 if (typeListeners == null) {
-                    typeListeners = new ArrayList();
+                    typeListeners = new ArrayList(); //todo: использовать Set
                     listenersByType.set(type, typeListeners);
                 }
                 typeListeners.add(listener);
