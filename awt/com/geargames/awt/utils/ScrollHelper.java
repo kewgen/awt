@@ -8,7 +8,7 @@ import com.geargames.awt.utils.motions.InertMotionListener;
 import com.geargames.awt.utils.motions.StubMotionListener;
 import com.geargames.common.Graphics;
 import com.geargames.common.util.Region;
-import com.geargames.common.util.Math;
+import com.geargames.common.util.Mathematics;
 
 /**
  * User: mikhail.kutuzov
@@ -177,7 +177,7 @@ public class ScrollHelper {
             stubMotionListener.create(left);
             return stubMotionListener;
         } else {
-            elasticInertMotionListener.create(left, Math.min(left + size, scrollView.getDrawRegion().getMaxX()), size, scrollView.getItemSize());
+            elasticInertMotionListener.create(left, Mathematics.min(left + size, scrollView.getDrawRegion().getMaxX()), size, scrollView.getItemSize());
             return elasticInertMotionListener;
         }
     }

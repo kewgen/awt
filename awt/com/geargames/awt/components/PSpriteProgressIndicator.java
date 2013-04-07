@@ -1,5 +1,6 @@
 package com.geargames.awt.components;
 
+import com.geargames.common.env.Environment;
 import com.geargames.common.packer.PObject;
 import com.geargames.common.Graphics;
 
@@ -23,7 +24,7 @@ public class PSpriteProgressIndicator extends PObjectElement {
 
     @Override
     public void draw(Graphics graphics, int x, int y) {
-        graphics.getRender().getSprite(spriteIndex + value).draw(graphics, x, y);
+        Environment.getRender().getSprite(spriteIndex + value).draw(graphics, x, y);
     }
 
     public int getValue() {

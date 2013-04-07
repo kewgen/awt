@@ -4,7 +4,7 @@ import com.geargames.common.packer.*;
 
 /**
  * Created with IntelliJ IDEA.
- * User: kewgen
+ * User: kewgen, m.v.kutuzov
  * Date: 21.09.12
  * Time: 14:46
  */
@@ -35,16 +35,6 @@ public interface Render {
     PSprite getSprite(int pid);
 
     PFrame getFrame(int pid);
-
-    void setODX(int dx);//смещение всей отрисовки
-
-    void setODY(int dy);
-
-    void setStringColor(byte color);
-
-    byte getStringColor();
-
-    int getSpriteDx(int id);//запрос Xа первого по списку индекса
 
     public int getFrameW(int id);
 

@@ -490,41 +490,12 @@ public abstract class PManager implements com.geargames.common.Render {
         }
     }
 
-    protected int o_dx;
-    protected int o_dy;
-
-    @Override
-    public void setODX(int dx) {
-        o_dx = dx;
-    }
-
-    @Override
-    public void setODY(int dy) {
-        o_dy = dy;
-    }
-
-    @Override
-    public void setStringColor(byte color) {
-        string_color = color;
-    }
-
-    @Override
-    public byte getStringColor() {
-        return string_color;
-    }
-
     @Override
     public EmitProcess createEmitter(int pos, int i, int i1) {
         return null;
     }
 
     public byte font;
-    protected byte string_color;
-
-    @Override
-    public int getSpriteDx(int id) {
-        return getPSprite(id).getIndex(0).getX();
-    }
 
     public PObject getPObject(int pid) {
         return (PObject) objects.get(pid);

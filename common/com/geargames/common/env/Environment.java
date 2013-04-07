@@ -1,5 +1,7 @@
 package com.geargames.common.env;
 
+import com.geargames.common.Render;
+
 /**
  * User: abarakov
  * Date: 09.02.13 19:28
@@ -7,6 +9,7 @@ package com.geargames.common.env;
 public abstract class Environment {
 
     private static AbstractEnvironment instance;
+    private static Render render;
 
     public static AbstractEnvironment getInstance() {
         return instance;
@@ -48,4 +51,11 @@ public abstract class Environment {
         instance.pause(milliseconds);
     }
 
+    public static Render getRender() {
+        return render;
+    }
+
+    public static void setRender(Render render) {
+        Environment.render = render;
+    }
 }

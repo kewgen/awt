@@ -10,7 +10,7 @@ import com.geargames.common.util.Region;
  */
 public abstract class PElement extends Eventable {
 
-    private static final byte VISIBLED_STATE = 1 << 0;
+    private static final byte VISIBLE_STATE = 1 << 0;
     private static final byte ENABLED_STATE  = 1 << 1;
 
     private int x;
@@ -18,7 +18,7 @@ public abstract class PElement extends Eventable {
     private byte state;
 
     public PElement() {
-        state = VISIBLED_STATE | ENABLED_STATE;
+        state = VISIBLE_STATE | ENABLED_STATE;
     }
 
     /**
@@ -71,14 +71,14 @@ public abstract class PElement extends Eventable {
      */
     // isVisible
     public boolean getVisible() {
-        return (state & VISIBLED_STATE) == VISIBLED_STATE;
+        return (state & VISIBLE_STATE) == VISIBLE_STATE;
     }
 
     public void setVisible(boolean visible) {
         if (visible) {
-            state = (byte) (state | VISIBLED_STATE);
+            state = (byte) (state | VISIBLE_STATE);
         } else {
-            state = (byte) (state & ~VISIBLED_STATE);
+            state = (byte) (state & ~VISIBLE_STATE);
         }
     }
 

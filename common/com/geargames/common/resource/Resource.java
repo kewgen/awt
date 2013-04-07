@@ -1,7 +1,5 @@
 package com.geargames.common.resource;
 
-import com.geargames.common.util.ArrayByte;
-
 /**
  * User: abarakov, m.v. kutuzov
  * Date: 07.03.13
