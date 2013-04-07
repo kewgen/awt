@@ -115,10 +115,14 @@ public abstract class MessageDispatcher implements TimerListener {
             } else {
                 try {
                     ClientDeSerializedMessage deserializedMessage = getMessage(message);
-                    deserializedMessage.deSerialize();
-                    short messageType = message.getMessageType();
-                    for (int j = 0; j < listeners.size(); j++) {
-                        ((DataMessageListener) listeners.get(j)).onReceive(deserializedMessage, messageType);
+                    if (deserializedMessage != null) {
+                        deserializedMessage.deSerialize();
+                        short messageType = message.getMessageType();
+                        for (int j = 0; j < listeners.size(); j++) {
+                            ((DataMessageListener) listeners.get(j)).onReceive(deserializedMessage, messageType);
+                        }
+                    } else {
+                        //todo: отреагировать на эту ситуацию
                     }
                 } catch (Exception e) {
                     //todo: Отправить обработку исключения подписчику на ошибки
