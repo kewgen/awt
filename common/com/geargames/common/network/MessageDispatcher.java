@@ -100,8 +100,8 @@ public abstract class MessageDispatcher implements TimerListener {
     }
 
     /**
-     * Всем подписчика отсылается один экземпляр класса DataMessage, поэтому экземпляры DataMessage
-     * стоит использовать только для чтения.
+     * Всем подписчикам отсылается один экземпляр класса ClientDeSerializedMessage, поэтому экземпляры
+     * ClientDeSerializedMessage стоит использовать только для чтения.
      * @param timerId - идентификатор сработавшего таймера, который вызвал данный метод.
      */
     public void onTimer(int timerId) {
