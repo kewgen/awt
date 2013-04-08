@@ -57,7 +57,7 @@ public abstract class PPanelManager {
             int size = callableElements.size();
             for (int i = size - 1; i >= 0; i--) {
                 //todo: если элемент панельки невидим или выключен, то событий он не должен получать
-                Drawable element = (Drawable) callableElements.get(i);
+                DrawablePPanel element = (DrawablePPanel) callableElements.get(i);
                 if (element.onEvent(code, param, x, y)) {
                     break;
                 }
@@ -110,12 +110,24 @@ public abstract class PPanelManager {
         int size = drawableElements.size();
         for (int i = 0; i < size; i++) {
             //todo: если элемент панельки невидим, то и рисовать его не следует
-            ((Drawable) drawableElements.get(i)).draw(graphics);
+            ((DrawablePPanel) drawableElements.get(i)).draw(graphics);
         }
 
         //todo: TextHint должен отрисовываться находясь в списке drawableElements, а не в индивидуальном порядке
         TextHint hintElement = TextHint.getInstance();
         hintElement.draw(graphics);
+    }
+
+    private void addByLayer(ArrayList list, DrawablePPanel element) {
+        int insertIndex = 0;
+        for (int i = list.size() - 1; i >= 0; i--) {
+            DrawablePPanel item = (DrawablePPanel)list.get(i);
+            if (item.getLayer() <= element.getLayer()) {
+                insertIndex = i + 1;
+                break;
+            }
+        }
+        list.add(insertIndex, element);
     }
 
     /**
@@ -125,8 +137,8 @@ public abstract class PPanelManager {
      */
     public void show(DrawablePPanel element) {
         if (!drawableElements.contains(element)) {
-            drawableElements.add(element);
-            callableElements.add(element);
+            addByLayer(drawableElements, element);
+            addByLayer(callableElements, element);
             element.init();
             element.onShow();
         }
@@ -157,9 +169,9 @@ public abstract class PPanelManager {
             previousModals.add(modal);
         }
         modal = element;
+        addByLayer(drawableElements, element);
         element.init();
         element.onShow();
-        drawableElements.add(element);
     }
 
     /**
@@ -192,7 +204,7 @@ public abstract class PPanelManager {
     }
 
     /**
-     * Установить Screen как подложку для отображаемых окошек.
+     * Установить Screen, как подложку для отображаемых окошек.
      *
      * @param screen
      */
@@ -203,4 +215,5 @@ public abstract class PPanelManager {
         this.screen = screen;
         screen.onShow();
     }
+
 }
