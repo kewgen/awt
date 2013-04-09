@@ -17,10 +17,10 @@ import com.geargames.common.packer.PObject;
  *     s10   caption   слот для заголовка кнопки;
  *     s110  bounds    фрейм задающий размеры кнопки.
  */
-public abstract class PRadioButton extends PButton {
+public class PRadioButton extends PButton {
     private PRadioGroup group;
 
-    protected PRadioButton(PObject prototype) {
+    public PRadioButton(PObject prototype) {
         super(prototype);
     }
 

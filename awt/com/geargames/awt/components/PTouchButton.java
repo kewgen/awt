@@ -13,9 +13,9 @@ import com.geargames.common.packer.PObject;
  *     s10   caption   слот для заголовка кнопки;
  *     s110  bounds    фрейм задающий размеры кнопки.
  */
-public abstract class PTouchButton extends PButton {
+public class PTouchButton extends PButton {
 
-    protected PTouchButton(PObject prototype) {
+    public PTouchButton(PObject prototype) {
         super(prototype);
     }
 

@@ -122,7 +122,7 @@ public class PFontManager {
      */
     public PFont createReSizedFont(PFontComposite baseFont, int size) {
         int amount = baseFont.getFontsAmount();
-        ArrayList fonts = new ArrayList(baseFont.getFontsAmount());
+        ArrayList fonts = new ArrayList(amount);
         for (int i = 0; i < amount; i++) {
             fonts.add(createReSizedFont((PFontCharRange) baseFont.getFont(i), size));
         }
