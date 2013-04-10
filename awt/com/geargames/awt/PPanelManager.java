@@ -4,9 +4,8 @@ import com.geargames.common.Graphics;
 import com.geargames.common.util.ArrayList;
 
 /**
- * User: mikhail v. kutuzov, abarakov
+ * Users: mikhail v. kutuzov, abarakov
  * Date: 12.02.13
- * Time: 17:10
  * Базовый класс для действий с игровыми окнами.
  */
 public abstract class PPanelManager {
@@ -46,9 +45,12 @@ public abstract class PPanelManager {
      * @param y
      */
     public void onEvent(int code, int param, int x, int y) {
-        screen.onEvent(code, param, x, y);
         eventX = x;
         eventY = y;
+        //todo: TextHint должен получать события, находясь в списке callableElements, а не в индивидуальном порядке
+        TextHint hintElement = TextHint.getInstance();
+        hintElement.onEvent(code, param, x, y);
+        screen.onEvent(code, param, x, y);
         if (modal == null) {
             if (!preDeafElements.isEmpty()) {
                 callableElements.removeAll(preDeafElements);
@@ -63,11 +65,8 @@ public abstract class PPanelManager {
                 }
             }
         } else {
-            modal.modalEvent(code, param, x, y);
+            modal.onModalEvent(code, param, x, y);
         }
-        //todo: TextHint должен получать события, находясь в списке callableElements, а не в индивидуальном порядке
-        TextHint hintElement = TextHint.getInstance();
-        hintElement.onEvent(code, param, x, y);
     }
 
     /**

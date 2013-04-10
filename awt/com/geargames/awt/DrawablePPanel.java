@@ -1,9 +1,8 @@
 package com.geargames.awt;
 
 /**
- * User: mikhail v. kutuzov, abarakov
+ * Users: mikhail v. kutuzov, abarakov
  * Date: 25.12.12
- * Time: 23:38
  */
 public abstract class DrawablePPanel extends DrawablePElement {
 

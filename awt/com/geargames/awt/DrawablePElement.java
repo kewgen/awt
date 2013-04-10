@@ -6,7 +6,7 @@ import com.geargames.common.util.Region;
 import com.geargames.common.Graphics;
 
 /**
- * User: mikhail v. kutuzov, abarakov
+ * Users: mikhail v. kutuzov, abarakov
  * Обёртка для отображения PElement-ов как Drawable.
  * Отображает окно в точке (x, y) экрана - левый верхний угол окна. Соответсвено, совмещая левый верхний угол элемента
  * с углом окна, отображаем элемент element и его содержимое в этом окне.
@@ -67,7 +67,7 @@ public class DrawablePElement extends Drawable {
      * @param y
      * @return
      */
-    public boolean modalEvent(int code, int param, int x, int y) {
+    public boolean onModalEvent(int code, int param, int x, int y) {
         Region region = element.getTouchRegion();
         int localX = x - getX() + region.getMinX();
         int localY = y - getY() + region.getMinY();
