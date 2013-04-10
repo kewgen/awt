@@ -47,6 +47,9 @@ public class ConsoleDebug extends AbstractDebug {
         }
         if (level >= consoleLogLevelMinimum) {
             (level >= Level.WARNING ? System.err : System.out).println(messageFormated);
+            if (level >= Level.ERROR) {
+                (new Exception()).printStackTrace();
+            }
         }
         if (level >= beepLogLevelMinimum) {
             java.awt.Toolkit.getDefaultToolkit().beep();

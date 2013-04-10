@@ -6,7 +6,7 @@ package com.geargames.common.logging;
  */
 public class Debug {
 
-    public static final boolean IS_DEBUG = true;
+    public static final boolean IS_DEBUG = true; // DEBUG_MODE
 
     private static AbstractDebug instance;
 

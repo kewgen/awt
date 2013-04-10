@@ -20,7 +20,7 @@ public class PFontCharRange extends PFont {
      * @param height высота букв шрифта
      * @param baseLine базовая линия шрифта
      */
-    PFontCharRange(char firstCharacter, int amount, int height, int baseLine) {
+    public PFontCharRange(char firstCharacter, int amount, int height, int baseLine) {
         this.firstCharacter = firstCharacter;
         this.amount = amount;
         this.characters = new ArrayList(amount);
