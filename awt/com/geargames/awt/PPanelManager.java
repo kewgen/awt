@@ -5,35 +5,29 @@ import com.geargames.common.util.ArrayList;
 
 /**
  * Users: mikhail v. kutuzov, abarakov
- * Date: 12.02.13
+ * Date: 12.02.13, 11.04.13
  * Базовый класс для действий с игровыми окнами.
  */
 public abstract class PPanelManager {
+    @Deprecated
     private Screen screen;
 
     private int eventX;
     private int eventY;
 
-    private ArrayList drawableElements;
-    private ArrayList callableElements;
-
-    private ArrayList preDeafElements;
-    private ArrayList preHideElements;
-    private ArrayList previousModals;
-
-    private DrawablePPanel modal;
-
-    private boolean hideAll;
+    // drawableElements + callableElements
+    private ArrayList panelElements;       // Список видимых простых панелек
+    private ArrayList modalElements;       // Список видимых модальных панелек
+    //todo: Реализовать списки addedPanelElements и addedModalElements
+//    private ArrayList addedPanelElements;  // Список простых панелек, которые должны быть отображены
+//    private ArrayList addedModalElements;  // Список модальных панелек, которые должны быть отображены
+    private ArrayList hiddenElements;      // Список панелек, которые должны быть скрыты
 
     protected PPanelManager() {
-        drawableElements = new ArrayList();
-        callableElements = new ArrayList();
-        preDeafElements = new ArrayList();
-        preHideElements = new ArrayList();
-        previousModals = new ArrayList();
-        modal = null;
+        panelElements  = new ArrayList(16);
+        modalElements  = new ArrayList(8);
+        hiddenElements = new ArrayList(8);
         screen = null;
-        hideAll = false;
     }
 
     /**
@@ -47,30 +41,35 @@ public abstract class PPanelManager {
     public void onEvent(int code, int param, int x, int y) {
         eventX = x;
         eventY = y;
-        //todo: TextHint должен получать события, находясь в списке callableElements, а не в индивидуальном порядке
+        //todo: TextHint должен получать события, находясь в списке panelElements, а не в индивидуальном порядке
         TextHint hintElement = TextHint.getInstance();
         hintElement.onEvent(code, param, x, y);
-        screen.onEvent(code, param, x, y);
-        if (modal == null) {
-            if (!preDeafElements.isEmpty()) {
-                callableElements.removeAll(preDeafElements);
-                preDeafElements.clear();
-            }
-            int size = callableElements.size();
-            for (int i = size - 1; i >= 0; i--) {
+        //todo: screen должен получать события последним, он же находится ниже всех
+        if (screen != null) {
+            screen.onEvent(code, param, x, y);
+        }
+        //todo: проще создать копию списка panelElements, чем использовать список hiddenElements + в будущем списки addedPanelElements и addedModalElements
+        if (!hiddenElements.isEmpty()) {
+            panelElements.removeAll(hiddenElements);
+            modalElements.removeAll(hiddenElements);
+            hiddenElements.clear();
+        }
+        if (modalElements.isEmpty()) {
+            for (int i = panelElements.size() - 1; i >= 0; i--) {
                 //todo: если элемент панельки невидим или выключен, то событий он не должен получать
-                DrawablePPanel element = (DrawablePPanel) callableElements.get(i);
-                if (element.onEvent(code, param, x, y)) {
+                DrawablePPanel panel = (DrawablePPanel) panelElements.get(i);
+                if (panel.onEvent(code, param, x, y)) {
                     break;
                 }
             }
         } else {
-            modal.onModalEvent(code, param, x, y);
+            DrawablePPanel modal = (DrawablePPanel) modalElements.get(modalElements.size() - 1);
+            modal.onModalEvent(code, param, x, y); //todo: не нужно отдельного обработчика модальных эвентов
         }
     }
 
     /**
-     * Вернуть экранную координату X.
+     * Вернуть экранную координату X в момент предыдущего события.
      *
      * @return
      */
@@ -79,7 +78,7 @@ public abstract class PPanelManager {
     }
 
     /**
-     * Вернуть экранную координату Y.
+     * Вернуть экранную координату Y в момент предыдущего события.
      *
      * @return
      */
@@ -93,26 +92,22 @@ public abstract class PPanelManager {
      * @param graphics
      */
     public void draw(Graphics graphics) {
-        screen.draw(graphics);
-        if (!preHideElements.isEmpty()) {
-            drawableElements.removeAll(preHideElements);
-            preHideElements.clear();
+        if (screen != null) {
+            screen.draw(graphics);
         }
-        if (hideAll) {
-            drawableElements.clear();
-            callableElements.clear();
-            preHideElements.clear();
-            preDeafElements.clear();
-            previousModals.clear();
-            hideAll = false;
+        //todo: проще создать копию списка panelElements, чем использовать список hiddenElements + в будущем списки addedPanelElements и addedModalElements
+        if (!hiddenElements.isEmpty()) {
+            panelElements.removeAll(hiddenElements);
+            modalElements.removeAll(hiddenElements);
+            hiddenElements.clear();
         }
-        int size = drawableElements.size();
+        int size = panelElements.size();
         for (int i = 0; i < size; i++) {
             //todo: если элемент панельки невидим, то и рисовать его не следует
-            ((DrawablePPanel) drawableElements.get(i)).draw(graphics);
+            DrawablePPanel panel = (DrawablePPanel) panelElements.get(i);
+            panel.draw(graphics);
         }
-
-        //todo: TextHint должен отрисовываться находясь в списке drawableElements, а не в индивидуальном порядке
+        //todo: TextHint должен отрисовываться находясь в списке panelElements, а не в индивидуальном порядке
         TextHint hintElement = TextHint.getInstance();
         hintElement.draw(graphics);
     }
@@ -130,75 +125,106 @@ public abstract class PPanelManager {
     }
 
     /**
-     * Рисовать панель на графическом контексте.
+     * Отобразить панель.
      *
-     * @param element
+     * @param panel
      */
-    public void show(DrawablePPanel element) {
-        if (!drawableElements.contains(element)) {
-            addByLayer(drawableElements, element);
-            addByLayer(callableElements, element);
-            element.init();
-            element.onShow();
+    public boolean show(DrawablePPanel panel) {
+        //todo: Наверно следует возбудить исключение, если панелька уже отображена в модальном режиме
+        boolean result = false;
+        if (hiddenElements.contains(panel)) {
+            hiddenElements.remove(panel);
+            result = true;
         }
+        if (!panelElements.contains(panel)) {
+            addByLayer(panelElements, panel); //todo: нельзя модифицировать список здесь
+            result = true;
+        }
+        if (result) {
+            panel.init();
+            panel.onShow();
+        }
+        return result;
     }
 
     /**
-     * Скрыть панель на графическом контексте.
+     * Скрыть панель.
      *
-     * @param element
+     * @param panel
      */
-    public void hide(DrawablePPanel element) {
-        preHideElements.add(element);
-        preDeafElements.add(element);
-        element.onHide();
+    public boolean hide(DrawablePPanel panel) {
+        if (panelElements.contains(panel) && !hiddenElements.contains(panel)) {
+            hiddenElements.add(panel);
+            panel.onHide();
+            return true;
+        }
+        return false;
     }
 
+    /**
+     * Скрыть все панельки.
+     */
     public void hideAll() {
-        hideAll = true;
-    }
-
-    /**
-     * Показать в модальном режиме.
-     *
-     * @param element
-     */
-    public void showModal(DrawablePPanel element) {
-        if (modal != null) {
-            previousModals.add(modal);
-        }
-        modal = element;
-        addByLayer(drawableElements, element);
-        element.init();
-        element.onShow();
-    }
-
-    /**
-     * Скрыть модальный элемент. Перейти в обычный режим работы.
-     */
-    public void hideModal() {
-        preHideElements.add(modal);
-        modal.onHide();
-        if (previousModals.size() > 0) {
-            modal = (DrawablePPanel) previousModals.remove(previousModals.size() - 1);
-        } else {
-            modal = null;
+        for (int i = panelElements.size() - 1; i >= 0; i--) {
+            DrawablePPanel panel = (DrawablePPanel) panelElements.get(i);
+            hide(panel);
         }
     }
 
     /**
-     * Вернет true, если в текущий момент открыта модальная панелька?
+     * Отобразить панель в модальном режиме.
      *
+     * @param panel
+     */
+    public boolean showModal(DrawablePPanel panel) {
+        //todo: Наверно следует возбудить исключение, если панелька уже отображена в немодальном режиме
+        boolean result = show(panel);
+        if (!modalElements.contains(panel)) {
+            addByLayer(modalElements, panel);
+            result = true;
+        }
+        return result;
+    }
+
+    /**
+     * Вернет true, если панелька panel в настоящий момент видима
+     *
+     * @param panel
      * @return
      */
-    public boolean isModal() {
-        return modal != null;
+    public boolean isVisible(DrawablePPanel panel) {
+        return panelElements.contains(panel) && !hiddenElements.contains(panel);
+    }
+
+    /**
+     * Вернет true, если панелька panel в настоящий момент открыта в модальном режиме
+     *
+     * @param panel
+     * @return
+     */
+    public boolean isModal(DrawablePPanel panel) {
+        return modalElements.contains(panel) && !hiddenElements.contains(panel);
+    }
+
+    /**
+     * Получить ссылку на активную модальную форму.
+     * @return
+     */
+    public DrawablePPanel getModalPanel() {
+        for (int i = modalElements.size() - 1; i >= 0; i--) {
+            DrawablePPanel panel = (DrawablePPanel) modalElements.get(i);
+            if (!hiddenElements.contains(panel)) {
+                return panel;
+            }
+        }
+        return null;
     }
 
     public void onScreenResize() {
-        int size = drawableElements.size();
+        int size = panelElements.size();
         for (int i = 0; i < size; i++) {
-            ((DrawablePPanel) drawableElements.get(i)).init();
+            DrawablePPanel panel = (DrawablePPanel) panelElements.get(i);
+            panel.init();
         }
     }
 
@@ -207,12 +233,15 @@ public abstract class PPanelManager {
      *
      * @param screen
      */
+    @Deprecated
     public void changeScreen(Screen screen) {
         if (this.screen != null) {
-            screen.onHide();
+            this.screen.onHide();
         }
         this.screen = screen;
-        screen.onShow();
+        if (screen != null) {
+            screen.onShow();
+        }
     }
 
 }
