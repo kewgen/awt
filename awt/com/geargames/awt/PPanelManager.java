@@ -143,7 +143,7 @@ public abstract class PPanelManager {
      * @param panel
      */
     public boolean hide(DrawablePPanel panel) {
-        if (panelElements.contains(panel) && !hiddenElements.contains(panel)) {
+        if (isVisible(panel)) {
             hiddenElements.add(panel);
             panel.onHide();
             return true;

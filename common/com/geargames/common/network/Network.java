@@ -137,7 +137,7 @@ public abstract class Network {
             }
             Environment.pause(100);
         }
-        throw new Exception("waiting time has been expired for a message : " + request.getType());
+        throw new Exception("Waiting time has been expired for a message : " + request.getType());
     }
 
     /**
