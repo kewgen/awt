@@ -9,9 +9,6 @@ import com.geargames.common.util.ArrayList;
  * Базовый класс для действий с игровыми окнами.
  */
 public abstract class PPanelManager {
-    @Deprecated
-    private Screen screen;
-
     private int eventX;
     private int eventY;
 
@@ -27,7 +24,6 @@ public abstract class PPanelManager {
         panelElements  = new ArrayList(16);
         modalElements  = new ArrayList(8);
         hiddenElements = new ArrayList(8);
-        screen = null;
     }
 
     /**
@@ -45,9 +41,6 @@ public abstract class PPanelManager {
         TextHint hintElement = TextHint.getInstance();
         hintElement.onEvent(code, param, x, y);
         //todo: screen должен получать события последним, он же находится ниже всех
-        if (screen != null) {
-            screen.onEvent(code, param, x, y);
-        }
         //todo: проще создать копию списка panelElements, чем использовать список hiddenElements + в будущем списки addedPanelElements и addedModalElements
         if (!hiddenElements.isEmpty()) {
             panelElements.removeAll(hiddenElements);
@@ -92,9 +85,6 @@ public abstract class PPanelManager {
      * @param graphics
      */
     public void draw(Graphics graphics) {
-        if (screen != null) {
-            screen.draw(graphics);
-        }
         //todo: проще создать копию списка panelElements, чем использовать список hiddenElements + в будущем списки addedPanelElements и addedModalElements
         if (!hiddenElements.isEmpty()) {
             panelElements.removeAll(hiddenElements);
@@ -225,22 +215,6 @@ public abstract class PPanelManager {
         for (int i = 0; i < size; i++) {
             DrawablePPanel panel = (DrawablePPanel) panelElements.get(i);
             panel.init();
-        }
-    }
-
-    /**
-     * Установить Screen, как подложку для отображаемых окошек.
-     *
-     * @param screen
-     */
-    @Deprecated
-    public void changeScreen(Screen screen) {
-        if (this.screen != null) {
-            this.screen.onHide();
-        }
-        this.screen = screen;
-        if (screen != null) {
-            screen.onShow();
         }
     }
 
