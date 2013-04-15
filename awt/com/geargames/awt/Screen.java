@@ -6,7 +6,7 @@ import com.geargames.common.Port;
  * User: m.v.kutuzov
  * Date: 05.04.13
  */
-public abstract class Screen extends Drawable {
+public abstract class Screen extends DrawablePPanel {
 
     public int getX() {
         return 0;
@@ -30,7 +30,7 @@ public abstract class Screen extends Drawable {
         return Port.getScreenW();
     }
 
-    public abstract void onShow();
-
-    public abstract void onHide();
+    public byte getLayer() {
+        return BOTTOM_LAYER;
+    }
 }

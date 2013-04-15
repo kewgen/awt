@@ -2,6 +2,7 @@ package com.geargames.platform.network;
 
 import com.geargames.common.io.DataInput;
 import com.geargames.common.io.DataOutput;
+import com.geargames.common.logging.Debug;
 import com.geargames.common.network.Socket;
 import com.geargames.platform.io.ConsoleDataInput;
 import com.geargames.platform.io.ConsoleDataOutput;
@@ -31,6 +32,7 @@ public class ConsoleSocket extends Socket {
     }
 
     public void connect() throws Exception {
+        Debug.debug("connect to" + getAddress() + ":" + getPort());
         SocketAddress socketAddress = new InetSocketAddress(getAddress(), getPort());
         socket = new java.net.Socket();
         socket.connect(socketAddress);
