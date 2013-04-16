@@ -21,8 +21,8 @@ public abstract class PPanelManager {
     private ArrayList hiddenElements;      // Список панелек, которые должны быть скрыты
 
     protected PPanelManager() {
-        panelElements  = new ArrayList(16);
-        modalElements  = new ArrayList(8);
+        panelElements = new ArrayList(16);
+        modalElements = new ArrayList(8);
         hiddenElements = new ArrayList(8);
     }
 
@@ -105,7 +105,7 @@ public abstract class PPanelManager {
     private void addByLayer(ArrayList list, DrawablePPanel element) {
         int insertIndex = 0;
         for (int i = list.size() - 1; i >= 0; i--) {
-            DrawablePPanel item = (DrawablePPanel)list.get(i);
+            DrawablePPanel item = (DrawablePPanel) list.get(i);
             if (item.getLayer() <= element.getLayer()) {
                 insertIndex = i + 1;
                 break;
@@ -152,12 +152,32 @@ public abstract class PPanelManager {
     }
 
     /**
-     * Скрыть все панельки.
+     * Скрыть все окона.
      */
     public void hideAll() {
+        hideByLayer(DrawablePPanel.TOP_LAYER);
+    }
+
+    /**
+     * Скрыть окна ниже верхнего уровня.
+     */
+    public void hideMiddle(){
+        hideByLayer(DrawablePPanel.MIDDLE_LAYER);
+    }
+
+    /**
+     * Скрыть окна ниже среднего уровня.
+     */
+    public void hideBottom(){
+        hideByLayer(DrawablePPanel.BOTTOM_LAYER);
+    }
+
+    private void hideByLayer(byte layer) {
         for (int i = panelElements.size() - 1; i >= 0; i--) {
             DrawablePPanel panel = (DrawablePPanel) panelElements.get(i);
-            hide(panel);
+            if (panel.getLayer() <= layer) {
+                hide(panel);
+            }
         }
     }
 
@@ -198,6 +218,7 @@ public abstract class PPanelManager {
 
     /**
      * Получить ссылку на активную модальную форму.
+     *
      * @return
      */
     public DrawablePPanel getModalPanel() {
