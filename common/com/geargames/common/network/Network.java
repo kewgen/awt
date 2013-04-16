@@ -51,6 +51,12 @@ public abstract class Network {
     public void disconnect() {
         sender.finishing();
         receiver.finishing();
+        while (sender.isRunning()){
+            Environment.pause(100);
+        }
+        while (receiver.isRunning()){
+            Environment.pause(100);
+        }
         socket.disconnect();
     }
 

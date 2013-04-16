@@ -23,9 +23,11 @@ public abstract class Sender {
         this.network = network;
     }
 
-    public boolean isRunning() {
-        return running;
-    }
+    /**
+     * Работает ли цикл отсылки сообщения.
+     * @return
+     */
+    public abstract boolean isRunning();
 
 
     public void starting(DataOutput output) {
@@ -62,7 +64,7 @@ public abstract class Sender {
 
     public void sending() {
         int errors = 0;
-        while (isRunning()) {
+        while (running) {
             if (messageQueue.isEmpty()) {
                 getWorkLock().lock();
                 if (messageQueue.isEmpty()) {
