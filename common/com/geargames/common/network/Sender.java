@@ -30,13 +30,13 @@ public abstract class Sender {
 
     public void starting(DataOutput output) {
         this.output = output;
-        running = true;
         startSending();
+        running = true;
     }
 
     public void finishing() {
-        stopSending();
         running = false;
+        stopSending();
     }
 
     /**

@@ -23,8 +23,8 @@ public abstract class Receiver {
 
     public void starting(DataInput input) {
         this.input = input;
-        running = true;
         startReceiving();
+        running = true;
     }
 
     public void finishing() {
@@ -61,10 +61,7 @@ public abstract class Receiver {
 
         while (isRunning()) {
             try {
-                while (!input.available()) {
-                    if (!isRunning()) {
-                        break;
-                    }
+                while (isRunning() && !input.available()) {
                     Environment.pause(50);
                 }
                 if (!isRunning()) {
