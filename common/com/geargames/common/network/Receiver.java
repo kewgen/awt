@@ -19,7 +19,7 @@ public abstract class Receiver {
      */
     public abstract boolean isRunning();
 
-    public void starting(DataInput input) {
+    public void start(DataInput input) {
         this.input = input;
         startReceiving();
         running = true;

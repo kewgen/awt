@@ -36,8 +36,8 @@ public abstract class Network {
             socket.connect();
             receiver = createReceiver(socket.getDataInput());
             sender = createSender(socket.getDataOutput());
-            receiver.starting(socket.getDataInput());
-            sender.starting(socket.getDataOutput());
+            receiver.start(socket.getDataInput());
+            sender.start(socket.getDataOutput());
         } catch (Exception e) {
             Debug.error("Server connection could not be established", e);
             return false;

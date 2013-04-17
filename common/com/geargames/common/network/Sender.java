@@ -30,7 +30,7 @@ public abstract class Sender {
     public abstract boolean isRunning();
 
 
-    public void starting(DataOutput output) {
+    public void start(DataOutput output) {
         this.output = output;
         startSending();
         running = true;
@@ -40,7 +40,6 @@ public abstract class Sender {
         running = false;
         stopSending();
         getWorkLock().release();
-        running = false;
     }
 
     /**
