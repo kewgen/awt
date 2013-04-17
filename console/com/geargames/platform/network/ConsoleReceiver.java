@@ -27,12 +27,12 @@ public class ConsoleReceiver extends Receiver {
     }
 
     @Override
-    protected void stopReceiving() {
+    protected void startReceiving() {
+        thread.start();
     }
 
     @Override
-    protected void startReceiving() {
-        thread.start();
+    protected void stopReceiving() {
     }
 
     @Override

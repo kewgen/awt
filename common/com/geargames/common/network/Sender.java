@@ -32,11 +32,12 @@ public abstract class Sender {
 
     public void starting(DataOutput output) {
         this.output = output;
-        running = true;
         startSending();
+        running = true;
     }
 
     public void stop() {
+        running = false;
         stopSending();
         getWorkLock().release();
         running = false;
@@ -56,7 +57,7 @@ public abstract class Sender {
     protected abstract int getErrorThreshold();
 
     /**
-     * Экземпляр класса симафора на конкретной платформе.
+     * Экземпляр класса семафора на конкретной платформе.
      * Будет использоваться для блокировки работы потока в случае отсутсвия исходящих сообщений.
      *
      * @return

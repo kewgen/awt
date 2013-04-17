@@ -21,8 +21,8 @@ public abstract class Receiver {
 
     public void starting(DataInput input) {
         this.input = input;
-        running = true;
         startReceiving();
+        running = true;
     }
 
     public void stop() {
@@ -54,30 +54,24 @@ public abstract class Receiver {
 
     protected void receiving() {
         int errors = 0;
-        short type;  // ID сообщения
-        int length;  // Длина данных сообщения
 
         while (running) {
             try {
-                while (!input.available()) {
-                    if (!running) {
-                        break;
-                    }
+                while (running && !input.available()) {
                     Environment.pause(50);
                 }
                 if (!running) {
                     break;
                 }
 
-                length = input.readShort() & 0xffff;
-                type = input.readShort();
-                int res;
+                int length = input.readShort() & 0xffff; // Длина данных сообщения
+                short type = input.readShort();          // ID сообщения
                 Debug.debug("Receiver: received message: type=" + type + " (" + (type & 0xff) + "), len=" + length);
 
                 MessageLock messageLock = getMessageLockIfItExists(type);
                 if (messageLock != null) {
                     // Зачитывание синхронного сообщения
-                    res = input.readBytes(getAnswersBuffer().getBytes(), 0, length);
+                    int res = input.readBytes(getAnswersBuffer().getBytes(), 0, length);
                     if (res != length) {
                         throw new Exception("Error received len: type=" + type + " (" + (type & 0xff) + "), len=" + length + " != res=" + res);
                     }
@@ -89,7 +83,7 @@ public abstract class Receiver {
                 } else {
                     // Зачитывание асинхронного сообщения
                     byte[] data = new byte[length];
-                    res = input.readBytes(data, 0, length);
+                    int res = input.readBytes(data, 0, length);
                     if (res != length) {
                         throw new Exception("Error received len: type=" + type + " (" + (type & 0xff) + "), len=" + length + " != res=" + res);
                     }

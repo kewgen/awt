@@ -46,7 +46,7 @@ public abstract class Network {
     }
 
     /**
-     * Отсоедениться.
+     * Отсоединиться.
      */
     public void disconnect() {
         sender.stop();

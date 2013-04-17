@@ -50,4 +50,5 @@ public class ConsoleSender extends Sender {
     public boolean isRunning() {
         return running;
     }
+
 }

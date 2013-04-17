@@ -121,11 +121,11 @@ public abstract class MIDlet extends JFrame implements HTTPCounter {
         pack();
     }
 
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+    protected void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         getManager().onStop();//завершаем процессы
     }
 
-    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+    protected void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
     }
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//размер канваза был изменен
