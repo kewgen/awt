@@ -82,9 +82,6 @@ public abstract class Sender {
                 output.writeBytes(serialized, 0, serialized.length);
                 output.flush();
                 messageQueue.removeElementAt(0);
-                MessageLock messageLock = network.getMessageLock();
-                messageLock.setMessageType(message.getType());
-                messageLock.getLock().lock();
             } catch (Exception e) {
                 errors++;
                 if (errors > getErrorThreshold()) {

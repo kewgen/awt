@@ -131,6 +131,7 @@ public abstract class Network {
      */
     public void sendSynchronousMessage(SerializedMessage request, ClientDeSerializedMessage answer, int attempt) throws Exception {
         MessageLock lock = getMessageLock();
+        lock.getLock().lock();
         lock.setMessageType(request.getType());
         lock.setValid(true);
         lock.setMessage(answer);
@@ -152,9 +153,9 @@ public abstract class Network {
      * @return
      */
     public int getAsynchronousMessagesSize() {
-        getAsynchronousLock().lock();
+        //getAsynchronousLock().lock();
         int result = asynchronousMessages.size();
-        getAsynchronousLock().release();
+       //getAsynchronousLock().release();
         return result;
     }
 
@@ -165,14 +166,14 @@ public abstract class Network {
      * @return массив необработанных DataMessage.
      */
     public DataMessage[] getAsynchronousDataMessages() {
-        getAsynchronousLock().lock();
+        //getAsynchronousLock().lock();
         int size = asynchronousMessages.size();
         DataMessage[] messages = new DataMessage[size];
         for (int i = 0; i < size; i++) {
             messages[i] = (DataMessage) asynchronousMessages.get(i);
         }
         asynchronousMessages.clear();
-        getAsynchronousLock().release();
+        //getAsynchronousLock().release();
         return messages;
     }
 
@@ -183,7 +184,7 @@ public abstract class Network {
      * @return
      */
     public DataMessage getAsynchronousMessageByType(short type) {
-        getAsynchronousLock().lock();
+        //getAsynchronousLock().lock();
         DataMessage dataMessage = null;
         for (int i = 0; i < asynchronousMessages.size(); i++) {
             dataMessage = (DataMessage) asynchronousMessages.get(i);
@@ -193,7 +194,7 @@ public abstract class Network {
             }
             dataMessage = null;
         }
-        getAsynchronousLock().release();
+        //getAsynchronousLock().release();
         return dataMessage;
     }
 
@@ -223,9 +224,9 @@ public abstract class Network {
      * @param dataMessage
      */
     public void addAsynchronousMessage(DataMessage dataMessage) {
-        getAsynchronousLock().lock();
+        //getAsynchronousLock().lock();
         asynchronousMessages.addElement(dataMessage);
-        getAsynchronousLock().release();
+        //getAsynchronousLock().release();
     }
 
 }
