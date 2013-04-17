@@ -11,6 +11,7 @@ import com.geargames.common.serialization.MicroByteBuffer;
 public class ConsoleReceiver extends Receiver {
     private Thread thread;
     private MicroByteBuffer answerBuffer;
+    private boolean running;
 
     public ConsoleReceiver(Network network, MicroByteBuffer buffer) {
         super(network);
@@ -18,7 +19,9 @@ public class ConsoleReceiver extends Receiver {
         thread = new Thread(){
             @Override
             public void run() {
+                running = true;
                 receiving();
+                running = false;
             }
         };
     }
@@ -42,4 +45,7 @@ public class ConsoleReceiver extends Receiver {
         return answerBuffer;
     }
 
+    public boolean isRunning() {
+        return running;
+    }
 }

@@ -17,9 +17,7 @@ public abstract class Receiver {
     /**
      * Вернет true, если вычитывающий поток в работает.
      */
-    public boolean isRunning() {
-        return running;
-    }
+    public abstract boolean isRunning();
 
     public void starting(DataInput input) {
         this.input = input;
@@ -59,12 +57,12 @@ public abstract class Receiver {
         short type;  // ID сообщения
         int length;  // Длина данных сообщения
 
-        while (isRunning()) {
+        while (running) {
             try {
-                while (isRunning() && !input.available()) {
+                while (running() && !input.available()) {
                     Environment.pause(50);
                 }
-                if (!isRunning()) {
+                if (!running) {
                     break;
                 }
 

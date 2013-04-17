@@ -12,6 +12,7 @@ import com.geargames.platform.util.JavaLock;
 public class ConsoleSender extends Sender {
     private Thread thread;
     private JavaLock lock;
+    private boolean running;
 
     public ConsoleSender(Network network) {
         super(network);
@@ -19,7 +20,9 @@ public class ConsoleSender extends Sender {
         thread = new Thread(){
             @Override
             public void run() {
+                running = false;
                 sending();
+                running = true;
             }
         };
     }
@@ -41,5 +44,10 @@ public class ConsoleSender extends Sender {
     @Override
     protected Lock getWorkLock() {
         return lock;
+    }
+
+    @Override
+    public boolean isRunning() {
+        return running;
     }
 }
