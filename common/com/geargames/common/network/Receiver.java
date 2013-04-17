@@ -25,7 +25,7 @@ public abstract class Receiver {
         startReceiving();
     }
 
-    public void finishing() {
+    public void stop() {
         running = false;
         stopReceiving();
     }

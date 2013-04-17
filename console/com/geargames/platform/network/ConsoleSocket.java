@@ -32,7 +32,7 @@ public class ConsoleSocket extends Socket {
     }
 
     public void connect() throws Exception {
-        Debug.debug("connect to" + getAddress() + ":" + getPort());
+        Debug.debug("connect to " + getAddress() + ":" + getPort());
         SocketAddress socketAddress = new InetSocketAddress(getAddress(), getPort());
         socket = new java.net.Socket();
         socket.connect(socketAddress);

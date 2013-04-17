@@ -49,8 +49,8 @@ public abstract class Network {
      * Отсоедениться.
      */
     public void disconnect() {
-        sender.finishing();
-        receiver.finishing();
+        sender.stop();
+        receiver.stop();
         while (sender.isRunning()){
             Environment.pause(100);
         }

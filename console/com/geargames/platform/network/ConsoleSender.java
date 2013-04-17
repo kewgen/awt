@@ -20,9 +20,9 @@ public class ConsoleSender extends Sender {
         thread = new Thread(){
             @Override
             public void run() {
-                running = false;
-                sending();
                 running = true;
+                sending();
+                running = false;
             }
         };
     }

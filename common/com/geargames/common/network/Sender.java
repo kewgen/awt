@@ -36,8 +36,9 @@ public abstract class Sender {
         startSending();
     }
 
-    public void finishing() {
+    public void stop() {
         stopSending();
+        getWorkLock().release();
         running = false;
     }
 
