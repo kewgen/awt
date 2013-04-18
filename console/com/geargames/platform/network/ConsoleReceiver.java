@@ -20,19 +20,19 @@ public class ConsoleReceiver extends Receiver {
             @Override
             public void run() {
                 running = true;
-                receiving();
+                cycle();
                 running = false;
             }
         };
     }
 
     @Override
-    protected void startReceiving() {
+    protected void onStart() {
         thread.start();
     }
 
     @Override
-    protected void stopReceiving() {
+    protected void onStop() {
     }
 
     @Override

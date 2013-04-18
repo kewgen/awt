@@ -21,19 +21,19 @@ public class ConsoleSender extends Sender {
             @Override
             public void run() {
                 running = true;
-                sending();
+                cycle();
                 running = false;
             }
         };
     }
 
     @Override
-    protected void startSending() {
+    protected void onStart() {
         thread.start();
     }
 
     @Override
-    protected void stopSending() {
+    protected void onStop() {
     }
 
     @Override
