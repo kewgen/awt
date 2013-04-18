@@ -32,25 +32,25 @@ public abstract class Sender {
 
     public void start(DataOutput output) {
         this.output = output;
-        startSending();
+        onStart();
         running = true;
     }
 
     public void stop() {
         running = false;
-        stopSending();
+        onStop();
         getWorkLock().release();
     }
 
     /**
      * Запуск потока рассылки сообщений.
      */
-    protected abstract void startSending();
+    protected abstract void onStart();
 
     /**
      * Останов потока рассылки сообщений.
      */
-    protected abstract void stopSending();
+    protected abstract void onStop();
 
 
     protected abstract int getErrorThreshold();
@@ -63,11 +63,14 @@ public abstract class Sender {
      */
     protected abstract Lock getWorkLock();
 
-    public void sending() {
+    public void cycle() {
         int errors = 0;
         while (running) {
             if (messageQueue.isEmpty()) {
                 getWorkLock().lock();
+                if(!running){
+                    break;
+                }
                 if (messageQueue.isEmpty()) {
                     getWorkLock().lock();
                 }

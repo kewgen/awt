@@ -21,24 +21,24 @@ public abstract class Receiver {
 
     public void start(DataInput input) {
         this.input = input;
-        startReceiving();
+        onStart();
         running = true;
     }
 
     public void stop() {
         running = false;
-        stopReceiving();
+        onStop();
     }
 
     /**
      * Запустить вычитывающий поток.
      */
-    protected abstract void startReceiving();
+    protected abstract void onStart();
 
     /**
      * Остановить вычитывающий поток.
      */
-    protected abstract void stopReceiving();
+    protected abstract void onStop();
 
     /**
      * Получить максимальное количество ошибок чтения, после которого будет разорвана связь с сервером.
@@ -52,7 +52,7 @@ public abstract class Receiver {
      */
     protected abstract MicroByteBuffer getAnswersBuffer();
 
-    protected void receiving() {
+    protected void cycle() {
         int errors = 0;
 
         while (running) {
