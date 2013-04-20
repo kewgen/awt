@@ -10,8 +10,6 @@ import com.geargames.common.util.Lock;
 import com.geargames.common.serialization.MicroByteBuffer;
 import com.geargames.common.serialization.SerializedMessage;
 
-import java.util.Vector;
-
 public abstract class Network {
     private ArrayList asynchronousMessages;
     private MicroByteBuffer buffer;
@@ -132,22 +130,24 @@ public abstract class Network {
      */
     public void sendSynchronousMessage(SerializedMessage request, ClientDeSerializedMessage answer, int attempt) throws Exception {
         MessageLock lock = getMessageLock();
-        lock.getLock().lock();
-        lock.setMessageType(request.getType());
-        lock.setValid(true);
-        lock.setMessage(answer);
-        sender.sendMessage(request);
-
-        for (int i = 0; i < attempt; i++) {
-            if (!lock.isValid()) {
-                answer.deSerialize();
-                lock.getLock().release();
-                return;
+        try {
+            lock.getLock().lock();
+            lock.setMessageType(request.getType());
+            lock.setAwaiting(true);
+            lock.setMessage(answer);
+            sender.sendMessage(request);
+            for (int i = 0; i < attempt; i++) {
+                if (!lock.isAwaiting()) {
+                    answer.deSerialize();
+                    lock.getLock().release();
+                    return;
+                }
+                Environment.pause(100);
             }
-            Environment.pause(100);
+            throw new Exception("Waiting time has been expired for a message : " + request.getType());
+        } finally {
+            lock.getLock().release();
         }
-        lock.getLock().release();
-        throw new Exception("Waiting time has been expired for a message : " + request.getType());
     }
 
     /**
@@ -171,6 +171,7 @@ public abstract class Network {
     public DataMessage[] getAsynchronousDataMessages() {
         getAsynchronousLock().lock();
         int size = asynchronousMessages.size();
+        //todo: убрать new из common
         DataMessage[] messages = new DataMessage[size];
         for (int i = 0; i < size; i++) {
             messages[i] = (DataMessage) asynchronousMessages.get(i);
@@ -208,7 +209,7 @@ public abstract class Network {
      * @param messageType
      * @return true если answer успешно заполнен данными.
      */
-    public synchronized boolean getAsynchronousAnswer(ClientDeSerializedMessage answer, short messageType) throws Exception {
+    public boolean getAsynchronousAnswer(ClientDeSerializedMessage answer, short messageType) throws Exception {
         DataMessage message = getAsynchronousMessageByType(messageType);
         if (message != null) {
             buffer.initiate(message.getData());

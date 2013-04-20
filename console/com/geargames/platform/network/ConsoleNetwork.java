@@ -24,7 +24,7 @@ public class ConsoleNetwork extends Network {
     public ConsoleNetwork(MicroByteBuffer buffer) {
         this.buffer = buffer;
         messageLock = new MessageLock();
-        messageLock.setValid(false);
+        messageLock.setAwaiting(false);
         messageLock.setLock(new JavaLock());
         lock = new JavaLock();
     }

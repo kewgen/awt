@@ -47,12 +47,14 @@ public class ConsoleDebug extends AbstractDebug {
         }
         if (level >= consoleLogLevelMinimum) {
             (level >= Level.WARNING ? System.err : System.out).println(messageFormated);
+/*
             if (level >= Level.ERROR) {
 //                (new Exception()).printStackTrace();
                 StackTraceElement[] stackTrace = (new Exception()).getStackTrace();
                 for (int i = 2; i < stackTrace.length; i++) // исключем из стек трейса методы ConsoleDebug.log и Debug.error
                     System.err.println("\tat " + stackTrace[i]);
             }
+*/
         }
         if (level >= beepLogLevelMinimum) {
             java.awt.Toolkit.getDefaultToolkit().beep();

@@ -78,7 +78,7 @@ public abstract class Receiver {
                     MicroByteBuffer buffer = getAnswersBuffer();
                     buffer.initiate(getAnswersBuffer().getBytes(), length);
                     messageLock.getMessage().setBuffer(buffer);
-                    messageLock.setValid(false);
+                    messageLock.setAwaiting(false);
                     messageLock.getLock().release();
                 } else {
                     // Зачитывание асинхронного сообщения
@@ -111,7 +111,7 @@ public abstract class Receiver {
 
     private MessageLock getMessageLockIfItExists(short type) {
         MessageLock messageLock = network.getMessageLock();
-        return messageLock.isValid() && messageLock.getMessageType() == type ? messageLock : null;
+        return messageLock.isAwaiting() && messageLock.getMessageType() == type ? messageLock : null;
     }
 
 }

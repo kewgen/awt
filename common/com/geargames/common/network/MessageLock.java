@@ -11,7 +11,7 @@ public class MessageLock {
     private Lock lock;
     private ClientDeSerializedMessage message;
     private short messageType;
-    private boolean valid;
+    private boolean awaiting;
 
     public ClientDeSerializedMessage getMessage() {
         return message;
@@ -37,11 +37,11 @@ public class MessageLock {
         this.messageType = messageType;
     }
 
-    public boolean isValid() {
-        return valid;
+    public boolean isAwaiting() {
+        return awaiting;
     }
 
-    public void setValid(boolean valid) {
-        this.valid = valid;
+    public void setAwaiting(boolean awaiting) {
+        this.awaiting = awaiting;
     }
 }
