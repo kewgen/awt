@@ -134,8 +134,6 @@ public abstract class MessageDispatcher implements TimerListener {
 
     protected abstract ClientDeSerializedMessage getMessage(DataMessage dataMessage);
 
-    protected void unhandledMessageHandler(DataMessage message) {
-        //todo: Оповестить подписчиков на ошибки о получении неизвестного сообщения.
-    }
+    protected abstract void unhandledMessageHandler(DataMessage message);
 
 }
