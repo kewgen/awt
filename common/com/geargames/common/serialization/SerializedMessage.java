@@ -1,6 +1,6 @@
 package com.geargames.common.serialization;
 
-import java.util.Arrays;
+import com.geargames.common.util.ArrayUtils;
 
 /**
  * User: mkutuzov, abarakov
@@ -41,8 +41,7 @@ public abstract class SerializedMessage {
         short length = (short) (buffer.getLimit() - HEAD_SIZE);
         SimpleSerializer.serialize(length, buffer);
         SimpleSerializer.serialize(getType(), buffer);
-        //TODO: либо переделать на цикл, либо абстрактный копирователь в gg.common
-        return Arrays.copyOf(buffer.getBytes(), buffer.getLimit());
+        return ArrayUtils.copyOf(buffer.getBytes(), buffer.getLimit());
     }
 
 }
