@@ -36,7 +36,7 @@ public class TimerManager {
     private static final boolean DEBUG       = false;
     private static final boolean STACK_TRACE = false;
 
-    public static final int NULL_TIMER = 0;
+    public static final int NULL_TIMER = 0; //todo: Перенести в класс Timer
 
     public static final int DINAMIC_TIMER_ID_MIN = 20000;
     public static final int DINAMIC_TIMER_ID_MAX = Integer.MAX_VALUE;
