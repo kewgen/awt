@@ -17,8 +17,6 @@ public class SimpleSerializer {
     public static final long INT_MASK = 0xFFFFFFFFL;
     public static final int DECIMAL_SCALE = 1000;
 
-
-
     public static void serialize(String string, MicroByteBuffer buffer) {
         serialize((short) string.length(), buffer);
         for (int i = 0; i < string.length(); i++) {
