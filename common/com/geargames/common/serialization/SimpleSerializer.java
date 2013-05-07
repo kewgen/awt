@@ -7,10 +7,6 @@ package com.geargames.common.serialization;
 public class SimpleSerializer {
     public static final byte NO = 0;
     public static final byte YES = 1;
-    public static final byte ALLY = 1;
-    public static final byte ENEMY = 0;
-
-    public static final short NULL_COORDINATE = -1;
 
     public static final int BYTE_MASK = 0xFF;
     public static final int CHAR_MASK = 0xFFFF;
