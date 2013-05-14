@@ -140,34 +140,34 @@ public class DrawablePElement extends Drawable {
                 case Anchors.TOP_LEFT_ANCHOR:
                 case Anchors.CENTER_LEFT_ANCHOR:
                 case Anchors.BOTTOM_LEFT_ANCHOR:
-                    setX(0);
+                    setX(element.getDrawRegion().getMinX());
                     break;
                 case Anchors.TOP_CENTER_ANCHOR:
                 case Anchors.CENTER_CENTER_ANCHOR:
                 case Anchors.BOTTOM_CENTER_ANCHOR:
-                    setX((Port.getScreenW() - element.getDrawRegion().getWidth()) / 2);
+                    setX(Port.getScreenW() / 2 + element.getDrawRegion().getMinX()); //todo: getW или getScreenW?
                     break;
                 case Anchors.TOP_RIGHT_ANCHOR:
                 case Anchors.CENTER_RIGHT_ANCHOR:
                 case Anchors.BOTTOM_RIGHT_ANCHOR:
-                    setX(Port.getScreenW() - element.getDrawRegion().getWidth()); //todo: getW или getScreenW?
+                    setX(Port.getScreenW() + element.getDrawRegion().getMinX()); //todo: getW или getScreenW?
                     break;
             }
             switch (anchor) {
                 case Anchors.TOP_LEFT_ANCHOR:
                 case Anchors.TOP_CENTER_ANCHOR:
                 case Anchors.TOP_RIGHT_ANCHOR:
-                    setY(0);
+                    setY(element.getDrawRegion().getMinY());
                     break;
                 case Anchors.CENTER_LEFT_ANCHOR:
                 case Anchors.CENTER_CENTER_ANCHOR:
                 case Anchors.CENTER_RIGHT_ANCHOR:
-                    setY((Port.getScreenH() - element.getDrawRegion().getHeight()) / 2);
+                    setY(Port.getScreenH() / 2 + element.getDrawRegion().getMinY()); //todo: getH или getScreenH?
                     break;
                 case Anchors.BOTTOM_LEFT_ANCHOR:
                 case Anchors.BOTTOM_CENTER_ANCHOR:
                 case Anchors.BOTTOM_RIGHT_ANCHOR:
-                    setY(Port.getScreenH() - element.getDrawRegion().getHeight()); //todo: getH или getScreenH?
+                    setY(Port.getScreenH() + element.getDrawRegion().getMinY()); //todo: getH или getScreenH?
                     break;
             }
         }
