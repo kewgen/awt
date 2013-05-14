@@ -135,43 +135,41 @@ public class DrawablePElement extends Drawable {
      * экранного якоря.
      */
     public void init() {
-        switch (anchor) {
-            case Anchors.NONE_ANCHOR:
-                break;
-            case Anchors.TOP_LEFT_ANCHOR:
-            case Anchors.CENTER_LEFT_ANCHOR:
-            case Anchors.BOTTOM_LEFT_ANCHOR:
-                setX(0);
-                break;
-            case Anchors.TOP_CENTER_ANCHOR:
-            case Anchors.CENTER_CENTER_ANCHOR:
-            case Anchors.BOTTOM_CENTER_ANCHOR:
-                setX((Port.getScreenW() - element.getDrawRegion().getWidth()) / 2);
-                break;
-            case Anchors.TOP_RIGHT_ANCHOR:
-            case Anchors.CENTER_RIGHT_ANCHOR:
-            case Anchors.BOTTOM_RIGHT_ANCHOR:
-                setX(Port.getScreenW() - element.getDrawRegion().getWidth()); //todo: getW или getScreenW?
-                break;
-        }
-        switch (anchor) {
-            case Anchors.NONE_ANCHOR:
-                break;
-            case Anchors.TOP_LEFT_ANCHOR:
-            case Anchors.TOP_CENTER_ANCHOR:
-            case Anchors.TOP_RIGHT_ANCHOR:
-                setY(0);
-                break;
-            case Anchors.CENTER_LEFT_ANCHOR:
-            case Anchors.CENTER_CENTER_ANCHOR:
-            case Anchors.CENTER_RIGHT_ANCHOR:
-                setY((Port.getScreenH() - element.getDrawRegion().getHeight()) / 2);
-                break;
-            case Anchors.BOTTOM_LEFT_ANCHOR:
-            case Anchors.BOTTOM_CENTER_ANCHOR:
-            case Anchors.BOTTOM_RIGHT_ANCHOR:
-                setY(Port.getScreenH() - element.getDrawRegion().getHeight()); //todo: getH или getScreenH?
-                break;
+        if (anchor != Anchors.NONE_ANCHOR) {
+            switch (anchor) {
+                case Anchors.TOP_LEFT_ANCHOR:
+                case Anchors.CENTER_LEFT_ANCHOR:
+                case Anchors.BOTTOM_LEFT_ANCHOR:
+                    setX(0);
+                    break;
+                case Anchors.TOP_CENTER_ANCHOR:
+                case Anchors.CENTER_CENTER_ANCHOR:
+                case Anchors.BOTTOM_CENTER_ANCHOR:
+                    setX((Port.getScreenW() - element.getDrawRegion().getWidth()) / 2);
+                    break;
+                case Anchors.TOP_RIGHT_ANCHOR:
+                case Anchors.CENTER_RIGHT_ANCHOR:
+                case Anchors.BOTTOM_RIGHT_ANCHOR:
+                    setX(Port.getScreenW() - element.getDrawRegion().getWidth()); //todo: getW или getScreenW?
+                    break;
+            }
+            switch (anchor) {
+                case Anchors.TOP_LEFT_ANCHOR:
+                case Anchors.TOP_CENTER_ANCHOR:
+                case Anchors.TOP_RIGHT_ANCHOR:
+                    setY(0);
+                    break;
+                case Anchors.CENTER_LEFT_ANCHOR:
+                case Anchors.CENTER_CENTER_ANCHOR:
+                case Anchors.CENTER_RIGHT_ANCHOR:
+                    setY((Port.getScreenH() - element.getDrawRegion().getHeight()) / 2);
+                    break;
+                case Anchors.BOTTOM_LEFT_ANCHOR:
+                case Anchors.BOTTOM_CENTER_ANCHOR:
+                case Anchors.BOTTOM_RIGHT_ANCHOR:
+                    setY(Port.getScreenH() - element.getDrawRegion().getHeight()); //todo: getH или getScreenH?
+                    break;
+            }
         }
     }
 
