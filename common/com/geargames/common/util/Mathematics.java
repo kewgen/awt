@@ -5,6 +5,8 @@ package com.geargames.common.util;
  * Date: 28.03.13
  */
 public class Mathematics {
+    public static int PRECISION = 1000;
+    public static int HALF_PRECISION = 500;
 
     public static int min(int a, int b) {
         return (a <= b) ? a : b;
