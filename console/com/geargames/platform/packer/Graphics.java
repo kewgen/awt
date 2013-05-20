@@ -128,6 +128,10 @@ public class Graphics implements com.geargames.common.Graphics {
         graphics.fillRect(x, y, w, h);
     }
 
+    public void fillPolygon(int xPoints[], int yPoints[], int nPoints) {
+        graphics.fillPolygon(xPoints, yPoints, nPoints);
+    }
+
     @Override
     public void setClip(int x, int y, int w, int h) {
         graphics.setClip(x, y, w, h);

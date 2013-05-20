@@ -7,21 +7,19 @@ import com.geargames.common.util.ArrayChar;
 import java.io.IOException;
 
 /**
- * Created with IntelliJ IDEA.
  * User: kewgen
  * Date: 10.09.12
- * Time: 13:08
  */
 public interface Graphics {
-    int HCENTER  = 1 << 0;
-    int VCENTER  = 1 << 1;
-    int LEFT     = 1 << 2;
-    int RIGHT    = 1 << 3;
-    int TOP      = 1 << 4;
-    int BOTTOM   = 1 << 5;
+    int HCENTER = 1 << 0;
+    int VCENTER = 1 << 1;
+    int LEFT = 1 << 2;
+    int RIGHT = 1 << 3;
+    int TOP = 1 << 4;
+    int BOTTOM = 1 << 5;
     int BASELINE = 6;
-    int SOLID    = 7;
-    int DOTTED   = 8;
+    int SOLID = 7;
+    int DOTTED = 8;
 
     void drawImage(Image image, int x, int y);
 
@@ -36,6 +34,8 @@ public interface Graphics {
     void drawRect(int x, int y, int w, int h);
 
     void fillRect(int x, int y, int w, int h);
+
+    void fillPolygon(int xPoints[], int yPoints[], int nPoints);
 
     void setClip(int x, int y, int w, int h);
 
